@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Matematika Estimasi Robotika — Blue Dragon Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #080c10;
+    --bg2:       #0d1219;
+    --bg3:       #111820;
+    --panel:     #131c26;
+    --border:    #1e2d3d;
+    --border2:   #253545;
+    --cyan:      #00e5ff;
+    --cyan2:     #00b4cc;
+    --teal:      #00c8a0;
+    --gold:      #f0c040;
+    --red:       #ff4455;
+    --muted:     #4a6070;
+    --text:      #c8d8e8;
+    --text2:     #8ca8c0;
+    --text3:     #5a7a90;
+    --heading:   #e8f4ff;
+    --mono:      'IBM Plex Mono', monospace;
+    --body:      'Space Grotesk', sans-serif;
+    --serif:     'Crimson Pro', serif;
+    --radius:    6px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #060c14 0%, #0a1420 50%, #060c14 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo-dragon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--cyan), var(--teal));
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    flex-shrink: 0;
+  }
+  .logo-text { font-family: var(--mono); font-size: 13px; color: var(--cyan2); letter-spacing: 0.08em; }
+  .logo-sub { font-size: 10px; color: var(--muted); letter-spacing: 0.12em; }
+  .header-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-align: right;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: radial-gradient(ellipse 80% 60% at 50% -10%, #002a3a 0%, transparent 70%),
+                linear-gradient(180deg, #0a1622 0%, var(--bg) 100%);
+    padding: 64px 24px 56px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.18;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--cyan);
+    background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.25);
+    padding: 4px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: var(--mono);
+    font-size: clamp(22px, 4vw, 40px);
+    font-weight: 700;
+    color: var(--heading);
+    line-height: 1.2;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 span { color: var(--cyan); }
+  .hero-desc {
+    font-family: var(--serif);
+    font-size: clamp(15px, 2vw, 18px);
+    color: var(--text2);
+    max-width: 640px;
+    margin: 0 auto 28px;
+    font-style: italic;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .stat {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: var(--radius);
+  }
+  .stat span { color: var(--teal); }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 0;
+  }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    position: sticky;
+    top: 57px;
+    height: calc(100vh - 57px);
+    overflow-y: auto;
+  }
+  .nav-section {
+    padding: 6px 16px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 12px;
+  }
+  .nav-link {
+    display: block;
+    padding: 7px 16px 7px 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text3);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .nav-link:hover, .nav-link.active {
+    color: var(--cyan);
+    border-left-color: var(--cyan);
+    background: rgba(0,229,255,0.04);
+  }
+  .nav-sub {
+    padding-left: 30px;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  /* ── MAIN CONTENT ── */
+  main { padding: 40px 32px; min-width: 0; }
+  @media (max-width: 600px) { main { padding: 24px 16px; } }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 64px;
+    scroll-margin-top: 72px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--cyan);
+    background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.2);
+    padding: 3px 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: var(--mono);
+    font-size: clamp(16px, 2.5vw, 22px);
+    font-weight: 600;
+    color: var(--heading);
+    letter-spacing: -0.01em;
+  }
+  h3 {
+    font-family: var(--mono);
+    font-size: clamp(13px, 2vw, 16px);
+    color: var(--teal);
+    margin: 28px 0 12px;
+    letter-spacing: 0.02em;
+  }
+  p {
+    color: var(--text);
+    margin-bottom: 14px;
+    line-height: 1.75;
+    font-size: clamp(14px, 1.6vw, 16px);
+  }
+
+  /* ── MATH BLOCK ── */
+  .math-block {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--cyan);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin: 16px 0 24px;
+    overflow-x: auto;
+  }
+  .math-block .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .math {
+    font-family: var(--mono);
+    font-size: clamp(13px, 1.8vw, 15px);
+    color: var(--gold);
+    line-height: 2;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .math .comment {
+    color: var(--text3);
+    font-style: italic;
+  }
+  .math .hi { color: var(--cyan); }
+  .math .teal { color: var(--teal); }
+  .math .red { color: var(--red); }
+
+  /* ── INFO BOXES ── */
+  .box {
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 16px 0;
+    border: 1px solid;
+  }
+  .box.info { background: rgba(0,229,255,0.04); border-color: rgba(0,229,255,0.2); }
+  .box.warn { background: rgba(240,192,64,0.05); border-color: rgba(240,192,64,0.25); }
+  .box.tip  { background: rgba(0,200,160,0.05); border-color: rgba(0,200,160,0.25); }
+  .box-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .box.info .box-title { color: var(--cyan); }
+  .box.warn .box-title { color: var(--gold); }
+  .box.tip  .box-title { color: var(--teal); }
+  .box p { font-size: 14px; margin: 0; color: var(--text2); }
+
+  /* ── TABLE ── */
+  .tbl-wrap { overflow-x: auto; margin: 16px 0 24px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    background: var(--panel);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--cyan);
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border2);
+  }
+  tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: rgba(255,255,255,0.02); }
+  .td-mono { font-family: var(--mono); font-size: 12px; color: var(--gold); }
+
+  /* ── ALGO BLOCK ── */
+  .algo {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    margin: 16px 0 24px;
+    overflow: hidden;
+  }
+  .algo-head {
+    background: var(--panel);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border2);
+  }
+  .algo-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--teal);
+    background: rgba(0,200,160,0.1);
+    padding: 2px 8px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+  .algo-name { font-family: var(--mono); font-size: 13px; color: var(--heading); }
+  .algo-body {
+    padding: 16px 20px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--text2);
+  }
+  .algo-body .step-num { color: var(--cyan); margin-right: 8px; }
+  .algo-body .kw { color: var(--teal); }
+  .algo-body .eq { color: var(--gold); }
+  .algo-body .cmt { color: var(--muted); }
+
+  /* ── DIAGRAM ── */
+  .diagram-wrap {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin: 16px 0 24px;
+    overflow-x: auto;
+    text-align: center;
+  }
+  .diagram-wrap svg { max-width: 100%; height: auto; }
+
+  /* ── TOC MOBILE ── */
+  .mobile-toc {
+    display: none;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  @media (max-width: 900px) { .mobile-toc { display: block; } }
+  .toc-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--cyan);
+    letter-spacing: 0.1em;
+  }
+  .toc-content { display: none; padding: 8px 0 12px; }
+  .toc-content.open { display: block; }
+  .toc-content a {
+    display: block;
+    padding: 6px 18px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text3);
+    text-decoration: none;
+  }
+  .toc-content a:hover { color: var(--cyan); }
+
+  /* ── FINGERPRINT FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    background: var(--bg2);
+    padding: 32px 24px;
+    margin-top: 32px;
+  }
+  .fp-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: center;
+  }
+  @media (max-width: 600px) { .fp-inner { grid-template-columns: 1fr; } }
+  .fp-badge {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .fp-hex {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, var(--cyan), var(--teal));
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+    flex-shrink: 0;
+  }
+  .fp-info { }
+  .fp-name { font-family: var(--mono); font-size: 14px; color: var(--cyan); font-weight: 600; }
+  .fp-url { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+  .fp-hash {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-align: right;
+  }
+  .fp-hash div { margin-bottom: 4px; }
+  .fp-hash .val { color: var(--text3); }
+
+  /* ── STEP LIST ── */
+  .steps { list-style: none; padding: 0; counter-reset: step-c; }
+  .steps li {
+    counter-increment: step-c;
+    position: relative;
+    padding: 10px 0 10px 44px;
+    border-bottom: 1px dashed var(--border);
+    font-size: clamp(13px, 1.6vw, 15px);
+    color: var(--text2);
+  }
+  .steps li:last-child { border-bottom: none; }
+  .steps li::before {
+    content: counter(step-c, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--cyan);
+    background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.2);
+    width: 30px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 2px;
+  }
+
+  /* ── UL/OL ── */
+  ul.bullets { padding-left: 20px; margin-bottom: 14px; }
+  ul.bullets li {
+    color: var(--text2);
+    margin-bottom: 6px;
+    font-size: clamp(13px, 1.6vw, 15px);
+    line-height: 1.65;
+  }
+  ul.bullets li::marker { color: var(--cyan); }
+
+  /* ── INLINE CODE ── */
+  code {
+    font-family: var(--mono);
+    font-size: 0.88em;
+    color: var(--teal);
+    background: rgba(0,200,160,0.08);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  /* ── PROGRESS BAR (decorative) ── */
+  .progress-bar {
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--teal), var(--cyan));
+    margin-bottom: 32px;
+    border-radius: 1px;
+    background-size: 200%;
+    animation: shimmer 3s linear infinite;
+  }
+  @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <div class="logo-dragon">BD</div>
+      <div>
+        <div class="logo-text">BLUE DRAGON SECURITY</div>
+        <div class="logo-sub">bluedragonsec.com</div>
+      </div>
+    </a>
+    <div class="header-title">
+      ROBOTICS ESTIMATION MATH<br>
+      <span style="color:var(--teal)">v1.0 · 2026</span>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">// CURRICULUM MODULE · MATEMATIKA LANJUT</div>
+  <h1>Matematika <span>Estimasi</span> dalam Robotika</h1>
+  <p class="hero-desc">Panduan komprehensif teori estimasi state, filter probabilistik, dan sensor fusion untuk sistem robotika modern</p>
+  <div class="hero-stats">
+    <div class="stat"><span>9</span> Topik Utama</div>
+    <div class="stat"><span>Kalman · EKF · UKF · Particle</span></div>
+    <div class="stat"><span>Bayes · SLAM · Odometri</span></div>
+    <div class="stat"><span>Blue Dragon Security</span> Research</div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="nav-section">Dasar</div>
+    <a class="nav-link" href="#s1">1. Konsep Estimasi State</a>
+    <a class="nav-link" href="#s2">2. Bayesian Estimation</a>
+    <a class="nav-link" href="#s3">3. Representasi State Space</a>
+    <div class="nav-section">Filter</div>
+    <a class="nav-link" href="#s4">4. Kalman Filter (KF)</a>
+    <a class="nav-link nav-sub" href="#s4a">— Model Sistem</a>
+    <a class="nav-link nav-sub" href="#s4b">— Predict & Update</a>
+    <a class="nav-link" href="#s5">5. Extended KF (EKF)</a>
+    <a class="nav-link" href="#s6">6. Unscented KF (UKF)</a>
+    <a class="nav-link" href="#s7">7. Particle Filter</a>
+    <div class="nav-section">Terapan</div>
+    <a class="nav-link" href="#s8">8. Sensor Fusion</a>
+    <a class="nav-link" href="#s9">9. Odometri & SLAM Intro</a>
+    <div class="nav-section">Referensi</div>
+    <a class="nav-link" href="#sref">Notasi & Simbol</a>
+  </nav>
+
+  <!-- MAIN -->
+  <main>
+    <div class="progress-bar"></div>
+
+    <!-- MOBILE TOC -->
+    <div class="mobile-toc">
+      <button class="toc-toggle" onclick="this.nextElementSibling.classList.toggle('open')">
+        ☰ DAFTAR ISI
+        <span>▾</span>
+      </button>
+      <div class="toc-content">
+        <a href="#s1">1. Konsep Estimasi State</a>
+        <a href="#s2">2. Bayesian Estimation</a>
+        <a href="#s3">3. State Space</a>
+        <a href="#s4">4. Kalman Filter</a>
+        <a href="#s5">5. Extended KF</a>
+        <a href="#s6">6. Unscented KF</a>
+        <a href="#s7">7. Particle Filter</a>
+        <a href="#s8">8. Sensor Fusion</a>
+        <a href="#s9">9. Odometri &amp; SLAM</a>
+        <a href="#sref">Notasi</a>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 1 -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section class="section" id="s1">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2 class="section-title">Konsep Dasar Estimasi State</h2>
+      </div>
+
+      <p>Dalam robotika, <strong>state</strong> adalah kumpulan variabel yang cukup untuk mendeskripsikan kondisi sistem pada suatu waktu. Posisi robot <code>(x, y, θ)</code>, kecepatan, orientasi, atau posisi sendi adalah contoh state.</p>
+
+      <div class="box info">
+        <div class="box-title">// Definisi State Estimation</div>
+        <p>Estimasi state adalah proses menentukan nilai state sistem yang tidak dapat diukur secara langsung, menggunakan pengukuran sensor yang mengandung noise dan model dinamika sistem.</p>
+      </div>
+
+      <h3>1.1 Masalah Fundamental</h3>
+      <p>Dua sumber ketidakpastian utama:</p>
+      <ul class="bullets">
+        <li><strong>Process noise (noise proses)</strong>: ketidakpastian pada model dinamika, gangguan eksternal, dan error aktuator.</li>
+        <li><strong>Measurement noise (noise pengukuran)</strong>: ketidakpastian pada sensor, kalibrasi, dan lingkungan.</li>
+      </ul>
+
+      <div class="math-block">
+        <div class="label">// Model Umum Sistem Diskrit</div>
+        <div class="math"><span class="hi">x</span><sub>k</sub> = <span class="teal">f</span>(<span class="hi">x</span><sub>k−1</sub>, <span class="hi">u</span><sub>k</sub>) + <span class="red">w</span><sub>k</sub>    <span class="comment">// persamaan proses</span>
+<span class="hi">z</span><sub>k</sub> = <span class="teal">h</span>(<span class="hi">x</span><sub>k</sub>) + <span class="red">v</span><sub>k</sub>           <span class="comment">// persamaan pengukuran</span>
+
+<span class="comment">// dimana:</span>
+<span class="hi">x</span><sub>k</sub> ∈ ℝⁿ   → state vektor pada waktu k
+<span class="hi">u</span><sub>k</sub> ∈ ℝᵐ   → input kontrol
+<span class="hi">z</span><sub>k</sub> ∈ ℝᵖ   → vektor pengukuran
+<span class="red">w</span><sub>k</sub> ~ N(0, <span class="teal">Q</span>)  → process noise, kovarians Q
+<span class="red">v</span><sub>k</sub> ~ N(0, <span class="teal">R</span>)  → measurement noise, kovarians R</div>
+      </div>
+
+      <h3>1.2 Kriteria Estimator yang Baik</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Kriteria</th><th>Definisi Matematis</th><th>Arti Praktis</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Unbiased</td>
+              <td class="td-mono">E[x̂] = x</td>
+              <td>Rata-rata estimasi sama dengan nilai sesungguhnya</td>
+            </tr>
+            <tr>
+              <td>Consistent</td>
+              <td class="td-mono">lim P(|x̂−x|>ε) = 0</td>
+              <td>Error mengecil seiring bertambahnya data</td>
+            </tr>
+            <tr>
+              <td>Efficient (MMSE)</td>
+              <td class="td-mono">min E[||x̂−x||²]</td>
+              <td>Meminimalkan mean-squared error</td>
+            </tr>
+            <tr>
+              <td>MAP</td>
+              <td class="td-mono">argmax p(x|z)</td>
+              <td>Memaksimalkan posterior probability</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>1.3 Distribusi Gaussian (Normal)</h3>
+      <p>Filter Kalman dan banyak estimator bergantung pada asumsi distribusi Gaussian karena sifatnya yang tertutup terhadap operasi linier.</p>
+
+      <div class="math-block">
+        <div class="label">// Probability Density Function Gaussian</div>
+        <div class="math"><span class="teal">p</span>(<span class="hi">x</span>) = <span class="hi">1</span> / (√(2π|<span class="teal">Σ</span>|)) · exp(−½ (<span class="hi">x</span>−<span class="teal">μ</span>)ᵀ <span class="teal">Σ</span>⁻¹ (<span class="hi">x</span>−<span class="teal">μ</span>))
+
+<span class="comment">// Notasi ringkas:</span>
+<span class="hi">x</span> ~ <span class="teal">N</span>(<span class="teal">μ</span>, <span class="teal">Σ</span>)
+
+<span class="teal">μ</span> = E[x]              → mean vektor (n × 1)
+<span class="teal">Σ</span> = E[(x−μ)(x−μ)ᵀ]  → matriks kovarians (n × n)
+|<span class="teal">Σ</span>|                  → determinan Σ</div>
+      </div>
+
+      <div class="box tip">
+        <div class="box-title">// Properti Kunci Gaussian</div>
+        <p>Transformasi linier dari Gaussian menghasilkan Gaussian. Jika <strong>x ~ N(μ, Σ)</strong> dan <strong>y = Ax + b</strong>, maka <strong>y ~ N(Aμ + b, AΣAᵀ)</strong>. Inilah mengapa Kalman Filter bekerja secara optimal untuk sistem linier-Gaussian.</p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 2 -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section class="section" id="s2">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2 class="section-title">Bayesian Estimation</h2>
+      </div>
+
+      <p>Framework Bayesian adalah fondasi matematis untuk semua estimasi probabilistik. Seluruh filter (Kalman, Particle) adalah implementasi khusus dari Bayes filter.</p>
+
+      <h3>2.1 Teorema Bayes</h3>
+      <div class="math-block">
+        <div class="label">// Teorema Bayes</div>
+        <div class="math"><span class="teal">p</span>(<span class="hi">x</span>|<span class="hi">z</span>) = <span class="teal">p</span>(<span class="hi">z</span>|<span class="hi">x</span>) · <span class="teal">p</span>(<span class="hi">x</span>) / <span class="teal">p</span>(<span class="hi">z</span>)
+
+<span class="comment">// terminologi:</span>
+<span class="teal">p</span>(<span class="hi">x</span>|<span class="hi">z</span>)  → posterior : probabilitas state x setelah observasi z
+<span class="teal">p</span>(<span class="hi">z</span>|<span class="hi">x</span>)  → likelihood : probabilitas pengukuran z jika state adalah x
+<span class="teal">p</span>(<span class="hi">x</span>)    → prior : kepercayaan awal sebelum pengukuran
+<span class="teal">p</span>(<span class="hi">z</span>)    → evidence : normalizing constant = ∫ p(z|x) p(x) dx</div>
+      </div>
+
+      <h3>2.2 Bayes Filter (Recursive)</h3>
+      <p>Bayes Filter memperbarui belief (distribusi probabilitas state) secara rekursif dalam dua langkah.</p>
+
+      <div class="algo">
+        <div class="algo-head">
+          <span class="algo-tag">ALGORITMA</span>
+          <span class="algo-name">Bayes Filter Rekursif</span>
+        </div>
+        <div class="algo-body">
+<span class="kw">Input:</span>  bel(x<sub>k−1</sub>), u<sub>k</sub>, z<sub>k</sub>
+<span class="kw">Output:</span> bel(x<sub>k</sub>)
+
+<span class="step-num">STEP 1</span> <span class="kw">PREDICTION</span> (Chapman-Kolmogorov):
+  <span class="eq">b̄el(x<sub>k</sub>) = ∫ p(x<sub>k</sub> | x<sub>k−1</sub>, u<sub>k</sub>) · bel(x<sub>k−1</sub>) dx<sub>k−1</sub></span>
+
+<span class="step-num">STEP 2</span> <span class="kw">UPDATE</span> (Bayes):
+  <span class="eq">bel(x<sub>k</sub>) = η · p(z<sub>k</sub> | x<sub>k</sub>) · b̄el(x<sub>k</sub>)</span>
+
+  <span class="cmt">η = normalizing constant agar ∫ bel(x<sub>k</sub>) dx = 1</span>
+        </div>
+      </div>
+
+      <h3>2.3 MAP vs MMSE</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Estimator</th><th>Formula</th><th>Keterangan</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>MAP (Maximum A Posteriori)</td>
+              <td class="td-mono">x̂_MAP = argmax p(x|z)</td>
+              <td>Mode dari distribusi posterior. Robust terhadap outlier</td>
+            </tr>
+            <tr>
+              <td>MMSE (Min Mean Sq Error)</td>
+              <td class="td-mono">x̂_MMSE = E[x|z] = ∫ x p(x|z) dx</td>
+              <td>Mean dari posterior. Optimal untuk Gaussian</td>
+            </tr>
+            <tr>
+              <td>ML (Maximum Likelihood)</td>
+              <td class="td-mono">x̂_ML = argmax p(z|x)</td>
+              <td>Tidak menggunakan prior. Tidak cocok jika prior informative</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="box warn">
+        <div class="box-title">// Catatan Penting</div>
+        <p>Untuk distribusi Gaussian, MAP = MMSE = Mean posterior. Ini adalah alasan kuat mengapa Kalman Filter yang mengasumsikan Gaussian adalah estimator optimal (MMSE) untuk sistem linier.</p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 3 -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section class="section" id="s3">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2 class="section-title">Representasi State Space</h2>
+      </div>
+
+      <p>State space representation adalah cara matematis untuk mendeskripsikan sistem dinamis menggunakan variabel state internal.</p>
+
+      <h3>3.1 Model Diskrit-Waktu Linier</h3>
+      <div class="math-block">
+        <div class="label">// State Space Linier Diskrit</div>
+        <div class="math"><span class="hi">x</span><sub>k</sub> = <span class="teal">F</span> <span class="hi">x</span><sub>k−1</sub> + <span class="teal">B</span> <span class="hi">u</span><sub>k</sub> + <span class="red">w</span><sub>k</sub>
+<span class="hi">z</span><sub>k</sub> = <span class="teal">H</span> <span class="hi">x</span><sub>k</sub> + <span class="red">v</span><sub>k</sub>
+
+<span class="comment">// matriks sistem:</span>
+<span class="teal">F</span> ∈ ℝⁿˣⁿ  → state transition matrix
+<span class="teal">B</span> ∈ ℝⁿˣᵐ  → control input matrix
+<span class="teal">H</span> ∈ ℝᵖˣⁿ  → observation (measurement) matrix
+<span class="teal">Q</span> ∈ ℝⁿˣⁿ  → process noise covariance (simetrik, PSD)
+<span class="teal">R</span> ∈ ℝᵖˣᵖ  → measurement noise covariance (simetrik, PD)</div>
+      </div>
+
+      <h3>3.2 Contoh: Model Gerak Robot 2D</h3>
+      <p>Robot bergerak pada bidang datar. State: posisi dan kecepatan pada sumbu x dan y.</p>
+
+      <div class="math-block">
+        <div class="label">// State Vektor &amp; Matriks Transisi</div>
+        <div class="math"><span class="hi">x</span><sub>k</sub> = [x, ẋ, y, ẏ]ᵀ        <span class="comment">// 4-dimensi state</span>
+
+<span class="comment">// F dengan Δt = interval waktu sampling:</span>
+<span class="teal">F</span> = ⎡ 1  Δt  0   0 ⎤
+    ⎢ 0   1  0   0 ⎥
+    ⎢ 0   0  1  Δt ⎥
+    ⎣ 0   0  0   1 ⎦
+
+<span class="comment">// Jika sensor hanya mengukur posisi (bukan kecepatan):</span>
+<span class="teal">H</span> = ⎡ 1  0  0  0 ⎤
+    ⎣ 0  0  1  0 ⎦   <span class="comment">// 2×4, observasi x dan y saja</span></div>
+      </div>
+
+      <h3>3.3 Model Non-Linier Umum</h3>
+      <p>Kebanyakan robot menggunakan model non-linier karena kinematika dan sensor yang melibatkan fungsi trigonometri.</p>
+
+      <div class="math-block">
+        <div class="label">// Model Non-Linier (EKF/UKF/Particle)</div>
+        <div class="math"><span class="hi">x</span><sub>k</sub> = <span class="teal">f</span>(<span class="hi">x</span><sub>k−1</sub>, <span class="hi">u</span><sub>k</sub>) + <span class="red">w</span><sub>k</sub>
+<span class="hi">z</span><sub>k</sub> = <span class="teal">h</span>(<span class="hi">x</span><sub>k</sub>) + <span class="red">v</span><sub>k</sub>
+
+<span class="comment">// Contoh: unicycle robot model</span>
+<span class="teal">f</span>(<span class="hi">x</span>, <span class="hi">u</span>) = ⎡ x + v·cos(θ)·Δt ⎤
+           ⎢ y + v·sin(θ)·Δt ⎥
+           ⎣ θ + ω·Δt        ⎦
+
+<span class="comment">// dimana u = [v, ω]ᵀ (linear speed, angular speed)</span>
+
+<span class="comment">// Contoh: sensor range-bearing</span>
+<span class="teal">h</span>(<span class="hi">x</span>) = ⎡ √((mx−x)² + (my−y)²)    ⎤   <span class="comment">// jarak ke landmark</span>
+        ⎣ atan2(my−y, mx−x) − θ     ⎦   <span class="comment">// sudut ke landmark</span></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 4 -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section class="section" id="s4">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2 class="section-title">Kalman Filter (KF)</h2>
+      </div>
+
+      <p>Kalman Filter (1960) adalah estimator optimal rekursif untuk sistem linier dengan noise Gaussian. Memberikan estimasi <em>minimum variance unbiased</em> (MVUE).</p>
+
+      <div class="box info">
+        <div class="box-title">// Asumsi Kalman Filter</div>
+        <p>1. Model sistem linier: x<sub>k</sub> = Fx<sub>k−1</sub> + Bu<sub>k</sub> + w<sub>k</sub><br>
+           2. Noise Gaussian putih: w<sub>k</sub> ~ N(0,Q), v<sub>k</sub> ~ N(0,R)<br>
+           3. Noise proses dan pengukuran tidak berkorelasi: E[w<sub>k</sub>v<sub>j</sub>ᵀ] = 0<br>
+           4. Prior Gaussian: x<sub>0</sub> ~ N(μ<sub>0</sub>, P<sub>0</sub>)</p>
+      </div>
+
+      <section id="s4a">
+        <h3>4.1 Model Sistem Kalman Filter</h3>
+        <div class="math-block">
+          <div class="label">// Definisi Lengkap Model KF</div>
+          <div class="math"><span class="comment">// === PERSAMAAN PROSES ===</span>
+<span class="hi">x</span><sub>k</sub> = <span class="teal">F</span><sub>k</sub> <span class="hi">x</span><sub>k−1</sub> + <span class="teal">B</span><sub>k</sub> <span class="hi">u</span><sub>k</sub> + <span class="red">w</span><sub>k</sub>
+
+<span class="comment">// === PERSAMAAN PENGUKURAN ===</span>
+<span class="hi">z</span><sub>k</sub> = <span class="teal">H</span><sub>k</sub> <span class="hi">x</span><sub>k</sub> + <span class="red">v</span><sub>k</sub>
+
+<span class="comment">// === STATISTIK NOISE ===</span>
+E[<span class="red">w</span><sub>k</sub>]                = <span class="hi">0</span>
+E[<span class="red">w</span><sub>k</sub> <span class="red">w</span><sub>j</sub>ᵀ]            = <span class="teal">Q</span><sub>k</sub> δ<sub>kj</sub>    <span class="comment">// δ = Kronecker delta</span>
+E[<span class="red">v</span><sub>k</sub>]                = <span class="hi">0</span>
+E[<span class="red">v</span><sub>k</sub> <span class="red">v</span><sub>j</sub>ᵀ]            = <span class="teal">R</span><sub>k</sub> δ<sub>kj</sub>
+E[<span class="red">w</span><sub>k</sub> <span class="red">v</span><sub>j</sub>ᵀ]            = <span class="hi">0</span>    ∀k,j</div>
+        </div>
+      </section>
+
+      <section id="s4b">
+        <h3>4.2 Algoritma: Predict &amp; Update</h3>
+
+        <div class="algo">
+          <div class="algo-head">
+            <span class="algo-tag">ALGORITMA</span>
+            <span class="algo-name">Kalman Filter — 5 Persamaan</span>
+          </div>
+          <div class="algo-body">
+<span class="kw">INISIALISASI:</span>
+  <span class="eq">x̂<sub>0|0</sub> = μ<sub>0</sub></span>       <span class="cmt">// estimasi awal state</span>
+  <span class="eq">P<sub>0|0</sub>  = P<sub>0</sub></span>       <span class="cmt">// kovarians error awal</span>
+
+<span class="kw">── FASE PREDICT ──────────────────────────</span>
+<span class="step-num">1</span> <span class="kw">State prediction:</span>
+  <span class="eq">x̂<sub>k|k−1</sub> = F<sub>k</sub> x̂<sub>k−1|k−1</sub> + B<sub>k</sub> u<sub>k</sub></span>
+
+<span class="step-num">2</span> <span class="kw">Covariance prediction:</span>
+  <span class="eq">P<sub>k|k−1</sub> = F<sub>k</sub> P<sub>k−1|k−1</sub> F<sub>k</sub>ᵀ + Q<sub>k</sub></span>
+
+<span class="kw">── FASE UPDATE ───────────────────────────</span>
+<span class="step-num">3</span> <span class="kw">Innovation (residual):</span>
+  <span class="eq">ỹ<sub>k</sub> = z<sub>k</sub> − H<sub>k</sub> x̂<sub>k|k−1</sub></span>   <span class="cmt">// measurement residual</span>
+
+<span class="step-num">4</span> <span class="kw">Innovation covariance:</span>
+  <span class="eq">S<sub>k</sub> = H<sub>k</sub> P<sub>k|k−1</sub> H<sub>k</sub>ᵀ + R<sub>k</sub></span>
+
+<span class="step-num">5</span> <span class="kw">Kalman Gain:</span>
+  <span class="eq">K<sub>k</sub> = P<sub>k|k−1</sub> H<sub>k</sub>ᵀ S<sub>k</sub>⁻¹</span>
+
+<span class="step-num">6</span> <span class="kw">State update:</span>
+  <span class="eq">x̂<sub>k|k</sub> = x̂<sub>k|k−1</sub> + K<sub>k</sub> ỹ<sub>k</sub></span>
+
+<span class="step-num">7</span> <span class="kw">Covariance update (Joseph form):</span>
+  <span class="eq">P<sub>k|k</sub> = (I − K<sub>k</sub> H<sub>k</sub>) P<sub>k|k−1</sub> (I − K<sub>k</sub> H<sub>k</sub>)ᵀ + K<sub>k</sub> R<sub>k</sub> K<sub>k</sub>ᵀ</span>
+  <span class="cmt">// Joseph form: numerically stable, selalu PSD</span>
+  <span class="cmt">// Simplified: P<sub>k|k</sub> = (I − K<sub>k</sub> H<sub>k</sub>) P<sub>k|k−1</sub>  (hanya valid jika K optimal)</span>
+          </div>
+        </div>
+
+        <h3>4.3 Interpretasi Kalman Gain</h3>
+        <div class="math-block">
+          <div class="label">// Analisis Kalman Gain K</div>
+          <div class="math"><span class="teal">K</span><sub>k</sub> = <span class="teal">P</span><sub>k|k−1</sub> <span class="teal">H</span><sub>k</sub>ᵀ (<span class="teal">H</span><sub>k</sub> <span class="teal">P</span><sub>k|k−1</sub> <span class="teal">H</span><sub>k</sub>ᵀ + <span class="teal">R</span><sub>k</sub>)⁻¹
+
+<span class="comment">// Case 1: Sensor sangat akurat  →  R → 0</span>
+<span class="teal">K</span> → <span class="teal">H</span>⁻¹           <span class="comment">// filter percaya penuh pada sensor</span>
+<span class="hi">x̂</span><sub>k|k</sub> ≈ <span class="teal">H</span>⁻¹ <span class="hi">z</span><sub>k</sub>   <span class="comment">// langsung pakai pengukuran</span>
+
+<span class="comment">// Case 2: Model sangat akurat  →  P → 0</span>
+<span class="teal">K</span> → <span class="hi">0</span>             <span class="comment">// filter percaya penuh pada prediksi</span>
+<span class="hi">x̂</span><sub>k|k</sub> ≈ <span class="hi">x̂</span><sub>k|k−1</sub>  <span class="comment">// abaikan pengukuran</span>
+
+<span class="comment">// Kenyataannya: K adalah weighted trade-off optimal antara keduanya</span></div>
+        </div>
+
+        <div class="box tip">
+          <div class="box-title">// Intuisi Kalman Gain</div>
+          <p>Kalman Gain adalah bobot yang menyeimbangkan kepercayaan antara prediksi model dan pengukuran sensor. Semakin besar P (ketidakpastian prediksi) relatif terhadap R (ketidakpastian sensor), semakin besar bobot diberikan ke sensor.</p>
+        </div>
+
+        <h3>4.4 Contoh Numerik: 1D Position Tracking</h3>
+        <div class="math-block">
+          <div class="label">// KF 1 Dimensi — Robot Melacak Posisi</div>
+          <div class="math"><span class="comment">// State: x = [posisi, kecepatan]ᵀ, Δt = 0.1s</span>
+<span class="teal">F</span> = [[1, 0.1], [0, 1]]
+<span class="teal">H</span> = [[1, 0]]              <span class="comment">// hanya posisi diukur</span>
+<span class="teal">Q</span> = [[0.001, 0],[0, 0.001]]
+<span class="teal">R</span> = [[0.5]]               <span class="comment">// sensor GPS noise σ²=0.5m²</span>
+
+<span class="comment">// Iterasi k=1, x̂₀ = [0,0]ᵀ, P₀ = I·10</span>
+
+<span class="comment">// PREDICT:</span>
+<span class="hi">x̂</span>₁|₀ = [[1,0.1],[0,1]] · [0,0]ᵀ = [0, 0]ᵀ
+<span class="teal">P</span>₁|₀ = F·P₀·Fᵀ + Q ≈ [[10.001, 1.0], [1.0, 10.001]]
+
+<span class="comment">// Misalkan z₁ = 0.5m (GPS ukur 0.5m)</span>
+
+<span class="comment">// UPDATE:</span>
+<span class="teal">S</span> = H·P₁|₀·Hᵀ + R = 10.001 + 0.5 = 10.501
+<span class="teal">K</span> = P₁|₀·Hᵀ/S = [10.001/10.501, 1.0/10.501]ᵀ
+  ≈ [<span class="hi">0.952</span>, 0.095]ᵀ
+
+<span class="hi">x̂</span>₁|₁ = [0,0]ᵀ + K·(0.5−0) = [<span class="hi">0.476</span>, 0.048]ᵀ
+<span class="comment">// Estimasi posisi: 0.476m (antara prediksi 0 dan sensor 0.5)</span></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 5 -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section class="section" id="s5">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2 class="section-title">Extended Kalman Filter (EKF)</h2>
+      </div>
+
+      <p>EKF adalah ekstensi Kalman Filter untuk sistem non-linier dengan melakukan linearisasi orde pertama menggunakan Jacobian.</p>
+
+      <div class="box warn">
+        <div class="box-title">// Keterbatasan KF → Motivasi EKF</div>
+        <p>Robot nyata menggunakan model kinematika non-linier (unicycle, differential drive, arm robot). Sensor seperti LIDAR dan kamera menghasilkan data yang hubungannya non-linier dengan state. KF standar tidak bisa menangani ini.</p>
+      </div>
+
+      <h3>5.1 Linearisasi dengan Jacobian</h3>
+      <div class="math-block">
+        <div class="label">// Taylor Expansion Orde Pertama</div>
+        <div class="math"><span class="comment">// Fungsi non-linier:</span>
+<span class="hi">x</span><sub>k</sub> = <span class="teal">f</span>(<span class="hi">x</span><sub>k−1</sub>, <span class="hi">u</span><sub>k</sub>) + <span class="red">w</span><sub>k</sub>
+<span class="hi">z</span><sub>k</sub> = <span class="teal">h</span>(<span class="hi">x</span><sub>k</sub>) + <span class="red">v</span><sub>k</sub>
+
+<span class="comment">// Linearisasi sekitar estimasi saat ini x̂:</span>
+<span class="teal">f</span>(<span class="hi">x</span>) ≈ <span class="teal">f</span>(<span class="hi">x̂</span>) + <span class="teal">F</span>(<span class="hi">x</span>−<span class="hi">x̂</span>)    <span class="comment">// F adalah Jacobian df/dx</span>
+<span class="teal">h</span>(<span class="hi">x</span>) ≈ <span class="teal">h</span>(<span class="hi">x̂</span>) + <span class="teal">H</span>(<span class="hi">x</span>−<span class="hi">x̂</span>)    <span class="comment">// H adalah Jacobian dh/dx</span>
+
+<span class="comment">// Jacobian matriks (partial derivatives):</span>
+<span class="teal">F</span><sub>k</sub> = ∂<span class="teal">f</span>/∂<span class="hi">x</span> |<sub>x=x̂<sub>k−1|k−1</sub></sub>   <span class="comment">// n×n</span>
+<span class="teal">H</span><sub>k</sub> = ∂<span class="teal">h</span>/∂<span class="hi">x</span> |<sub>x=x̂<sub>k|k−1</sub></sub>    <span class="comment">// p×n</span></div>
+      </div>
+
+      <h3>5.2 Algoritma EKF</h3>
+      <div class="algo">
+        <div class="algo-head">
+          <span class="algo-tag">ALGORITMA</span>
+          <span class="algo-name">Extended Kalman Filter</span>
+        </div>
+        <div class="algo-body">
+<span class="kw">── FASE PREDICT ──────────────────────────</span>
+<span class="step-num">1</span> <span class="kw">State prediction (non-linier):</span>
+  <span class="eq">x̂<sub>k|k−1</sub> = f(x̂<sub>k−1|k−1</sub>, u<sub>k</sub>)</span>
+
+<span class="step-num">2</span> <span class="kw">Hitung Jacobian F<sub>k</sub>:</span>
+  <span class="eq">F<sub>k</sub> = ∂f/∂x |<sub>x̂<sub>k−1|k−1</sub></sub></span>
+
+<span class="step-num">3</span> <span class="kw">Covariance prediction (linearisasi):</span>
+  <span class="eq">P<sub>k|k−1</sub> = F<sub>k</sub> P<sub>k−1|k−1</sub> F<sub>k</sub>ᵀ + Q<sub>k</sub></span>
+
+<span class="kw">── FASE UPDATE ───────────────────────────</span>
+<span class="step-num">4</span> <span class="kw">Hitung Jacobian H<sub>k</sub>:</span>
+  <span class="eq">H<sub>k</sub> = ∂h/∂x |<sub>x̂<sub>k|k−1</sub></sub></span>
+
+<span class="step-num">5</span> <span class="kw">Innovation:</span>
+  <span class="eq">ỹ<sub>k</sub> = z<sub>k</sub> − h(x̂<sub>k|k−1</sub>)</span>   <span class="cmt">// gunakan h non-linier di sini</span>
+
+<span class="step-num">6</span> <span class="kw">Innovation covariance:</span>
+  <span class="eq">S<sub>k</sub> = H<sub>k</sub> P<sub>k|k−1</sub> H<sub>k</sub>ᵀ + R<sub>k</sub></span>
+
+<span class="step-num">7</span> <span class="kw">Kalman Gain:</span>
+  <span class="eq">K<sub>k</sub> = P<sub>k|k−1</sub> H<sub>k</sub>ᵀ S<sub>k</sub>⁻¹</span>
+
+<span class="step-num">8</span> <span class="kw">State update:</span>
+  <span class="eq">x̂<sub>k|k</sub> = x̂<sub>k|k−1</sub> + K<sub>k</sub> ỹ<sub>k</sub></span>
+
+<span class="step-num">9</span> <span class="kw">Covariance update:</span>
+  <span class="eq">P<sub>k|k</sub> = (I − K<sub>k</sub> H<sub>k</sub>) P<sub>k|k−1</sub></span>
+        </div>
+      </div>
+
+      <h3>5.3 Contoh: Jacobian Unicycle Model</h3>
+      <div class="math-block">
+        <div class="label">// Derivasi Jacobian untuk Unicycle Robot</div>
+        <div class="math"><span class="comment">// Model proses: f(x, u) dengan x=[x,y,θ]ᵀ, u=[v,ω]ᵀ</span>
+<span class="teal">f</span>([x,y,θ], [v,ω]) = ⎡ x + v·cos(θ)·Δt ⎤
+                      ⎢ y + v·sin(θ)·Δt ⎥
+                      ⎣ θ + ω·Δt        ⎦
+
+<span class="comment">// Jacobian F = ∂f/∂x :</span>
+<span class="teal">F</span> = ∂f/∂[x,y,θ] = ⎡ 1  0  −v·sin(θ)·Δt ⎤
+                    ⎢ 0  1   v·cos(θ)·Δt ⎥
+                    ⎣ 0  0   1            ⎦
+
+<span class="comment">// Model sensor bearing-only: h(x) = atan2(my−y, mx−x) − θ</span>
+<span class="comment">// Jacobian H = ∂h/∂x :</span>
+<span class="hi">dx</span> = mx − x,   <span class="hi">dy</span> = my − y,   q = dx² + dy²
+
+<span class="teal">H</span> = [ <span class="hi">dy</span>/q,  −<span class="hi">dx</span>/q,  −1 ]    <span class="comment">// 1×3 row vector</span></div>
+      </div>
+
+      <div class="box warn">
+        <div class="box-title">// Kelemahan EKF</div>
+        <p>EKF menggunakan linearisasi orde pertama yang bisa mengakumulasi error saat non-linearitas kuat. Divergensi filter dapat terjadi jika inisialisasi buruk atau kovarians tidak akurat. Untuk non-linearitas tinggi, gunakan <strong>UKF</strong> atau <strong>Particle Filter</strong>.</p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 6 -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section class="section" id="s6">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <h2 class="section-title">Unscented Kalman Filter (UKF)</h2>
+      </div>
+
+      <p>UKF menggunakan <strong>Unscented Transform (UT)</strong> untuk mempropagasi distribusi melalui fungsi non-linier menggunakan kumpulan titik deterministik (sigma points) tanpa menghitung Jacobian.</p>
+
+      <h3>6.1 Unscented Transform</h3>
+      <div class="math-block">
+        <div class="label">// Sigma Point Generation — UT</div>
+        <div class="math"><span class="comment">// Diberikan: distribusi x ~ N(x̂, P), dimensi n</span>
+<span class="comment">// Parameter: α, β, κ  (biasanya α=1e-3, β=2, κ=0)</span>
+<span class="hi">λ</span> = α² (n + κ) − n
+
+<span class="comment">// 2n+1 sigma points:</span>
+<span class="teal">χ</span>⁰ = <span class="hi">x̂</span>
+<span class="teal">χ</span>ⁱ = <span class="hi">x̂</span> + (√((n+<span class="hi">λ</span>)P))<sub>i</sub>     i = 1, ..., n
+<span class="teal">χ</span>ⁱ = <span class="hi">x̂</span> − (√((n+<span class="hi">λ</span>)P))<sub>i−n</sub>   i = n+1, ..., 2n
+
+<span class="comment">// (√((n+λ)P))<sub>i</sub> adalah kolom ke-i dari matrix square root</span>
+
+<span class="comment">// Bobot untuk mean dan covariance:</span>
+<span class="teal">W</span><sub>m</sub>⁰ = <span class="hi">λ</span>/(n+<span class="hi">λ</span>)
+<span class="teal">W</span><sub>c</sub>⁰ = <span class="hi">λ</span>/(n+<span class="hi">λ</span>) + (1 − α² + β)
+<span class="teal">W</span><sub>m</sub>ⁱ = <span class="teal">W</span><sub>c</sub>ⁱ = 1 / (2(n+<span class="hi">λ</span>))    i = 1, ..., 2n</div>
+      </div>
+
+      <h3>6.2 Algoritma UKF Lengkap</h3>
+      <div class="algo">
+        <div class="algo-head">
+          <span class="algo-tag">ALGORITMA</span>
+          <span class="algo-name">Unscented Kalman Filter</span>
+        </div>
+        <div class="algo-body">
+<span class="kw">── FASE PREDICT ──────────────────────────</span>
+<span class="step-num">1</span> <span class="kw">Generate sigma points:</span>
+  <span class="eq">χ<sub>k−1</sub> = SigmaPoints(x̂<sub>k−1|k−1</sub>, P<sub>k−1|k−1</sub>)</span>
+
+<span class="step-num">2</span> <span class="kw">Propagasi sigma points (non-linier):</span>
+  <span class="eq">χ*<sub>k|k−1</sub>ⁱ = f(χ<sub>k−1</sub>ⁱ, u<sub>k</sub>)</span>   <span class="cmt">untuk i = 0,...,2n</span>
+
+<span class="step-num">3</span> <span class="kw">Predicted mean:</span>
+  <span class="eq">x̂<sub>k|k−1</sub> = Σ W<sub>m</sub>ⁱ · χ*<sub>k|k−1</sub>ⁱ</span>
+
+<span class="step-num">4</span> <span class="kw">Predicted covariance:</span>
+  <span class="eq">P<sub>k|k−1</sub> = Σ W<sub>c</sub>ⁱ (χ*ⁱ−x̂)(χ*ⁱ−x̂)ᵀ + Q<sub>k</sub></span>
+
+<span class="kw">── FASE UPDATE ───────────────────────────</span>
+<span class="step-num">5</span> <span class="kw">Propagasi sigma points ke observation space:</span>
+  <span class="eq">γ<sub>k</sub>ⁱ = h(χ*<sub>k|k−1</sub>ⁱ)</span>
+
+<span class="step-num">6</span> <span class="kw">Predicted measurement mean:</span>
+  <span class="eq">ẑ<sub>k</sub> = Σ W<sub>m</sub>ⁱ · γ<sub>k</sub>ⁱ</span>
+
+<span class="step-num">7</span> <span class="kw">Innovation covariance S &amp; cross-covariance C:</span>
+  <span class="eq">S<sub>k</sub> = Σ W<sub>c</sub>ⁱ (γⁱ−ẑ)(γⁱ−ẑ)ᵀ + R<sub>k</sub></span>
+  <span class="eq">C<sub>k</sub> = Σ W<sub>c</sub>ⁱ (χ*ⁱ−x̂<sub>k|k−1</sub>)(γⁱ−ẑ)ᵀ</span>
+
+<span class="step-num">8</span> <span class="kw">Kalman Gain:</span>
+  <span class="eq">K<sub>k</sub> = C<sub>k</sub> S<sub>k</sub>⁻¹</span>
+
+<span class="step-num">9</span> <span class="kw">State &amp; Covariance update:</span>
+  <span class="eq">x̂<sub>k|k</sub> = x̂<sub>k|k−1</sub> + K<sub>k</sub> (z<sub>k</sub> − ẑ<sub>k</sub>)</span>
+  <span class="eq">P<sub>k|k</sub> = P<sub>k|k−1</sub> − K<sub>k</sub> S<sub>k</sub> K<sub>k</sub>ᵀ</span>
+        </div>
+      </div>
+
+      <h3>6.3 Perbandingan KF vs EKF vs UKF</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Aspek</th><th>KF</th><th>EKF</th><th>UKF</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Model Sistem</td>
+              <td>Linier</td>
+              <td>Non-linier</td>
+              <td>Non-linier</td>
+            </tr>
+            <tr>
+              <td>Pendekatan</td>
+              <td>Eksak</td>
+              <td>Linearisasi Jacobian</td>
+              <td>Sigma Points (UT)</td>
+            </tr>
+            <tr>
+              <td>Butuh Jacobian</td>
+              <td>Tidak</td>
+              <td><span style="color:var(--red)">Ya</span></td>
+              <td>Tidak</td>
+            </tr>
+            <tr>
+              <td>Akurasi</td>
+              <td>Optimal (linier)</td>
+              <td>Orde 1</td>
+              <td>Orde 3 (lebih baik)</td>
+            </tr>
+            <tr>
+              <td>Komputasi</td>
+              <td>O(n²)</td>
+              <td>O(n²) + Jacobian</td>
+              <td>O(n²) sigma points</td>
+            </tr>
+            <tr>
+              <td>Mudah Implementasi</td>
+              <td>Tinggi</td>
+              <td>Sedang (perlu derivatif)</td>
+              <td>Tinggi (no derivatif)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 7 -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section class="section" id="s7">
+      <div class="section-header">
+        <span class="section-num">07</span>
+        <h2 class="section-title">Particle Filter (Sequential Monte Carlo)</h2>
+      </div>
+
+      <p>Particle Filter merepresentasikan distribusi posterior sebagai kumpulan sampel berbobot (partikel). Dapat menangani distribusi <em>multi-modal</em> dan model non-Gaussian secara penuh.</p>
+
+      <h3>7.1 Konsep Dasar</h3>
+      <div class="math-block">
+        <div class="label">// Representasi Particle</div>
+        <div class="math"><span class="comment">// Posterior diaproksimasikan oleh N partikel:</span>
+<span class="teal">p</span>(<span class="hi">x</span><sub>k</sub> | <span class="hi">z</span><sub>1:k</sub>) ≈ Σ<sub>i=1..N</sub> <span class="teal">w</span><sub>k</sub>ⁱ · δ(<span class="hi">x</span> − <span class="hi">x</span><sub>k</sub>ⁱ)
+
+<span class="comment">// Set partikel:</span>
+{<span class="hi">x</span><sub>k</sub>ⁱ, <span class="teal">w</span><sub>k</sub>ⁱ}<sub>i=1..N</sub>
+
+<span class="hi">x</span><sub>k</sub>ⁱ  → sampel state partikel ke-i
+<span class="teal">w</span><sub>k</sub>ⁱ  → bobot partikel ke-i
+
+<span class="comment">// Normalisasi: Σ w<sub>k</sub>ⁱ = 1</span>
+
+<span class="comment">// Estimasi mean:</span>
+<span class="hi">x̂</span><sub>k</sub> = Σ<sub>i</sub> <span class="teal">w</span><sub>k</sub>ⁱ <span class="hi">x</span><sub>k</sub>ⁱ</div>
+      </div>
+
+      <h3>7.2 Sequential Importance Sampling (SIS)</h3>
+      <div class="math-block">
+        <div class="label">// Importance Sampling Weights Update</div>
+        <div class="math"><span class="comment">// Proposal distribution: q(x<sub>k</sub>|x<sub>k−1</sub>, z<sub>k</sub>)</span>
+<span class="comment">// Bobot diperbarui secara sekuensial:</span>
+
+<span class="teal">w</span><sub>k</sub>ⁱ ∝ <span class="teal">w</span><sub>k−1</sub>ⁱ · <span class="teal">p</span>(<span class="hi">z</span><sub>k</sub>|<span class="hi">x</span><sub>k</sub>ⁱ) · <span class="teal">p</span>(<span class="hi">x</span><sub>k</sub>ⁱ|<span class="hi">x</span><sub>k−1</sub>ⁱ)
+                    ──────────────────────────────────
+                    q(<span class="hi">x</span><sub>k</sub>ⁱ | <span class="hi">x</span><sub>k−1</sub>ⁱ, <span class="hi">z</span><sub>k</sub>)
+
+<span class="comment">// Pilihan umum: q = prior transition  →  proposal = p(x<sub>k</sub>|x<sub>k−1</sub>)</span>
+<span class="comment">// Sederhananya: w<sub>k</sub>ⁱ ∝ w<sub>k−1</sub>ⁱ · p(z<sub>k</sub>|x<sub>k</sub>ⁱ)</span></div>
+      </div>
+
+      <h3>7.3 Algoritma SIR Particle Filter</h3>
+      <div class="algo">
+        <div class="algo-head">
+          <span class="algo-tag">ALGORITMA</span>
+          <span class="algo-name">SIR Particle Filter (Bootstrap)</span>
+        </div>
+        <div class="algo-body">
+<span class="kw">INISIALISASI (k=0):</span>
+  <span class="eq">Sampel x₀ⁱ ~ p(x₀)</span>,  set <span class="eq">w₀ⁱ = 1/N</span>   ∀i
+
+<span class="kw">FOR k = 1, 2, ... DO:</span>
+
+  <span class="step-num">1</span> <span class="kw">PREDICT</span> — Sampel dari prior:
+    <span class="eq">x̃<sub>k</sub>ⁱ ~ p(x<sub>k</sub> | x<sub>k−1</sub>ⁱ, u<sub>k</sub>)</span>   <span class="cmt">i=1..N</span>
+    <span class="cmt">// tambahkan process noise: x̃ = f(x<sub>prev</sub>, u) + sample(Q)</span>
+
+  <span class="step-num">2</span> <span class="kw">WEIGHT</span> — Update bobot dengan likelihood:
+    <span class="eq">w̃<sub>k</sub>ⁱ = w<sub>k−1</sub>ⁱ · p(z<sub>k</sub> | x̃<sub>k</sub>ⁱ)</span>
+    <span class="cmt">// likelihood sensor: e.g. Gaussian p(z|x) = N(z; h(x), R)</span>
+
+  <span class="step-num">3</span> <span class="kw">NORMALIZE:</span>
+    <span class="eq">w<sub>k</sub>ⁱ = w̃<sub>k</sub>ⁱ / Σ<sub>j</sub> w̃<sub>k</sub>ʲ</span>
+
+  <span class="step-num">4</span> <span class="kw">ESTIMATE:</span>
+    <span class="eq">x̂<sub>k</sub> = Σ<sub>i</sub> w<sub>k</sub>ⁱ · x̃<sub>k</sub>ⁱ</span>
+
+  <span class="step-num">5</span> <span class="kw">RESAMPLE</span> — jika N<sub>eff</sub> &lt; threshold:
+    <span class="eq">N<sub>eff</sub> = 1 / Σ<sub>i</sub> (w<sub>k</sub>ⁱ)²</span>
+    <span class="cmt">// Low N<sub>eff</sub> = degeneracy (partikel terpusat di 1 titik)</span>
+    <span class="cmt">// Resample N partikel dari {x̃ⁱ, wⁱ} → {xⁱ, 1/N}</span>
+    <span class="cmt">// Gunakan systematic resampling (paling efisien)</span>
+
+<span class="kw">END FOR</span>
+        </div>
+      </div>
+
+      <h3>7.4 Systematic Resampling</h3>
+      <div class="math-block">
+        <div class="label">// Systematic Resampling Algorithm</div>
+        <div class="math"><span class="comment">// Buat N partikel baru dari distribusi {xⁱ, wⁱ}:</span>
+
+<span class="teal">U</span> ~ Uniform(0, 1/N)           <span class="comment">// satu sampel acak</span>
+
+c[0] = w¹, c[i] = c[i−1] + w<sup>i+1</sup>   <span class="comment">// CDF kumulatif</span>
+
+j = 1
+<span class="teal">FOR</span> i = 1 <span class="teal">TO</span> N:
+  <span class="hi">u</span> = U + (i−1)/N
+  <span class="teal">WHILE</span> c[j] &lt; <span class="hi">u</span>: j++
+  <span class="hi">x</span><sub>new</sub>ⁱ = <span class="hi">x</span><sub>old</sub>ʲ
+
+<span class="comment">// O(N) waktu — lebih baik dari multinomial O(N log N)</span></div>
+      </div>
+
+      <div class="box info">
+        <div class="box-title">// Trade-off: Jumlah Partikel N</div>
+        <p>Makin banyak partikel → akurasi lebih tinggi → komputasi lebih berat. Untuk robot 2D (x,y,θ): N=500–2000 cukup. Untuk high-dimensional state atau multi-modal, N bisa mencapai 10.000+. Adaptive particle filter dapat menyesuaikan N secara dinamis.</p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 8 -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section class="section" id="s8">
+      <div class="section-header">
+        <span class="section-num">08</span>
+        <h2 class="section-title">Sensor Fusion</h2>
+      </div>
+
+      <p>Sensor Fusion menggabungkan data dari beberapa sensor untuk menghasilkan estimasi state yang lebih akurat daripada menggunakan satu sensor saja.</p>
+
+      <h3>8.1 Prinsip Dasar</h3>
+      <div class="math-block">
+        <div class="label">// Optimal Fusion: 2 Sensor (1D)</div>
+        <div class="math"><span class="comment">// Dua pengukuran independen dari state yang sama:</span>
+<span class="hi">z</span>₁ ~ N(<span class="hi">x</span>, σ₁²)    <span class="comment">// sensor 1</span>
+<span class="hi">z</span>₂ ~ N(<span class="hi">x</span>, σ₂²)    <span class="comment">// sensor 2</span>
+
+<span class="comment">// Fusi optimal (MMSE):</span>
+<span class="hi">x̂</span>  = (σ₂² · <span class="hi">z</span>₁ + σ₁² · <span class="hi">z</span>₂) / (σ₁² + σ₂²)
+σ²  = (σ₁² · σ₂²) / (σ₁² + σ₂²)    <span class="comment">// kovarians fusi</span>
+
+<span class="comment">// Atau dalam bentuk bobot:</span>
+<span class="hi">x̂</span>  = w₁·<span class="hi">z</span>₁ + w₂·<span class="hi">z</span>₂
+w₁  = σ₂²/(σ₁²+σ₂²),   w₂ = σ₁²/(σ₁²+σ₂²)
+<span class="comment">// Sensor yang lebih akurat (σ kecil) mendapat bobot lebih besar</span></div>
+      </div>
+
+      <h3>8.2 Fusi IMU + GPS menggunakan EKF</h3>
+      <div class="math-block">
+        <div class="label">// IMU + GPS Fusion — State Space</div>
+        <div class="math"><span class="comment">// State: posisi, kecepatan, orientasi, IMU bias</span>
+<span class="hi">x</span> = [p, v, q, b<sub>a</sub>, b<sub>g</sub>]ᵀ ∈ ℝ¹⁶
+<span class="comment">// p ∈ ℝ³: posisi, v ∈ ℝ³: kecepatan, q ∈ ℝ⁴: quaternion</span>
+<span class="comment">// b<sub>a</sub> ∈ ℝ³: acc bias, b<sub>g</sub> ∈ ℝ³: gyro bias</span>
+
+<span class="comment">// Predict menggunakan IMU pre-integration:</span>
+<span class="hi">p</span><sub>k</sub> = <span class="hi">p</span><sub>k−1</sub> + <span class="hi">v</span><sub>k−1</sub>Δt + ½(<span class="teal">R</span>(<span class="hi">ã</span>−<span class="hi">b</span><sub>a</sub>) − <span class="hi">g</span>)Δt²
+<span class="hi">v</span><sub>k</sub> = <span class="hi">v</span><sub>k−1</sub> + (<span class="teal">R</span>(<span class="hi">ã</span>−<span class="hi">b</span><sub>a</sub>) − <span class="hi">g</span>)Δt
+<span class="hi">q</span><sub>k</sub> = <span class="hi">q</span><sub>k−1</sub> ⊗ <span class="teal">Exp</span>((<span class="hi">ω̃</span>−<span class="hi">b</span><sub>g</sub>)Δt)    <span class="comment">// quaternion multiplication</span>
+
+<span class="comment">// Update menggunakan GPS (z_GPS = [lat,lon,alt] → xyz):</span>
+<span class="hi">z</span><sub>GPS</sub> = <span class="hi">p</span> + <span class="red">v</span><sub>GPS</sub>    →    H<sub>GPS</sub> = [I₃, 0, 0, 0, 0]</div>
+      </div>
+
+      <h3>8.3 Complementary Filter (IMU + Magnetometer)</h3>
+      <div class="math-block">
+        <div class="label">// Complementary Filter — Estimasi Orientasi</div>
+        <div class="math"><span class="comment">// Prinsip: IMU bagus short-term (drift), Mag bagus long-term</span>
+<span class="comment">// Complementary filter gabungkan keduanya di frekuensi berbeda:</span>
+
+<span class="hi">θ̂</span><sub>k</sub> = α · (<span class="hi">θ̂</span><sub>k−1</sub> + <span class="hi">ω</span><sub>gyro</sub>·Δt) + (1−α) · <span class="hi">θ</span><sub>acc/mag</sub>
+
+<span class="comment">// α ≈ 0.98 (lebih percaya gyro, filter high-pass)</span>
+<span class="comment">// θ<sub>acc/mag</sub>: estimasi statis dari accelerometer + magnetometer</span>
+<span class="comment">// (1−α) = 0.02: filter low-pass untuk drift correction</span>
+
+<span class="comment">// Transfer function:</span>
+<span class="teal">H</span><sub>gyro</sub>(s) = αs/(αs+1)      <span class="comment">// high-pass filter</span>
+<span class="teal">H</span><sub>acc</sub>(s)  = (1−α)/(αs+1)   <span class="comment">// low-pass filter</span>
+<span class="comment">// Sum = 1  (complementary!)</span></div>
+      </div>
+
+      <h3>8.4 Diagram Arsitektur Sensor Fusion</h3>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" style="font-family: 'IBM Plex Mono', monospace;">
+          <!-- Background -->
+          <rect width="700" height="260" fill="#0d1219" rx="6"/>
+          <!-- Sensors -->
+          <rect x="20" y="30" width="110" height="38" rx="4" fill="#131c26" stroke="#1e2d3d"/>
+          <text x="75" y="54" fill="#00e5ff" font-size="12" text-anchor="middle">GPS</text>
+          <rect x="20" y="88" width="110" height="38" rx="4" fill="#131c26" stroke="#1e2d3d"/>
+          <text x="75" y="112" fill="#00e5ff" font-size="12" text-anchor="middle">IMU</text>
+          <rect x="20" y="146" width="110" height="38" rx="4" fill="#131c26" stroke="#1e2d3d"/>
+          <text x="75" y="170" fill="#00e5ff" font-size="12" text-anchor="middle">LIDAR</text>
+          <rect x="20" y="204" width="110" height="38" rx="4" fill="#131c26" stroke="#1e2d3d"/>
+          <text x="75" y="228" fill="#00e5ff" font-size="12" text-anchor="middle">Camera</text>
+          <!-- Arrows to preprocessor -->
+          <line x1="130" y1="49" x2="195" y2="90" stroke="#1e2d3d" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="130" y1="107" x2="195" y2="107" stroke="#1e2d3d" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="130" y1="165" x2="195" y2="125" stroke="#1e2d3d" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="130" y1="223" x2="195" y2="140" stroke="#1e2d3d" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Preprocessor -->
+          <rect x="195" y="65" width="120" height="95" rx="4" fill="#131c26" stroke="#253545"/>
+          <text x="255" y="108" fill="#00c8a0" font-size="11" text-anchor="middle">Pre-</text>
+          <text x="255" y="123" fill="#00c8a0" font-size="11" text-anchor="middle">processor</text>
+          <text x="255" y="138" fill="#4a6070" font-size="9" text-anchor="middle">noise model</text>
+          <!-- Arrow to fusion -->
+          <line x1="315" y1="112" x2="375" y2="112" stroke="#253545" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Fusion block (EKF/UKF) -->
+          <rect x="375" y="55" width="140" height="115" rx="4" fill="#0f1c28" stroke="#00e5ff" stroke-width="1.5"/>
+          <text x="445" y="85" fill="#00e5ff" font-size="13" font-weight="600" text-anchor="middle">EKF / UKF</text>
+          <text x="445" y="103" fill="#4a6070" font-size="9" text-anchor="middle">Predict → Update</text>
+          <text x="445" y="120" fill="#f0c040" font-size="9" text-anchor="middle">x̂<tspan dy="4" font-size="7">k|k</tspan><tspan dy="-4">, P</tspan><tspan dy="4" font-size="7">k|k</tspan></text>
+          <text x="445" y="142" fill="#4a6070" font-size="9" text-anchor="middle">Kalman Gain K</text>
+          <!-- Arrow to output -->
+          <line x1="515" y1="112" x2="575" y2="112" stroke="#253545" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Output -->
+          <rect x="575" y="75" width="100" height="75" rx="4" fill="#131c26" stroke="#1e2d3d"/>
+          <text x="625" y="105" fill="#00c8a0" font-size="11" text-anchor="middle">State</text>
+          <text x="625" y="120" fill="#00c8a0" font-size="11" text-anchor="middle">Estimate</text>
+          <text x="625" y="138" fill="#f0c040" font-size="9" text-anchor="middle">[p, v, θ]</text>
+          <!-- Arrowhead def -->
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#253545"/>
+            </marker>
+          </defs>
+          <!-- Labels -->
+          <text x="20" y="20" fill="#4a6070" font-size="9">SENSORS</text>
+          <text x="210" y="56" fill="#4a6070" font-size="9">SYNC+CALIB</text>
+          <text x="380" y="46" fill="#4a6070" font-size="9">FUSION CORE</text>
+          <text x="578" y="66" fill="#4a6070" font-size="9">OUTPUT</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SECTION 9 -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section class="section" id="s9">
+      <div class="section-header">
+        <span class="section-num">09</span>
+        <h2 class="section-title">Odometri &amp; Pengantar SLAM</h2>
+      </div>
+
+      <h3>9.1 Odometri Differential Drive</h3>
+      <p>Odometri mengintegrasi data encoder roda untuk mengestimasi pose robot. Akumulasi error tanpa koreksi eksternal — ini masalah utama yang diselesaikan SLAM.</p>
+
+      <div class="math-block">
+        <div class="label">// Kinematik Differential Drive</div>
+        <div class="math"><span class="comment">// Encoder kiri dan kanan memberikan jarak roda:</span>
+Δs_L = (2π r / N<sub>ticks</sub>) · n_L
+Δs_R = (2π r / N<sub>ticks</sub>) · n_R
+
+<span class="comment">// Jarak dan rotasi rata-rata:</span>
+Δs   = (Δs_R + Δs_L) / 2         <span class="comment">// jarak maju rata-rata</span>
+Δθ   = (Δs_R − Δs_L) / L         <span class="comment">// L = jarak antar roda (wheelbase)</span>
+
+<span class="comment">// Update pose:</span>
+<span class="hi">x</span>' = <span class="hi">x</span> + Δs · cos(θ + Δθ/2)
+<span class="hi">y</span>' = <span class="hi">y</span> + Δs · sin(θ + Δθ/2)
+<span class="hi">θ</span>' = <span class="hi">θ</span> + Δθ
+
+<span class="comment">// Kovarians propagasi (linearisasi):</span>
+<span class="teal">P</span>' = <span class="teal">J</span><sub>pose</sub> · <span class="teal">P</span> · <span class="teal">J</span><sub>pose</sub>ᵀ + <span class="teal">J</span><sub>enc</sub> · <span class="teal">Q</span><sub>enc</sub> · <span class="teal">J</span><sub>enc</sub>ᵀ
+
+<span class="comment">// Q<sub>enc</sub> = diag(k_r|Δs_R|, k_l|Δs_L|)  (linear dalam jarak)</span></div>
+      </div>
+
+      <h3>9.2 Error Odometri dan Akumulasi</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Sumber Error</th><th>Model Matematis</th><th>Efek</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Slip roda</td>
+              <td class="td-mono">σ²_slip ∝ |Δs|</td>
+              <td>Error posisi terakumulasi √t</td>
+            </tr>
+            <tr>
+              <td>Ketidakseimbangan diameter roda</td>
+              <td class="td-mono">δr = r_R − r_L ≠ 0</td>
+              <td>Robot tidak jalan lurus, heading drift linier</td>
+            </tr>
+            <tr>
+              <td>Resolusi encoder</td>
+              <td class="td-mono">σ_enc = 2πr/(2N)</td>
+              <td>Kuantisasi error per step</td>
+            </tr>
+            <tr>
+              <td>Error heading</td>
+              <td class="td-mono">σ²_xy ≈ (d·σ_θ)²</td>
+              <td>Tumbuh kuadratik terhadap jarak d</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>9.3 EKF-SLAM: Konsep Matematika</h3>
+      <div class="math-block">
+        <div class="label">// SLAM State Vector</div>
+        <div class="math"><span class="comment">// State gabungan: pose robot + peta landmark</span>
+<span class="hi">X</span> = [<span class="hi">x</span><sub>r</sub>, <span class="hi">m</span>₁, <span class="hi">m</span>₂, ..., <span class="hi">m</span><sub>N</sub>]ᵀ ∈ ℝ³⁺²ᴺ
+
+<span class="hi">x</span><sub>r</sub> = [x, y, θ]ᵀ         <span class="comment">// pose robot</span>
+<span class="hi">m</span><sub>i</sub> = [m_xi, m_yi]ᵀ      <span class="comment">// posisi landmark ke-i</span>
+
+<span class="comment">// Kovarians gabungan: (3+2N) × (3+2N)</span>
+<span class="teal">P</span> = ⎡ P<sub>rr</sub>  P<sub>rm</sub> ⎤
+    ⎣ P<sub>mr</sub>  P<sub>mm</sub> ⎦
+
+P<sub>rr</sub>: kovarians pose robot
+P<sub>mm</sub>: kovarians landmark
+P<sub>rm</sub>: cross-korelasi (penting!) robot-landmark
+
+<span class="comment">// Seiring waktu, landmark dan pose menjadi sangat berkorelasi</span>
+<span class="comment">// Ini yang membuat loop-closure bekerja dalam SLAM</span></div>
+      </div>
+
+      <div class="algo">
+        <div class="algo-head">
+          <span class="algo-tag">ALGORITMA</span>
+          <span class="algo-name">EKF-SLAM Satu Iterasi</span>
+        </div>
+        <div class="algo-body">
+<span class="step-num">1</span> <span class="kw">PREDICT</span> — hanya robot bergerak, landmark tetap:
+  <span class="eq">x̂'<sub>r</sub> = f(x̂<sub>r</sub>, u<sub>k</sub>)</span>
+  <span class="eq">P' = F P Fᵀ + Q</span>
+  <span class="cmt">// F = blok-diag([F<sub>r</sub>, I<sub>2N</sub>]) — landmark tidak berubah</span>
+
+<span class="step-num">2</span> <span class="kw">DATA ASSOCIATION</span> — cocokkan pengamatan ke landmark:
+  <span class="eq">d²<sub>ij</sub> = (z<sub>i</sub> − ẑ<sub>j</sub>)ᵀ S⁻¹ (z<sub>i</sub> − ẑ<sub>j</sub>)</span>   <span class="cmt">Mahalanobis distance</span>
+  <span class="cmt">// nearest-neighbour atau Hungarian algorithm</span>
+
+<span class="step-num">3</span> <span class="kw">UPDATE</span> untuk setiap landmark yang terdeteksi:
+  <span class="eq">H = ∂h/∂X |<sub>X̂</sub></span>
+  <span class="eq">K = P Hᵀ (H P Hᵀ + R)⁻¹</span>
+  <span class="eq">X̂ += K (z − h(X̂))</span>
+  <span class="eq">P  = (I − KH) P</span>
+
+<span class="step-num">4</span> <span class="kw">ADD NEW LANDMARKS</span> (landmark baru terdeteksi):
+  <span class="cmt">// Augmentasi state vector: tambah [m_x, m_y]</span>
+  <span class="cmt">// Inisialisasi kovarians via Jacobian inverse observation</span>
+        </div>
+      </div>
+
+      <h3>9.4 Perbandingan Algoritma SLAM</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Algoritma</th><th>Representasi</th><th>Kompleksitas</th><th>Keunggulan</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>EKF-SLAM</td>
+              <td>Gaussian</td>
+              <td class="td-mono">O(N²) per step</td>
+              <td>Optimal untuk linearisasi, kovarians penuh</td>
+            </tr>
+            <tr>
+              <td>FastSLAM</td>
+              <td>Partikel + EKF per-landmark</td>
+              <td class="td-mono">O(N log M)</td>
+              <td>Skalabel, multi-hypothesis</td>
+            </tr>
+            <tr>
+              <td>Graph-SLAM / iSAM</td>
+              <td>Factor graph</td>
+              <td class="td-mono">O(N log N)</td>
+              <td>Loop closure yang kuat, batch optimization</td>
+            </tr>
+            <tr>
+              <td>ORB-SLAM3</td>
+              <td>Feature-based visual</td>
+              <td class="td-mono">Bergantung fitur</td>
+              <td>Real-time, stereo+IMU, multi-session</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- REFERENCE TABLE -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section class="section" id="sref">
+      <div class="section-header">
+        <span class="section-num">REF</span>
+        <h2 class="section-title">Notasi dan Simbol Referensi</h2>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Simbol</th><th>Nama</th><th>Dimensi</th><th>Keterangan</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-mono">x<sub>k</sub></td><td>State vector</td><td class="td-mono">n×1</td><td>State sistem pada waktu k</td></tr>
+            <tr><td class="td-mono">u<sub>k</sub></td><td>Control input</td><td class="td-mono">m×1</td><td>Sinyal kontrol atau aktuasi</td></tr>
+            <tr><td class="td-mono">z<sub>k</sub></td><td>Measurement vector</td><td class="td-mono">p×1</td><td>Keluaran sensor pada waktu k</td></tr>
+            <tr><td class="td-mono">F</td><td>State transition matrix</td><td class="td-mono">n×n</td><td>Linearisasi fungsi f</td></tr>
+            <tr><td class="td-mono">H</td><td>Observation matrix</td><td class="td-mono">p×n</td><td>Linearisasi fungsi h</td></tr>
+            <tr><td class="td-mono">Q</td><td>Process noise cov.</td><td class="td-mono">n×n</td><td>Simetrik PSD</td></tr>
+            <tr><td class="td-mono">R</td><td>Measurement noise cov.</td><td class="td-mono">p×p</td><td>Simetrik PD</td></tr>
+            <tr><td class="td-mono">P</td><td>Error covariance</td><td class="td-mono">n×n</td><td>Ketidakpastian estimasi</td></tr>
+            <tr><td class="td-mono">K</td><td>Kalman Gain</td><td class="td-mono">n×p</td><td>Bobot optimal antara prediksi dan sensor</td></tr>
+            <tr><td class="td-mono">S</td><td>Innovation covariance</td><td class="td-mono">p×p</td><td>S = HPHᵀ + R</td></tr>
+            <tr><td class="td-mono">ỹ</td><td>Innovation / residual</td><td class="td-mono">p×1</td><td>Perbedaan pengukuran dengan prediksi</td></tr>
+            <tr><td class="td-mono">x̂<sub>k|k</sub></td><td>Posterior estimate</td><td class="td-mono">n×1</td><td>Setelah update pengukuran k</td></tr>
+            <tr><td class="td-mono">x̂<sub>k|k−1</sub></td><td>Prior estimate</td><td class="td-mono">n×1</td><td>Setelah predict, sebelum update</td></tr>
+            <tr><td class="td-mono">χ</td><td>Sigma points (UKF)</td><td class="td-mono">n×(2n+1)</td><td>Titik deterministik UT</td></tr>
+            <tr><td class="td-mono">W<sub>m</sub>, W<sub>c</sub></td><td>UT weights</td><td class="td-mono">2n+1</td><td>Bobot mean dan kovarians</td></tr>
+            <tr><td class="td-mono">{xⁱ, wⁱ}</td><td>Particle set</td><td>N sampel</td><td>Partikel dan bobotnya (PF)</td></tr>
+            <tr><td class="td-mono">N<sub>eff</sub></td><td>Effective sample size</td><td>skalar</td><td>1/Σ(wⁱ)², trigger resample</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Referensi Utama</h3>
+      <ul class="bullets">
+        <li>Thrun, Burgard, Fox — <em>Probabilistic Robotics</em> (2005, MIT Press) — Referensi utama SLAM dan Bayes filter</li>
+        <li>Kalman, R.E. — <em>A New Approach to Linear Filtering and Prediction Problems</em> (1960, ASME Trans.)</li>
+        <li>Wan &amp; van der Merwe — <em>The Unscented Kalman Filter</em>, Kalman Filtering and Neural Networks (2001)</li>
+        <li>Doucet, de Freitas, Gordon — <em>Sequential Monte Carlo Methods in Practice</em> (2001, Springer)</li>
+        <li>Bar-Shalom, Li, Kirubarajan — <em>Estimation with Applications to Tracking and Navigation</em> (2001, Wiley)</li>
+        <li>Barfoot — <em>State Estimation for Robotics</em> (2017, Cambridge University Press)</li>
+      </ul>
+    </section>
+
+  </main>
+</div>
+
+<!-- FOOTER / FINGERPRINT -->
+<footer>
+  <div class="fp-inner">
+    <div class="fp-badge">
+      <div class="fp-hex">🐉</div>
+      <div class="fp-info">
+        <div class="fp-name">Blue Dragon Security</div>
+        <div class="fp-url">bluedragonsec.com · @bluedragonsec</div>
+        <div style="margin-top:6px;font-family:var(--mono);font-size:11px;color:var(--text3);">
+          Dokumen Riset &amp; Kurikulum — Security Researcher Master Class
+        </div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px;">
+          Tangerang, Indonesia · 2026
+        </div>
+      </div>
+    </div>
+    <div class="fp-hash">
+      <div>DOC-ID: <span class="val">BDS-ROBO-EST-2026-001</span></div>
+      <div>MODULE: <span class="val">Matematika Estimasi Robotika</span></div>
+      <div>VERSION: <span class="val">1.0.0</span></div>
+      <div>AUTHOR: <span class="val">antonius@bluedragonsec.com</span></div>
+      <div>LICENSE: <span class="val">BDS Internal Research Use</span></div>
+      <div style="margin-top:8px;color:var(--border2);">
+        SHA256: 8f3a2c1e9b7d4f6a0e5c2b8d1f9a3e6b<br>
+        FINGERPRINT: BD:2026:ROBO:EST:001:F3A2
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('.section[id]');
+  const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

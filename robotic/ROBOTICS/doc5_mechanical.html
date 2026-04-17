@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mechanical Engineering Robot — Robotika</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>:root{--ac:192,96,224}:root{--bg:#0b0d0f;--bg2:#111417;--bg3:#181c21;--border:#2a3240;--border2:#3a4558;--text:#c8d4e0;--text2:#8a9ab0;--text3:#5a6a80;--mono:'IBM Plex Mono',monospace;--body:'IBM Plex Sans',sans-serif;--disp:'Bebas Neue',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.7;display:flex;min-height:100vh}
+#sidebar{width:280px;min-width:280px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;scrollbar-width:thin;transition:transform .3s ease}
+.sh{padding:22px 18px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:10}
+.sl{font-family:var(--disp);font-size:20px;letter-spacing:2px;line-height:1;margin-bottom:3px}
+.ss{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-family:var(--mono)}
+.nsec{padding:5px 18px 3px;font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--text3);margin-top:8px}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 18px;color:var(--text2);text-decoration:none;font-size:13px;transition:all .15s;border-left:2px solid transparent;line-height:1.3}
+.ni.active,.ni:hover{color:rgb(var(--ac));background:rgba(var(--ac),.07);border-left-color:rgb(var(--ac))}
+.nd{width:5px;height:5px;border-radius:50%;background:var(--border2);flex-shrink:0}
+.ni.active .nd,.ni:hover .nd{background:rgb(var(--ac))}
+#main{margin-left:280px;flex:1;min-width:0}
+#topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 36px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:90}
+.tbt{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:1px}
+#mbtn{display:none;background:none;border:1px solid var(--border2);color:var(--text);padding:5px 10px;border-radius:4px;cursor:pointer;font-size:15px}
+.content{max-width:920px;margin:0 auto;padding:44px 36px 80px}
+.hero{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:44px;margin-bottom:52px;position:relative;overflow:hidden}
+.hero::before{position:absolute;right:-10px;top:-10px;font-family:var(--disp);font-size:140px;color:rgba(var(--ac),.03);line-height:1;pointer-events:none;letter-spacing:4px}
+.hl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:3px;color:rgb(var(--ac));margin-bottom:14px}
+h1{font-family:var(--disp);font-size:48px;letter-spacing:3px;color:#fff;line-height:1.05;margin-bottom:14px}
+.hdesc{color:var(--text2);font-size:14.5px;max-width:620px;line-height:1.7}
+.htags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tag{padding:3px 10px;border:1px solid var(--border2);border-radius:3px;font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
+.ta{border-color:rgb(var(--ac));color:rgb(var(--ac))}.tb{border-color:#60c0e8;color:#60c0e8}.to{border-color:#e8a030;color:#e8a030}.tp2{border-color:#c060e0;color:#c060e0}.tr{border-color:#e06060;color:#e06060}
+.sec{margin-bottom:68px;scroll-margin-top:76px}
+.sech{display:flex;align-items:flex-start;gap:14px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.sn{font-family:var(--disp);font-size:44px;line-height:1;color:rgba(var(--ac),.15);flex-shrink:0;min-width:56px}
+.sc{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;color:rgb(var(--ac));margin-bottom:5px}
+h2{font-family:var(--disp);font-size:32px;letter-spacing:2px;color:#fff;line-height:1.1}
+h3{font-size:17px;font-weight:600;color:rgb(var(--ac));margin-top:32px;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+h3::before{content:'';width:3px;height:16px;background:rgb(var(--ac));border-radius:2px;flex-shrink:0}
+h4{font-size:14.5px;font-weight:600;color:#60c0e8;margin-top:22px;margin-bottom:9px}
+p{margin-bottom:13px;color:var(--text);font-size:14px}
+pre{background:var(--bg2);border:1px solid var(--border);border-left:3px solid rgb(var(--ac));border-radius:6px;padding:18px 22px;overflow-x:auto;margin:18px 0;font-family:var(--mono);font-size:12px;line-height:1.65;scrollbar-width:thin}
+pre::-webkit-scrollbar{height:4px}pre::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+code{font-family:var(--mono);font-size:12px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:rgb(var(--ac))}
+pre code{background:none;border:none;padding:0;color:var(--text)}
+.kw{color:#c060e0;font-weight:500}.fn{color:#60c0e8}.st{color:#80e060}.cm{color:#5a6a80;font-style:italic}.nm{color:#e8a030}.tp3{color:#f0c060}
+.math{background:var(--bg3);border:1px solid var(--border);border-left:3px solid #60c0e8;border-radius:6px;padding:18px 22px;margin:18px 0;font-family:var(--mono);font-size:13px;color:#c8ffd0;line-height:2;overflow-x:auto}
+.ib{border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin:18px 0;font-size:13.5px}
+.ib.note{border-left:3px solid #60c0e8;background:rgba(96,192,232,.05)}.ib.warn{border-left:3px solid #e8a030;background:rgba(232,160,48,.05)}.ib.tip{border-left:3px solid rgb(var(--ac));background:rgba(var(--ac),.05)}.ib.danger{border-left:3px solid #e06060;background:rgba(224,96,96,.06)}
+.ibl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;margin-bottom:7px;font-weight:600}.note .ibl{color:#60c0e8}.warn .ibl{color:#e8a030}.danger .ibl{color:#e06060}.tip .ibl{color:rgb(var(--ac))}
+.tw{overflow-x:auto;margin:18px 0}table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--bg3);color:rgb(var(--ac));font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:500;padding:11px 14px;text-align:left;border:1px solid var(--border)}
+td{padding:9px 14px;border:1px solid var(--border);color:var(--text);vertical-align:top}tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:18px 0}.card{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:16px}
+.ci{font-size:22px;margin-bottom:8px}.ct{font-weight:600;font-size:14px;color:var(--text);margin-bottom:5px}.cd{font-size:12px;color:var(--text2);line-height:1.5}
+.steps{counter-reset:sc;margin:18px 0}.step{display:flex;gap:18px;margin-bottom:18px;counter-increment:sc}.step::before{content:counter(sc,decimal-leading-zero);font-family:var(--disp);font-size:26px;color:rgba(var(--ac),.22);flex-shrink:0;min-width:38px;line-height:1;margin-top:2px}
+.stit{font-weight:600;color:var(--text);margin-bottom:5px;font-size:14px}.sdesc{font-size:13px;color:var(--text2);line-height:1.6}
+.divider{height:1px;background:linear-gradient(90deg,rgb(var(--ac)) 0%,var(--border) 60%,transparent 100%);margin:36px 0;opacity:.35}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99}
+@media(max-width:900px){#mbtn{display:block}#sidebar{transform:translateX(-100%)}#sidebar.open{transform:translateX(0)}#overlay.open{display:block}#main{margin-left:0}.content{padding:24px 18px 60px}h2{font-size:26px}.cg{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.cg{grid-template-columns:1fr}}.hero::before{content:'MECH'}</style>
+</head><body>
+<nav id="sidebar"><div class="sh"><div class="sl" style="color:rgb(var(--ac))">MECH</div><div class="ss">Mechanical Engineering Robot</div></div>
+<div style="padding:14px 0"><div class="nsec">Kinematika</div><a href="#s1" class="ni"><span class="nd"></span>DH Parameters</a><a href="#s2" class="ni"><span class="nd"></span>Forward Kinematics</a><a href="#s3" class="ni"><span class="nd"></span>Inverse Kinematics</a><div class="nsec">Desain</div><a href="#s4" class="ni"><span class="nd"></span>Gear Train & Aktuator</a><a href="#s5" class="ni"><span class="nd"></span>Bearing & Poros</a><a href="#s6" class="ni"><span class="nd"></span>Statics & Dynamics</a><div class="nsec">Manufaktur</div><a href="#s7" class="ni"><span class="nd"></span>CAD Workflow</a><a href="#s8" class="ni"><span class="nd"></span>3D Printing Design</a><div class="nsec">Analisis</div><a href="#s9" class="ni"><span class="nd"></span>FEA Dasar</a><a href="#s10" class="ni"><span class="nd"></span>Material Selection</a><a href="#s11" class="ni"><span class="nd"></span>Python Kinematika</a></div></nav>
+<div id="overlay"></div>
+<div id="main">
+<div id="topbar"><span class="tbt">DOC 5 — MECHANICAL ENGINEERING</span><button id="mbtn" onclick="toggleSidebar()">&#9776;</button></div>
+<div class="content">
+<div class="hero"><div class="hl">// DOC 05 / 07</div><h1>MECHANICAL<br>ENGINEERING</h1><p class="hdesc">Panduan mekanikal robotika: DH parameters, FK/IK analytical & numerical, gear train, bearing, poros, statics & dynamics, CAD workflow, 3D printing, FEA, material selection, Python Robotics Toolbox.</p><div class="htags"><span class="tag ta">DH Parameters</span><span class="tag tb">FK/IK</span><span class="tag to">Gear Design</span><span class="tag ta">FEA</span><span class="tag tb">3D Print</span></div></div>
+<section class="sec" id="s1"><div class="sech"><div class="sn">01</div><div><div class="sc">Kinematika</div><h2>DENAVIT-HARTENBERG PARAMETERS</h2></div></div><p>Konvensi DH adalah metode standar untuk mendeskripsikan kinematika robot lengan menggunakan 4 parameter per joint. Setiap link i memiliki frame koordinat yang didefinisikan relatif terhadap frame sebelumnya.</p><div class="math">4 Parameter DH per joint:
+  a_i     = panjang link (jarak antar sumbu z, sepanjang sumbu x)
+  α_i     = twist link (sudut antara sumbu z_i-1 dan z_i, sekitar sumbu x_i)
+  d_i     = offset joint (jarak sepanjang sumbu z_i)
+  θ_i     = sudut joint (rotasi sekitar sumbu z_i) ← variabel untuk revolute
+
+Matriks transformasi homogen T_i-1_i:
+  | cθ  -sθ·cα   sθ·sα   a·cθ |
+  | sθ   cθ·cα  -cθ·sα   a·sθ |
+  |  0    sα      cα      d    |
+  |  0    0       0       1    |</div><h3>Contoh: Robot 3-DOF Planar</h3><div class="tw"><table><tr><th>Joint i</th><th>a_i (mm)</th><th>α_i (deg)</th><th>d_i (mm)</th><th>θ_i (var)</th></tr><tr><td>1</td><td>150</td><td>0</td><td>0</td><td>θ₁</td></tr><tr><td>2</td><td>120</td><td>0</td><td>0</td><td>θ₂</td></tr><tr><td>3</td><td>80</td><td>0</td><td>0</td><td>θ₃</td></tr></table></div><div class="ib tip"><div class="ibl">Tips DH</div>Untuk robot planar: semua α=0, semua d=0. Untuk robot 6-DOF seperti UR5: gunakan modified DH (Craig convention) — beda urutan parameter tapi hasil sama jika konsisten.</div></section><section class="sec" id="s2"><div class="sech"><div class="sn">02</div><div><div class="sc">Kinematika</div><h2>FORWARD KINEMATICS</h2></div></div><div class="math">Forward Kinematics: joint angles → end-effector pose
+
+T_0_n = T_0_1 · T_1_2 · T_2_3 · ... · T_(n-1)_n
+
+Hasil T_0_n adalah 4×4 homogeneous transform:
+  [ R_3x3 | p_3x1 ]
+  [ 0 0 0 |   1   ]
+
+R = rotation matrix end-effector relative to base
+p = position (x,y,z) end-effector in base frame</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">dh_matrix</span>(a, alpha, d, theta):
+    <span class="st">"""Matriks transformasi DH standar 4x4"""</span>
+    ct, st = np.<span class="fn">cos</span>(theta), np.<span class="fn">sin</span>(theta)
+    ca, sa = np.<span class="fn">cos</span>(alpha), np.<span class="fn">sin</span>(alpha)
+    <span class="kw">return</span> np.<span class="fn">array</span>([
+        [ct, -st*ca,  st*sa, a*ct],
+        [st,  ct*ca, -ct*sa, a*st],
+        [ 0,     sa,     ca,    d],
+        [ 0,      0,      0,    1]
+    ])
+
+<span class="kw">def</span> <span class="fn">forward_kinematics_3dof</span>(theta1, theta2, theta3,
+                             L1=<span class="nm">0.15</span>, L2=<span class="nm">0.12</span>, L3=<span class="nm">0.08</span>):
+    <span class="st">"""Robot 3-DOF planar, panjang link dalam meter"""</span>
+    T1 = <span class="fn">dh_matrix</span>(L1, <span class="nm">0</span>, <span class="nm">0</span>, theta1)
+    T2 = <span class="fn">dh_matrix</span>(L2, <span class="nm">0</span>, <span class="nm">0</span>, theta2)
+    T3 = <span class="fn">dh_matrix</span>(L3, <span class="nm">0</span>, <span class="nm">0</span>, theta3)
+    T  = T1 @ T2 @ T3
+    x, y = T[<span class="nm">0</span>,<span class="nm">3</span>], T[<span class="nm">1</span>,<span class="nm">3</span>]
+    psi  = theta1 + theta2 + theta3  <span class="cm"># total orientation</span>
+    <span class="kw">return</span> x, y, psi, T
+
+<span class="cm"># Test:</span>
+x,y,psi,T = <span class="fn">forward_kinematics_3dof</span>(np.radians(<span class="nm">30</span>), np.radians(<span class="nm">45</span>), np.radians(-<span class="nm">15</span>))
+<span class="fn">print</span>(<span class="st">f"EE pos: ({x*1000:.1f}, {y*1000:.1f}) mm, orientasi: {np.degrees(psi):.1f}°"</span>)</pre></section><section class="sec" id="s3"><div class="sech"><div class="sn">03</div><div><div class="sc">Kinematika</div><h2>INVERSE KINEMATICS</h2></div></div><div class="math">Inverse Kinematics: end-effector pose → joint angles
+
+Analytical IK (3-DOF planar):
+  r = sqrt(x² + y²)   -- jarak target dari base
+  c2 = (r² - L1² - L2²) / (2·L1·L2)  -- cosine rule
+  θ2 = ±atan2(sqrt(1-c2²), c2)        -- elbow up/down
+  θ1 = atan2(y,x) - atan2(L2·sin(θ2), L1+L2·cos(θ2))
+  θ3 = ψ_desired - θ1 - θ2
+
+Numerical IK (Jacobian pseudo-inverse, works for any DOF):
+  Δq = J⁺ · Δx     (J⁺ = Moore-Penrose pseudoinverse)
+  q_(k+1) = q_k + α·Δq</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">ik_analytical_3dof</span>(xd, yd, psi_d, L1=<span class="nm">0.15</span>, L2=<span class="nm">0.12</span>, L3=<span class="nm">0.08</span>, elbow_up=<span class="nm">True</span>):
+    <span class="st">"""Analytical IK 3-DOF planar. Returns (theta1,theta2,theta3) in rad."""</span>
+    <span class="cm"># Wrist center (kurangi kontribusi L3)</span>
+    xw = xd - L3*np.<span class="fn">cos</span>(psi_d)
+    yw = yd - L3*np.<span class="fn">sin</span>(psi_d)
+
+    c2 = (xw**<span class="nm">2</span> + yw**<span class="nm">2</span> - L1**<span class="nm">2</span> - L2**<span class="nm">2</span>) / (<span class="nm">2</span>*L1*L2)
+    <span class="kw">if</span> <span class="fn">abs</span>(c2) > <span class="nm">1</span>: <span class="kw">raise</span> <span class="fn">ValueError</span>(<span class="st">"Target di luar jangkauan!"</span>)
+
+    s2 = np.<span class="fn">sqrt</span>(<span class="nm">1</span> - c2**<span class="nm">2</span>) * (<span class="nm">1</span> <span class="kw">if</span> elbow_up <span class="kw">else</span> -<span class="nm">1</span>)
+    theta2 = np.<span class="fn">arctan2</span>(s2, c2)
+    theta1 = np.<span class="fn">arctan2</span>(yw, xw) - np.<span class="fn">arctan2</span>(L2*s2, L1+L2*c2)
+    theta3 = psi_d - theta1 - theta2
+    <span class="kw">return</span> theta1, theta2, theta3
+
+<span class="kw">def</span> <span class="fn">ik_numerical</span>(target_pos, fk_fn, q0, alpha=<span class="nm">0.5</span>, iters=<span class="nm">200</span>, tol=<span class="nm">1e-4</span>):
+    <span class="st">"""Numerical IK dengan Jacobian finite difference"""</span>
+    q = np.<span class="fn">array</span>(q0, dtype=float)
+    <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(iters):
+        x_cur = np.<span class="fn">array</span>(<span class="fn">fk_fn</span>(*q)[:<span class="nm">2</span>])
+        err = np.<span class="fn">array</span>(target_pos) - x_cur
+        <span class="kw">if</span> np.linalg.<span class="fn">norm</span>(err) < tol: <span class="kw">break</span>
+        <span class="cm"># Jacobian finite difference</span>
+        J = np.<span class="fn">zeros</span>((<span class="nm">2</span>, <span class="fn">len</span>(q))); eps=<span class="nm">1e-5</span>
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(q)):
+            qp=q.<span class="fn">copy</span>(); qp[i]+=eps
+            J[:,i] = (np.<span class="fn">array</span>(<span class="fn">fk_fn</span>(*qp)[:<span class="nm">2</span>]) - x_cur) / eps
+        Jp = np.linalg.<span class="fn">pinv</span>(J)
+        q += alpha * Jp @ err
+    <span class="kw">return</span> q</pre></section><section class="sec" id="s4"><div class="sech"><div class="sn">04</div><div><div class="sc">Desain</div><h2>GEAR TRAIN & AKTUATOR</h2></div></div><h3>Gear Ratio & Torsi</h3><div class="math">Gear ratio N = N_output / N_input = ω_input / ω_output
+
+Torsi output:  τ_out = τ_in × N × η  (η = efisiensi, 0.7-0.95)
+Kecepatan out: ω_out = ω_in / N
+
+Reflected inertia ke motor: J_ref = J_load / N²
+Total inertia motor: J_total = J_motor + J_ref
+
+Pemilihan gear ratio optimal:
+  N_opt = sqrt(J_load / J_motor)  → minimasi acceleration time</div><h3>Perbandingan Aktuator</h3><div class="tw"><table><tr><th>Aktuator</th><th>Torsi</th><th>Kecepatan</th><th>Backdriv.</th><th>Berat</th><th>Harga</th><th>Use Case</th></tr><tr><td>DC Gearmotor</td><td>Med</td><td>Med</td><td>Mudah</td><td>Sedang</td><td>Murah</td><td>Wheeled robot, belt</td></tr><tr><td>BLDC + FOC</td><td>Tinggi</td><td>Tinggi</td><td>Mudah</td><td>Ringan</td><td>Sedang</td><td>Drone, manipulator</td></tr><tr><td>Servo Hobby</td><td>Low-Med</td><td>Med</td><td>Mudah</td><td>Ringan</td><td>Murah</td><td>Small arm, gripper</td></tr><tr><td>Dynamixel</td><td>Med-High</td><td>Med</td><td>Sulit</td><td>Sedang</td><td>Mahal</td><td>Research arm, bipedal</td></tr><tr><td>Harmonic Drive</td><td>Sangat Tinggi</td><td>Rendah</td><td>Tidak</td><td>Sedang</td><td>Sangat Mahal</td><td>Industrial 6-DOF</td></tr><tr><td>Linear Actuator</td><td>Tinggi</td><td>Rendah</td><td>Tidak</td><td>Berat</td><td>Sedang</td><td>Lift, heavy push</td></tr></table></div><h3>Perhitungan Motor Drive</h3><pre><span class="kw">def</span> <span class="fn">motor_sizing</span>(J_load_kgm2, omega_max_rpm, accel_time_s,
+                  gear_ratio, eta=<span class="nm">0.85</span>):
+    omega_max = omega_max_rpm * <span class="nm">2</span> * np.pi / <span class="nm">60</span>  <span class="cm"># rpm → rad/s</span>
+    omega_motor = omega_max * gear_ratio
+    J_ref = J_load_kgm2 / gear_ratio**<span class="nm">2</span>
+    alpha_motor = (omega_motor / accel_time_s)  <span class="cm"># max angular accel</span>
+    tau_accel = J_ref * alpha_motor
+    tau_motor_min = tau_accel / eta
+    power_min = tau_motor_min * omega_motor
+    <span class="kw">return</span> {
+        "omega_motor_rpm": omega_motor * <span class="nm">60</span> / (<span class="nm">2</span>*np.pi),
+        "tau_min_Nm": tau_motor_min,
+        "power_min_W": power_min
+    }</pre></section><section class="sec" id="s5"><div class="sech"><div class="sn">05</div><div><div class="sc">Desain</div><h2>BEARING & POROS</h2></div></div><h3>Pemilihan Bearing</h3><div class="tw"><table><tr><th>Tipe Bearing</th><th>Beban Radial</th><th>Beban Aksial</th><th>Kecepatan</th><th>Kebisingan</th><th>Aplikasi Robot</th></tr><tr><td>Deep groove ball</td><td>Tinggi</td><td>Sedang</td><td>Tinggi</td><td>Rendah</td><td>Motor shaft, wheel</td></tr><tr><td>Angular contact</td><td>Tinggi</td><td>Tinggi</td><td>Tinggi</td><td>Rendah</td><td>Spindle, aktuator</td></tr><tr><td>Tapered roller</td><td>Sangat Tinggi</td><td>Tinggi</td><td>Sedang</td><td>Sedang</td><td>Heavy wheel hub</td></tr><tr><td>Thrust ball</td><td>Rendah</td><td>Tinggi</td><td>Sedang</td><td>Rendah</td><td>Vertical screw</td></tr><tr><td>Slewing ring</td><td>Tinggi</td><td>Tinggi</td><td>Rendah</td><td>Sedang</td><td>Turntable, base joint</td></tr></table></div><h3>Umur Bearing (L10)</h3><div class="math">L10 = (C/P)^p × 10^6 revolutions
+
+C = dynamic load rating (dari katalog, N)
+P = equivalent dynamic load (N)
+p = 3 untuk ball bearing, 10/3 untuk roller bearing
+
+P = X·Fr + Y·Fa
+X, Y = load factors (dari tabel katalog)
+Fr = radial force, Fa = axial force
+
+L10h (jam) = L10 / (60 × n)   n = rpm</div><h3>Diameter Poros Minimum</h3><div class="math">Poros solid, pure torsi:
+  d_min = (16·T / (π·τ_allow))^(1/3)
+
+Poros dengan bending + torsi (von Mises):
+  d_min = (16/(π·τ_allow) × sqrt(M² + T²))^(1/3)
+
+τ_allow = S_y / (2 × SF)    safety factor SF = 1.5–3
+Baja ST37: S_y = 235 MPa, Baja ST60: S_y = 490 MPa</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">shaft_diameter</span>(T_Nm, M_Nm=<span class="nm">0</span>, Sy_MPa=<span class="nm">235</span>, SF=<span class="nm">2.0</span>):
+    tau_allow = (Sy_MPa * <span class="nm">1e6</span>) / (<span class="nm">2</span> * SF)
+    d = (<span class="nm">16</span>/(np.pi*tau_allow) * np.<span class="fn">sqrt</span>(M_Nm**<span class="nm">2</span> + T_Nm**<span class="nm">2</span>))**(<span class="nm">1</span>/<span class="nm">3</span>)
+    <span class="kw">return</span> d * <span class="nm">1000</span>  <span class="cm"># mm</span>
+
+print(<span class="st">f"Diameter min: {shaft_diameter(T_Nm=5, M_Nm=3):.1f} mm"</span>)</pre></section><section class="sec" id="s6"><div class="sech"><div class="sn">06</div><div><div class="sc">Dinamika</div><h2>STATICS & DYNAMICS</h2></div></div><h3>Static Equilibrium — Robot Link</h3><div class="math">Untuk robot statis:
+ΣF = 0,  ΣM = 0
+
+Torsi joint untuk menahan beban gravitasi:
+  τ_i = Σ(m_j × g × d_j_projected)   j = semua link di depan joint i
+
+d_j_projected = jarak proyeksi CoM link j ke axis joint i
+
+Jacobian gravity torque:
+  τ_gravity = J^T × F_gravity</div><h3>Persamaan Gerak Robot (Newton-Euler)</h3><div class="math">M(q)·q̈ + C(q,q̇)·q̇ + G(q) = τ
+
+M(q) = inertia matrix (n×n, positive definite)
+C(q,q̇) = Coriolis + centripetal matrix
+G(q) = gravity vector
+τ = joint torques
+
+Inverse dynamics: τ = M·q̈_desired + C·q̇ + G
+→ digunakan untuk feed-forward control</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">gravity_torques_2dof</span>(theta1, theta2,
+                          L1=<span class="nm">0.15</span>, L2=<span class="nm">0.12</span>,
+                          m1=<span class="nm">0.3</span>, m2=<span class="nm">0.2</span>, g=<span class="nm">9.81</span>):
+    <span class="st">"""Gravity torques untuk 2-DOF planar robot vertical plane"""</span>
+    lc1 = L1/<span class="nm">2</span>; lc2 = L2/<span class="nm">2</span>  <span class="cm"># CoM tiap link</span>
+    t1 = theta1; t12 = theta1 + theta2
+
+    <span class="cm"># Torsi joint 2: hanya support link 2</span>
+    tau2 = m2 * g * lc2 * np.<span class="fn">cos</span>(t12)
+
+    <span class="cm"># Torsi joint 1: support link 1 + link 2</span>
+    tau1 = (m1*lc1 + m2*L1) * g * np.<span class="fn">cos</span>(t1) + m2*g*lc2*np.<span class="fn">cos</span>(t12)
+    <span class="kw">return</span> tau1, tau2
+
+t1, t2 = <span class="fn">gravity_torques_2dof</span>(np.radians(<span class="nm">30</span>), np.radians(<span class="nm">45</span>))
+<span class="fn">print</span>(<span class="st">f"τ1={t1:.3f} Nm, τ2={t2:.3f} Nm"</span>)</pre></section><section class="sec" id="s7"><div class="sech"><div class="sn">07</div><div><div class="sc">CAD</div><h2>CAD WORKFLOW ROBOTIKA</h2></div></div><p>Workflow desain mekanik robot yang efisien menggunakan CAD parametrik.</p><div class="steps"><div class="step"><div><div class="stit">Conceptual Design</div><div class="sdesc">Sketch tangan, identifikasi DOF, range of motion, payload, envelope. Tentukan jenis aktuator dan transmission.</div></div></div><div class="step"><div><div class="stit">Part Design</div><div class="sdesc">Model 3D tiap komponen. Gunakan parameter/variable untuk dimensi kritis. Feature: extrude, revolve, sweep, fillet.</div></div></div><div class="step"><div><div class="stit">Assembly</div><div class="sdesc">Rakit komponen dengan mate/constraint. Cek interference. Simulasikan range of motion. Hitung CoM tiap link.</div></div></div><div class="step"><div><div class="stit">Analysis</div><div class="sdesc">FEA untuk komponen kritis (bracket, poros). Kinematic simulation. Bill of Materials (BOM).</div></div></div><div class="step"><div><div class="stit">Manufacturing Drawing</div><div class="sdesc">2D drawing dengan toleransi (ISO 2768). GD&T untuk fitur kritis. Export STEP untuk vendor.</div></div></div></div><h3>Software CAD untuk Robotika</h3><div class="tw"><table><tr><th>Software</th><th>Platform</th><th>Harga</th><th>Kelebihan</th><th>Robot Feature</th></tr><tr><td>Fusion 360</td><td>Cloud/Win/Mac</td><td>Free(edu)</td><td>Integrated CAM+FEA</td><td>Joint simulation, STEP export</td></tr><tr><td>FreeCAD</td><td>Cross-platform</td><td>Free</td><td>Open source, Python API</td><td>Robotics workbench, URDF export</td></tr><tr><td>SolidWorks</td><td>Windows</td><td>Mahal</td><td>Industry standard</td><td>RobotStudio integration</td></tr><tr><td>Onshape</td><td>Browser</td><td>Free(edu)</td><td>Kolaboratif</td><td>Direct API, parametric</td></tr><tr><td>OpenSCAD</td><td>Cross-platform</td><td>Free</td><td>Code-based, parametric</td><td>Printable robot parts</td></tr></table></div><div class="ib tip"><div class="ibl">Export ke URDF</div>Gunakan FreeCAD RoboticsWorkbench atau sw_urdf_exporter (SolidWorks) untuk mengekspor model CAD langsung ke format URDF yang bisa digunakan di ROS2 dan Gazebo.</div></section><section class="sec" id="s8"><div class="sech"><div class="sn">08</div><div><div class="sc">Manufaktur</div><h2>3D PRINTING DESIGN RULES</h2></div></div><h3>Aturan Desain FDM</h3><div class="tw"><table><tr><th>Parameter</th><th>Nilai Umum</th><th>Catatan</th></tr><tr><td>Min wall thickness</td><td>1.2–2mm (PLA), 2mm (PETG)</td><td>Min 2–3 perimeter passes</td></tr><tr><td>Min hole diameter</td><td>2mm (drill required &lt;3mm)</td><td>Tambah 0.2mm tolerance untuk shaft fit</td></tr><tr><td>Overhang angle</td><td>≤45° tanpa support</td><td>Support perlu jika &gt;45°</td></tr><tr><td>Bridge length</td><td>Max 50mm tanpa support</td><td>Cooling fan penting</td></tr><tr><td>Infill untuk struktur</td><td>30–60% gyroid/honeycomb</td><td>Gyroid terkuat isotropic</td></tr><tr><td>Layer height</td><td>0.15–0.3mm standard</td><td>0.1mm untuk detail tinggi</td></tr><tr><td>Fit clearance (shaft)</td><td>0.2–0.4mm per sisi</td><td>Tergantung printer & material</td></tr></table></div><h3>Material Robotika</h3><div class="tw"><table><tr><th>Material</th><th>Kekuatan</th><th>Suhu</th><th>Fleksibel</th><th>Berat</th><th>Aplikasi Robot</th></tr><tr><td>PLA</td><td>Sedang</td><td>≤60°C</td><td>Tidak</td><td>1.24g/cc</td><td>Prototype, non-load</td></tr><tr><td>PETG</td><td>Baik</td><td>≤80°C</td><td>Sedikit</td><td>1.27g/cc</td><td>Enclosure, light structure</td></tr><tr><td>ABS</td><td>Baik</td><td>≤100°C</td><td>Tidak</td><td>1.05g/cc</td><td>Functional parts (aseton finish)</td></tr><tr><td>ASA</td><td>Baik</td><td>≤100°C</td><td>Tidak</td><td>1.07g/cc</td><td>Outdoor UV-resistant</td></tr><tr><td>TPU 95A</td><td>Rendah</td><td>≤100°C</td><td>Sangat</td><td>1.21g/cc</td><td>Gripper, wheel, bumper</td></tr><tr><td>Carbon CF-PLA</td><td>Sangat Baik</td><td>≤60°C</td><td>Tidak</td><td>1.3g/cc</td><td>Light structural arms</td></tr></table></div><pre><span class="cm">// OpenSCAD: Parametric robot wheel</span>
+<span class="kw">module</span> <span class="fn">wheel</span>(r=<span class="nm">30</span>, w=<span class="nm">20</span>, hub_r=<span class="nm">8</span>, shaft_d=<span class="nm">5</span>, spokes=<span class="nm">6</span>) {
+  difference() {
+    union() {
+      cylinder(r=r, h=w, center=true, $fn=<span class="nm">64</span>);
+      cylinder(r=hub_r+<span class="nm">3</span>, h=w+<span class="nm">4</span>, center=true, $fn=<span class="nm">32</span>);
+    }
+    cylinder(r=shaft_d/<span class="nm">2</span>+<span class="nm">0.3</span>, h=w+<span class="nm">10</span>, center=true, $fn=<span class="nm">32</span>);
+    for(i=[<span class="nm">0</span>:spokes-<span class="nm">1</span>]) rotate([<span class="nm">0</span>,<span class="nm">0</span>,i*<span class="nm">360</span>/spokes])
+      translate([r/<span class="nm">2</span>,<span class="nm">0</span>,<span class="nm">0</span>]) cylinder(r=(r-hub_r)/<span class="nm">3</span>, h=w-<span class="nm">2</span>, center=true, $fn=<span class="nm">16</span>);
+  }
+}</pre></section><section class="sec" id="s9"><div class="sech"><div class="sn">09</div><div><div class="sc">FEA</div><h2>FINITE ELEMENT ANALYSIS DASAR</h2></div></div><div class="math">FEA Process:
+1. Geometry: import STEP/model CAD
+2. Material: definisi E (modulus), ν (Poisson), ρ (densitas)
+3. Mesh: diskretisasi ke elemen (tetrahedral, hexahedral)
+4. BC: boundary conditions (fixed support, forces, pressures)
+5. Solve: [K]{u} = {F}
+   K = global stiffness matrix
+   u = nodal displacement vector
+   F = force vector
+6. Post: von Mises stress, displacement, factor of safety</div><h3>Von Mises Stress Criterion</h3><div class="math">σ_vm = sqrt(σ₁² + σ₂² - σ₁σ₂)  (2D plane stress)
+
+σ_vm = sqrt(0.5[(σx-σy)² + (σy-σz)² + (σz-σx)² + 6(τxy²+τyz²+τzx²)])
+
+Yield criterion: σ_vm &lt; S_y / SF
+SF (safety factor) = 1.5 (static, ductile) — 3.0 (dynamic/impact)
+
+FOS = S_y / σ_vm_max   → harus ≥ 1.5 untuk robot structural parts</div><h3>FEA Tools</h3><div class="tw"><table><tr><th>Software</th><th>Tipe</th><th>Harga</th><th>Kelebihan</th></tr><tr><td>Fusion 360 Simulation</td><td>Cloud FEA</td><td>Free(edu)</td><td>Terintegrasi CAD, mudah</td></tr><tr><td>FreeCAD FEM</td><td>Open FEA</td><td>Free</td><td>Python scriptable, CalculiX</td></tr><tr><td>SimScale</td><td>Cloud FEA</td><td>Free tier</td><td>Browser-based, CFD juga</td></tr><tr><td>Ansys Student</td><td>Full FEA</td><td>Free(edu)</td><td>Industri standard, powerful</td></tr><tr><td>OpenFOAM</td><td>CFD+FEA</td><td>Free</td><td>Open source, Linux based</td></tr></table></div></section><section class="sec" id="s10"><div class="sech"><div class="sn">010</div><div><div class="sc">Material</div><h2>MATERIAL SELECTION</h2></div></div><h3>Material Struktur Robot</h3><div class="tw"><table><tr><th>Material</th><th>E (GPa)</th><th>ρ (g/cc)</th><th>Sy (MPa)</th><th>Machinability</th><th>Cost</th></tr><tr><td>Aluminium 6061-T6</td><td>68.9</td><td>2.70</td><td>276</td><td>Sangat mudah</td><td>Murah</td></tr><tr><td>Aluminium 7075-T6</td><td>71.7</td><td>2.81</td><td>503</td><td>Mudah</td><td>Sedang</td></tr><tr><td>Baja ST37</td><td>200</td><td>7.85</td><td>235</td><td>Mudah</td><td>Sangat Murah</td></tr><tr><td>Baja SS304</td><td>193</td><td>7.99</td><td>215</td><td>Sedang</td><td>Sedang</td></tr><tr><td>Titanium Ti6Al4V</td><td>113.8</td><td>4.43</td><td>880</td><td>Sulit</td><td>Sangat Mahal</td></tr><tr><td>Carbon Fiber UD</td><td>135</td><td>1.55</td><td>600+</td><td>Sulit (cetak)</td><td>Mahal</td></tr><tr><td>Delrin (POM)</td><td>3.1</td><td>1.42</td><td>68</td><td>Sangat Mudah</td><td>Murah</td></tr></table></div><h3>Specific Stiffness & Strength</h3><div class="math">Specific Stiffness = E / ρ     (kN·m/kg)
+Specific Strength = Sy / ρ    (kN·m/kg)
+
+Untuk robot: pilih material dengan specific stiffness tinggi
+Al6061: E/ρ = 25.5 MN·m/kg   → sangat baik untuk robot lengan
+Carbon fiber: E/ρ = 87 MN·m/kg → terbaik, mahal
+Steel ST37: E/ρ = 25.5 MN·m/kg → sama dengan Al, tapi 3x lebih berat</div></section><section class="sec" id="s11"><div class="sech"><div class="sn">011</div><div><div class="sc">Python</div><h2>PYTHON KINEMATIKA TOOLS</h2></div></div><pre><span class="kw">import</span> roboticstoolbox <span class="kw">as</span> rtb
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="cm"># Robotics Toolbox Python — Peter Corke</span>
+<span class="cm"># pip install roboticstoolbox-python</span>
+
+<span class="cm"># Load model robot standar</span>
+panda = rtb.<span class="fn">models.Panda</span>()
+ur5   = rtb.<span class="fn">models.UR5</span>()
+
+<span class="cm"># Forward kinematics</span>
+q = np.<span class="fn">array</span>([<span class="nm">0</span>, -np.pi/<span class="nm">4</span>, <span class="nm">0</span>, -np.pi/<span class="nm">2</span>, <span class="nm">0</span>, np.pi/<span class="nm">3</span>, <span class="nm">0</span>])
+T = panda.<span class="fn">fkine</span>(q)
+<span class="fn">print</span>(<span class="st">"EE Pose:\n"</span>, T)
+
+<span class="cm"># Inverse kinematics (numerical)</span>
+target_T = rtb.<span class="fn">SE3</span>(<span class="nm">0.4</span>, <span class="nm">0.2</span>, <span class="nm">0.5</span>)
+sol = panda.<span class="fn">ik_LM</span>(target_T)  <span class="cm"># Levenberg-Marquardt</span>
+<span class="fn">print</span>(<span class="st">"IK solution:"</span>, np.<span class="fn">degrees</span>(sol.q))
+
+<span class="cm"># Jacobian</span>
+J = panda.<span class="fn">jacob0</span>(q)  <span class="cm"># 6×7 Jacobian di base frame</span>
+<span class="fn">print</span>(<span class="st">"Jacobian shape:"</span>, J.shape)
+
+<span class="cm"># Manipulability measure (Yoshikawa)</span>
+w = np.<span class="fn">sqrt</span>(np.linalg.<span class="fn">det</span>(J @ J.T))
+<span class="fn">print</span>(<span class="st">f"Manipulability: {w:.4f}"</span>)
+
+<span class="cm"># Trajectory generation</span>
+q_start = np.<span class="fn">zeros</span>(<span class="nm">7</span>)
+q_end   = np.<span class="fn">array</span>([<span class="nm">0.5</span>, -<span class="nm">0.5</span>, <span class="nm">0.2</span>, -<span class="nm">1.0</span>, <span class="nm">0.1</span>, <span class="nm">0.8</span>, -<span class="nm">0.3</span>])
+traj = rtb.jtraj(q_start, q_end, <span class="nm">50</span>)  <span class="cm"># 50 waypoints, quintic</span>
+panda.<span class="fn">plot</span>(traj.q, movie=<span class="st">'robot_motion.gif'</span>)</pre><h3>Singularity Detection</h3><pre><span class="kw">def</span> <span class="fn">check_singularity</span>(J, threshold=<span class="nm">0.01</span>):
+    <span class="st">"""Cek singularity via condition number"""</span>
+    _, sv, _ = np.linalg.<span class="fn">svd</span>(J[:3,:])
+    cond = sv[<span class="nm">0</span>] / (sv[-<span class="nm">1</span>] + <span class="nm">1e-10</span>)
+    near_singular = sv[-<span class="nm">1</span>] < threshold
+    <span class="kw">return</span> near_singular, cond, sv
+
+<span class="cm"># Manip. ellipsoid: eigenvalues of J·J^T</span>
+<span class="cm"># Principal axes = sqrt(eigenvalues)</span>
+JJt = J[:3,:] @ J[:3,:].T
+eigvals, eigvecs = np.linalg.<span class="fn">eig</span>(JJt)
+axes = np.<span class="fn">sqrt</span>(<span class="fn">abs</span>(eigvals))</pre></section>
+<div style="text-align:center;padding:40px 0;color:var(--text3);font-family:var(--mono);font-size:11px;border-top:1px solid var(--border);margin-top:40px">MECHANICAL ENGINEERING ROBOT — DOC 05 / 07<br><span style="color:rgb(var(--ac));margin-top:8px;display:block">Antonius - bluedragonsec.com</span></div>
+</div></div><script>function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open')}
+document.getElementById('overlay').addEventListener('click',toggleSidebar);
+const secs=document.querySelectorAll('.sec'),nls=document.querySelectorAll('.ni');
+secs.forEach(s=>new IntersectionObserver(e=>{if(e[0].isIntersecting){const id=s.id;nls.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+id))}},{threshold:0.15,rootMargin:'-60px 0px -60% 0px'}).observe(s));
+nls.forEach(l=>l.addEventListener('click',()=>{if(window.innerWidth<=900)toggleSidebar()}));</script></body></html>

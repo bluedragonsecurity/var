@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>LLM & Deep Learning Robot — Robotika</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>:root{--ac:232,160,48}:root{--bg:#0b0d0f;--bg2:#111417;--bg3:#181c21;--border:#2a3240;--border2:#3a4558;--text:#c8d4e0;--text2:#8a9ab0;--text3:#5a6a80;--mono:'IBM Plex Mono',monospace;--body:'IBM Plex Sans',sans-serif;--disp:'Bebas Neue',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.7;display:flex;min-height:100vh}
+#sidebar{width:280px;min-width:280px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;scrollbar-width:thin;transition:transform .3s ease}
+.sh{padding:22px 18px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:10}
+.sl{font-family:var(--disp);font-size:20px;letter-spacing:2px;line-height:1;margin-bottom:3px}
+.ss{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-family:var(--mono)}
+.nsec{padding:5px 18px 3px;font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--text3);margin-top:8px}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 18px;color:var(--text2);text-decoration:none;font-size:13px;transition:all .15s;border-left:2px solid transparent;line-height:1.3}
+.ni.active,.ni:hover{color:rgb(var(--ac));background:rgba(var(--ac),.07);border-left-color:rgb(var(--ac))}
+.nd{width:5px;height:5px;border-radius:50%;background:var(--border2);flex-shrink:0}
+.ni.active .nd,.ni:hover .nd{background:rgb(var(--ac))}
+#main{margin-left:280px;flex:1;min-width:0}
+#topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 36px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:90}
+.tbt{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:1px}
+#mbtn{display:none;background:none;border:1px solid var(--border2);color:var(--text);padding:5px 10px;border-radius:4px;cursor:pointer;font-size:15px}
+.content{max-width:920px;margin:0 auto;padding:44px 36px 80px}
+.hero{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:44px;margin-bottom:52px;position:relative;overflow:hidden}
+.hero::before{position:absolute;right:-10px;top:-10px;font-family:var(--disp);font-size:140px;color:rgba(var(--ac),.03);line-height:1;pointer-events:none;letter-spacing:4px}
+.hl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:3px;color:rgb(var(--ac));margin-bottom:14px}
+h1{font-family:var(--disp);font-size:48px;letter-spacing:3px;color:#fff;line-height:1.05;margin-bottom:14px}
+.hdesc{color:var(--text2);font-size:14.5px;max-width:620px;line-height:1.7}
+.htags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tag{padding:3px 10px;border:1px solid var(--border2);border-radius:3px;font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
+.ta{border-color:rgb(var(--ac));color:rgb(var(--ac))}.tb{border-color:#60c0e8;color:#60c0e8}.to{border-color:#e8a030;color:#e8a030}.tp2{border-color:#c060e0;color:#c060e0}.tr{border-color:#e06060;color:#e06060}
+.sec{margin-bottom:68px;scroll-margin-top:76px}
+.sech{display:flex;align-items:flex-start;gap:14px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.sn{font-family:var(--disp);font-size:44px;line-height:1;color:rgba(var(--ac),.15);flex-shrink:0;min-width:56px}
+.sc{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;color:rgb(var(--ac));margin-bottom:5px}
+h2{font-family:var(--disp);font-size:32px;letter-spacing:2px;color:#fff;line-height:1.1}
+h3{font-size:17px;font-weight:600;color:rgb(var(--ac));margin-top:32px;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+h3::before{content:'';width:3px;height:16px;background:rgb(var(--ac));border-radius:2px;flex-shrink:0}
+h4{font-size:14.5px;font-weight:600;color:#60c0e8;margin-top:22px;margin-bottom:9px}
+p{margin-bottom:13px;color:var(--text);font-size:14px}
+pre{background:var(--bg2);border:1px solid var(--border);border-left:3px solid rgb(var(--ac));border-radius:6px;padding:18px 22px;overflow-x:auto;margin:18px 0;font-family:var(--mono);font-size:12px;line-height:1.65;scrollbar-width:thin}
+pre::-webkit-scrollbar{height:4px}pre::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+code{font-family:var(--mono);font-size:12px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:rgb(var(--ac))}
+pre code{background:none;border:none;padding:0;color:var(--text)}
+.kw{color:#c060e0;font-weight:500}.fn{color:#60c0e8}.st{color:#80e060}.cm{color:#5a6a80;font-style:italic}.nm{color:#e8a030}.tp3{color:#f0c060}
+.math{background:var(--bg3);border:1px solid var(--border);border-left:3px solid #60c0e8;border-radius:6px;padding:18px 22px;margin:18px 0;font-family:var(--mono);font-size:13px;color:#c8ffd0;line-height:2;overflow-x:auto}
+.ib{border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin:18px 0;font-size:13.5px}
+.ib.note{border-left:3px solid #60c0e8;background:rgba(96,192,232,.05)}.ib.warn{border-left:3px solid #e8a030;background:rgba(232,160,48,.05)}.ib.tip{border-left:3px solid rgb(var(--ac));background:rgba(var(--ac),.05)}.ib.danger{border-left:3px solid #e06060;background:rgba(224,96,96,.06)}
+.ibl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;margin-bottom:7px;font-weight:600}.note .ibl{color:#60c0e8}.warn .ibl{color:#e8a030}.danger .ibl{color:#e06060}.tip .ibl{color:rgb(var(--ac))}
+.tw{overflow-x:auto;margin:18px 0}table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--bg3);color:rgb(var(--ac));font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:500;padding:11px 14px;text-align:left;border:1px solid var(--border)}
+td{padding:9px 14px;border:1px solid var(--border);color:var(--text);vertical-align:top}tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:18px 0}.card{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:16px}
+.ci{font-size:22px;margin-bottom:8px}.ct{font-weight:600;font-size:14px;color:var(--text);margin-bottom:5px}.cd{font-size:12px;color:var(--text2);line-height:1.5}
+.steps{counter-reset:sc;margin:18px 0}.step{display:flex;gap:18px;margin-bottom:18px;counter-increment:sc}.step::before{content:counter(sc,decimal-leading-zero);font-family:var(--disp);font-size:26px;color:rgba(var(--ac),.22);flex-shrink:0;min-width:38px;line-height:1;margin-top:2px}
+.stit{font-weight:600;color:var(--text);margin-bottom:5px;font-size:14px}.sdesc{font-size:13px;color:var(--text2);line-height:1.6}
+.divider{height:1px;background:linear-gradient(90deg,rgb(var(--ac)) 0%,var(--border) 60%,transparent 100%);margin:36px 0;opacity:.35}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99}
+@media(max-width:900px){#mbtn{display:block}#sidebar{transform:translateX(-100%)}#sidebar.open{transform:translateX(0)}#overlay.open{display:block}#main{margin-left:0}.content{padding:24px 18px 60px}h2{font-size:26px}.cg{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.cg{grid-template-columns:1fr}}.hero::before{content:'LLM'}</style>
+</head><body>
+<nav id="sidebar"><div class="sh"><div class="sl" style="color:rgb(var(--ac))">LLM+DL</div><div class="ss">LLM & Deep Learning Robot</div></div>
+<div style="padding:14px 0"><div class="nsec">Elektronika</div><a href="#s1" class="ni"><span class="nd"></span>Hardware Platform</a><a href="#s2" class="ni"><span class="nd"></span>Mikrofon & Speech</a><div class="nsec">Speech & NLP</div><a href="#s3" class="ni"><span class="nd"></span>Whisper Speech Recognition</a><a href="#s4" class="ni"><span class="nd"></span>Text-to-Speech</a><div class="nsec">LLM Integration</div><a href="#s5" class="ni"><span class="nd"></span>LLM Task Planning</a><a href="#s6" class="ni"><span class="nd"></span>ReAct Reasoning</a><a href="#s7" class="ni"><span class="nd"></span>Tool Calling API</a><div class="nsec">Deep Learning</div><a href="#s8" class="ni"><span class="nd"></span>Embodied AI Pipeline</a><a href="#s9" class="ni"><span class="nd"></span>RAG Robot Memory</a><a href="#s10" class="ni"><span class="nd"></span>Vision Language Model</a></div></nav>
+<div id="overlay"></div>
+<div id="main">
+<div id="topbar"><span class="tbt">DOC 2 — LLM & DEEP LEARNING ROBOT</span><button id="mbtn" onclick="toggleSidebar()">&#9776;</button></div>
+<div class="content">
+<div class="hero"><div class="hl">// DOC 02 / 07</div><h1>LLM &amp;<br>DEEP LEARNING</h1><p class="hdesc">Integrasi LLM, speech recognition, TTS, vision language model, ReAct reasoning, RAG memory, dan embodied AI pipeline untuk robot cerdas — dengan elektronika dan source code lengkap.</p><div class="htags"><span class="tag ta">Whisper STT</span><span class="tag tb">Llama/GPT</span><span class="tag to">Ollama Local</span><span class="tag ta">ReAct</span><span class="tag tb">XTTS</span></div></div>
+<section class="sec" id="s1"><div class="sech"><div class="sn">01</div><div><div class="sc">Hardware</div><h2>PLATFORM HARDWARE</h2></div></div><p>Platform hardware untuk robot dengan LLM integration memerlukan komputasi edge yang cukup kuat untuk inference model. Berikut perbandingan platform populer:</p><div class="tw"><table><tr><th>Platform</th><th>CPU</th><th>RAM</th><th>GPU/NPU</th><th>Power</th><th>Best For</th></tr><tr><td>Raspberry Pi 5</td><td>Cortex-A76 4-core</td><td>8GB LPDDR4X</td><td>None</td><td>5–10W</td><td>Lightweight inference</td></tr><tr><td>NVIDIA Jetson Orin NX</td><td>12-core Arm A78</td><td>16GB</td><td>1024-core Ampere+DLAM</td><td>10–25W</td><td>Local LLM + Vision</td></tr><tr><td>Jetson AGX Orin</td><td>12-core Arm A78</td><td>64GB</td><td>2048-core Ampere</td><td>15–60W</td><td>Full LLM robot</td></tr><tr><td>Intel NUC i7</td><td>x86 i7</td><td>32GB DDR5</td><td>Iris Xe</td><td>28W</td><td>ROS2 + inference</td></tr><tr><td>Orange Pi 5 Plus</td><td>Cortex-A76</td><td>16GB LPDDR5</td><td>Mali-G610</td><td>5–15W</td><td>Budget option</td></tr></table></div><div class="cg"><div class="card"><div class="ci">🎙️</div><div class="ct">ReSpeaker Mic Array</div><div class="cd">USB microphone array 4-mic untuk beam forming, far-field speech recognition. Driver siap untuk Linux.</div></div><div class="card"><div class="ci">🔊</div><div class="ct">USB Speaker</div><div class="cd">Compact USB speaker untuk TTS output. Atau gunakan I2S amplifier (MAX98357A) untuk audio lebih baik.</div></div><div class="card"><div class="ci">📷</div><div class="ct">OAK-D Lite</div><div class="cd">Stereo depth camera + neural inference accelerator (Myriad X). Ideal untuk edge vision.</div></div><div class="card"><div class="ci">🔋</div><div class="ct">LiPo BMS</div><div class="cd">4S 18Ah LiPo + BMS 30A. Cukup untuk Jetson + drive system selama 3-4 jam.</div></div></div><h3>Skema Koneksi Hardware</h3><pre><span class="cm"># Hardware connectivity diagram:
+# ReSpeaker USB Mic  --USB--> Jetson Orin
+# OAK-D Lite Camera  --USB3-> Jetson Orin
+# RPLiDAR A3         --USB--> Jetson Orin
+#                              |
+#                         Jetson Orin (ROS2, LLM inference, Nav2)
+#                              | UART/USB
+#                         Arduino Mega (PID, encoder, sensors)
+#                              | PWM/GPIO
+#                         Motor Driver (VESC/L298N)
+#                              | DC
+#                         Drive Motors (BLDC/DC)</span></pre><h3>I2S Audio Output — Arduino + MAX98357A</h3><pre><span class="cm">// Arduino ESP32: I2S audio output untuk TTS playback</span>
+<span class="kw">#include</span> &lt;driver/i2s.h&gt;
+
+<span class="kw">const</span> i2s_config_t i2s_cfg = {
+  .mode = (i2s_mode_t)(I2S_MODE_MASTER|I2S_MODE_TX),
+  .sample_rate = <span class="nm">22050</span>,
+  .bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT,
+  .channel_format = I2S_CHANNEL_FMT_ONLY_LEFT,
+  .communication_format = I2S_COMM_FORMAT_I2S_MSB,
+  .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
+  .dma_buf_count = <span class="nm">8</span>, .dma_buf_len = <span class="nm">64</span>
+};
+<span class="kw">const</span> i2s_pin_config_t pin_cfg = {
+  .bck_io_num=<span class="nm">26</span>, .ws_io_num=<span class="nm">25</span>, .data_out_num=<span class="nm">22</span>, .data_in_num=-<span class="nm">1</span>};
+
+<span class="kw">void</span> <span class="fn">playAudio</span>(<span class="kw">int16_t</span>* samples, <span class="kw">size_t</span> count){
+  <span class="kw">size_t</span> written;
+  <span class="fn">i2s_write</span>(I2S_NUM_0, samples, count*<span class="nm">2</span>, &amp;written, <span class="fn">portMAX_DELAY</span>);}</pre></section><section class="sec" id="s2"><div class="sech"><div class="sn">02</div><div><div class="sc">Audio</div><h2>MIKROFON & SPEECH INPUT</h2></div></div><h3>ReSpeaker + WebRTC VAD</h3><pre><span class="kw">import</span> pyaudio, webrtcvad, numpy <span class="kw">as</span> np
+
+<span class="kw">class</span> <span class="tp3">VoiceActivityDetector</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, aggressiveness=<span class="nm">2</span>, sample_rate=<span class="nm">16000</span>):
+        self.vad = webrtcvad.<span class="fn">Vad</span>(aggressiveness)  <span class="cm"># 0-3</span>
+        self.sr = sample_rate
+        self.frame_ms = <span class="nm">30</span>  <span class="cm"># 10, 20, atau 30 ms</span>
+        self.frame_sz = <span class="kw">int</span>(sample_rate * self.frame_ms / <span class="nm">1000</span> * <span class="nm">2</span>)  <span class="cm"># bytes</span>
+        self.p = pyaudio.<span class="fn">PyAudio</span>()
+
+    <span class="kw">def</span> <span class="fn">record_utterance</span>(self, silence_ms=<span class="nm">800</span>, max_sec=<span class="nm">30</span>):
+        stream = self.p.<span class="fn">open</span>(rate=self.sr, channels=<span class="nm">1</span>,
+                             format=pyaudio.paInt16, input=<span class="nm">True</span>,
+                             frames_per_buffer=self.frame_sz//<span class="nm">2</span>)
+        frames=[]; silent_ms=<span class="nm">0</span>; speaking=<span class="nm">False</span>
+
+        <span class="fn">print</span>(<span class="st">"Listening..."</span>)
+        <span class="kw">while</span> <span class="nm">True</span>:
+            data = stream.<span class="fn">read</span>(self.frame_sz//<span class="nm">2</span>)
+            is_speech = self.vad.<span class="fn">is_speech</span>(data, self.sr)
+
+            <span class="kw">if</span> is_speech:
+                speaking=<span class="nm">True</span>; silent_ms=<span class="nm">0</span>; frames.<span class="fn">append</span>(data)
+            <span class="kw">elif</span> speaking:
+                frames.<span class="fn">append</span>(data); silent_ms+=self.frame_ms
+                <span class="kw">if</span> silent_ms >= silence_ms: <span class="kw">break</span>
+
+        stream.<span class="fn">close</span>()
+        <span class="kw">return</span> np.<span class="fn">frombuffer</span>(<span class="st">b''</span>.<span class="fn">join</span>(frames), dtype=np.int16)</pre></section><section class="sec" id="s3"><div class="sech"><div class="sn">03</div><div><div class="sc">Speech</div><h2>WHISPER SPEECH RECOGNITION</h2></div></div><p>OpenAI Whisper adalah model ASR (Automatic Speech Recognition) multi-bahasa, berjalan lokal. Tersedia model small/medium/large. Untuk Indonesia: Bahasa Indonesia didukung natively.</p><pre><span class="kw">import</span> whisper, numpy <span class="kw">as</span> np
+
+<span class="kw">class</span> <span class="tp3">WhisperSTT</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, model_size=<span class="st">'small'</span>, device=<span class="st">'cuda'</span>):
+        <span class="fn">print</span>(<span class="st">f"Loading Whisper {model_size}..."</span>)
+        self.model = whisper.<span class="fn">load_model</span>(model_size, device=device)
+        <span class="cm"># small: 244M params, medium: 769M, large: 1550M</span>
+
+    <span class="kw">def</span> <span class="fn">transcribe</span>(self, audio_np, language=<span class="st">'id'</span>):
+        <span class="st">"""audio_np: float32 normalized [-1,1] at 16kHz"""</span>
+        audio = audio_np.<span class="fn">astype</span>(np.float32) / <span class="nm">32768.0</span>
+        result = self.model.<span class="fn">transcribe</span>(
+            audio,
+            language=language,
+            task=<span class="st">'transcribe'</span>,
+            beam_size=<span class="nm">5</span>,
+            temperature=<span class="nm">0</span>,
+            no_speech_threshold=<span class="nm">0.6</span>,
+            condition_on_previous_text=<span class="nm">False</span>)
+        <span class="kw">return</span> result[<span class="st">'text'</span>].<span class="fn">strip</span>()
+
+    <span class="kw">def</span> <span class="fn">transcribe_realtime</span>(self, audio_np):
+        <span class="st">"""Streaming transcription dengan sliding window"""</span>
+        audio = audio_np.<span class="fn">astype</span>(np.float32) / <span class="nm">32768.0</span>
+        <span class="cm"># Pad to 30s jika pendek</span>
+        padded = whisper.<span class="fn">pad_or_trim</span>(audio)
+        mel = whisper.<span class="fn">log_mel_spectrogram</span>(padded).<span class="fn">to</span>(self.model.device)
+        _, probs = self.model.<span class="fn">detect_language</span>(mel)
+        lang = <span class="fn">max</span>(probs, key=probs.<span class="fn">get</span>)
+        options = whisper.<span class="fn">DecodingOptions</span>(language=lang, fp16=<span class="nm">True</span>)
+        result = whisper.<span class="fn">decode</span>(self.model, mel, options)
+        <span class="kw">return</span> result.text</pre><h3>TTS — Coqui XTTS / Edge-TTS</h3><pre><span class="kw">import</span> edge_tts, asyncio
+
+<span class="kw">async def</span> <span class="fn">speak</span>(text, voice=<span class="st">'id-ID-GadisNeural'</span>):
+    <span class="st">"""Microsoft Edge TTS — bahasa Indonesia"""</span>
+    tts = edge_tts.<span class="fn">Communicate</span>(text, voice)
+    <span class="kw">await</span> tts.<span class="fn">save</span>(<span class="st">'/tmp/speech.mp3'</span>)
+    <span class="kw">import</span> subprocess
+    subprocess.<span class="fn">run</span>([<span class="st">'mpg321'</span>,<span class="st">'/tmp/speech.mp3'</span>])
+
+<span class="cm"># Voices Indonesia:
+# id-ID-GadisNeural (female)
+# id-ID-ArdiNeural  (male)</span>
+
+asyncio.<span class="fn">run</span>(<span class="fn">speak</span>(<span class="st">"Robot siap melaksanakan perintah"</span>))</pre></section><section class="sec" id="s4"><div class="sech"><div class="sn">04</div><div><div class="sc">TTS</div><h2>TEXT-TO-SPEECH OFFLINE</h2></div></div><pre><span class="kw">from</span> TTS.api <span class="kw">import</span> TTS  <span class="cm"># Coqui TTS, fully offline</span>
+
+tts = <span class="fn">TTS</span>(<span class="st">'tts_models/multilingual/multi-dataset/xtts_v2'</span>).<span class="fn">to</span>(<span class="st">'cuda'</span>)
+
+<span class="kw">def</span> <span class="fn">synthesize</span>(text, speaker_wav=<span class="st">'speaker.wav'</span>, language=<span class="st">'id'</span>):
+    tts.<span class="fn">tts_to_file</span>(
+        text=text,
+        speaker_wav=speaker_wav,  <span class="cm"># voice cloning dari 3 detik audio</span>
+        language=language,
+        file_path=<span class="st">'/tmp/out.wav'</span>)
+
+<span class="cm"># Streaming TTS real-time:</span>
+<span class="kw">import</span> sounddevice <span class="kw">as</span> sd
+
+<span class="kw">def</span> <span class="fn">speak_stream</span>(text):
+    chunks = tts.<span class="fn">tts_with_vc_to_bytes</span>(text, speaker_wav=<span class="st">'speaker.wav'</span>)
+    <span class="kw">import</span> numpy <span class="kw">as</span> np
+    audio = np.<span class="fn">frombuffer</span>(chunks, dtype=np.int16)
+    sd.<span class="fn">play</span>(audio, samplerate=<span class="nm">22050</span>); sd.<span class="fn">wait</span>()</pre></section><section class="sec" id="s5"><div class="sech"><div class="sn">05</div><div><div class="sc">LLM</div><h2>LLM TASK PLANNING</h2></div></div><p>LLM digunakan sebagai high-level task planner yang mengkonversi perintah bahasa alami menjadi sequence aksi robot primitif. Robot memiliki set <b>tool functions</b> yang dipanggil LLM.</p><div class="math">Pipeline:
+User Speech -> STT (Whisper) -> Natural Language Command
+           -> LLM (GPT/Llama) + Tool Calling
+           -> Robot Action Sequence
+           -> Execute via ROS2 / Serial
+           -> TTS Feedback -> Speaker</div><pre><span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+<span class="kw">import</span> json, re
+
+client = <span class="fn">OpenAI</span>()  <span class="cm"># atau gunakan local Ollama endpoint</span>
+
+<span class="cm"># Definisi robot tools / primitives</span>
+ROBOT_TOOLS = [
+  {"type":"function","function":{"name":"move_forward","description":"Gerakkan robot maju","parameters":{"type":"object","properties":{"distance_m":{"type":"number","description":"Jarak dalam meter"},"speed":{"type":"number","default":0.3}},"required":["distance_m"]}}},
+  {"type":"function","function":{"name":"turn","description":"Putar robot","parameters":{"type":"object","properties":{"angle_deg":{"type":"number","description":"Sudut putar, positif=kiri"},"speed":{"type":"number","default":0.5}},"required":["angle_deg"]}}},
+  {"type":"function","function":{"name":"navigate_to","description":"Navigasi ke koordinat","parameters":{"type":"object","properties":{"x":{"type":"number"},"y":{"type":"number"},"frame":{"type":"string","default":"map"}},"required":["x","y"]}}},
+  {"type":"function","function":{"name":"pick_object","description":"Ambil objek","parameters":{"type":"object","properties":{"object_name":{"type":"string"}},"required":["object_name"]}}},
+  {"type":"function","function":{"name":"speak","description":"Robot bicara","parameters":{"type":"object","properties":{"text":{"type":"string"}},"required":["text"]}}}
+]
+
+SYSTEM_PROMPT = <span class="st">"""
+Kamu adalah robot assistant cerdas bernama ARIA.
+Gunakan tools yang tersedia untuk menjalankan perintah pengguna.
+Selalu confirm aksi sebelum mengeksekusi.
+Bahasa Indonesia diutamakan.
+"""</span>
+
+<span class="kw">class</span> <span class="tp3">RobotLLMAgent</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, robot_interface):
+        self.robot = robot_interface
+        self.history = [{"role":"system","content":SYSTEM_PROMPT}]
+
+    <span class="kw">def</span> <span class="fn">execute_tool</span>(self, name, args):
+        <span class="kw">if</span>   name==<span class="st">'move_forward'</span>: self.robot.<span class="fn">move</span>(args[<span class="st">'distance_m'</span>])
+        <span class="kw">elif</span> name==<span class="st">'turn'</span>:         self.robot.<span class="fn">turn</span>(args[<span class="st">'angle_deg'</span>])
+        <span class="kw">elif</span> name==<span class="st">'navigate_to'</span>:  self.robot.<span class="fn">navigate</span>(args[<span class="st">'x'</span>],args[<span class="st">'y'</span>])
+        <span class="kw">elif</span> name==<span class="st">'pick_object'</span>:  self.robot.<span class="fn">pick</span>(args[<span class="st">'object_name'</span>])
+        <span class="kw">elif</span> name==<span class="st">'speak'</span>:        self.robot.<span class="fn">speak</span>(args[<span class="st">'text'</span>])
+        <span class="kw">return</span> <span class="st">f"OK: {name} executed"</span>
+
+    <span class="kw">def</span> <span class="fn">process_command</span>(self, user_input):
+        self.history.<span class="fn">append</span>({"role":"user","content":user_input})
+        response = client.chat.completions.<span class="fn">create</span>(
+            model=<span class="st">"gpt-4o-mini"</span>,
+            messages=self.history,
+            tools=ROBOT_TOOLS,
+            tool_choice=<span class="st">"auto"</span>)
+
+        msg = response.choices[<span class="nm">0</span>].message
+        <span class="kw">if</span> msg.tool_calls:
+            results = []
+            <span class="kw">for</span> call <span class="kw">in</span> msg.tool_calls:
+                args = json.<span class="fn">loads</span>(call.function.arguments)
+                res  = self.<span class="fn">execute_tool</span>(call.function.name, args)
+                results.<span class="fn">append</span>(res)
+            self.history.<span class="fn">append</span>({"role":"assistant","content":f"Executed: {results}"})
+        <span class="kw">return</span> msg.content <span class="kw">or</span> <span class="st">"Actions executed"</span></pre></section><section class="sec" id="s6"><div class="sech"><div class="sn">06</div><div><div class="sc">LLM</div><h2>ReAct REASONING</h2></div></div><p>ReAct (Reason + Act) adalah prompting strategy dimana LLM secara bergantian melakukan reasoning dan mengambil aksi berdasarkan observasi environment.</p><div class="math">ReAct Loop:
+Thought: [reasoning tentang situasi]
+Action: [pilih aksi dan parameter]
+Observation: [hasil aksi dari environment]
+... (ulangi sampai task selesai)
+
+Kelebihan vs pure tool calling:
+- LLM dapat menjelaskan reasoning
+- Dapat handle ambiguity lebih baik
+- Chain of thought natural</div><pre><span class="kw">def</span> <span class="fn">react_agent</span>(task, robot, max_steps=<span class="nm">10</span>):
+    <span class="st">"""ReAct robot agent loop"""</span>
+    prompt = <span class="st">f"""</span>
+<span class="st">Kamu adalah robot AI. Selesaikan tugas dengan loop Thought->Action->Observation.</span>
+
+<span class="st">Aksi tersedia:</span>
+<span class="st">- scan_environment() -> list obstacles dan objek</span>
+<span class="st">- navigate_to(x, y) -> bergerak ke koordinat</span>
+<span class="st">- pick(object) -> ambil objek</span>
+<span class="st">- place(location) -> taruh objek</span>
+<span class="st">- check_goal() -> cek apakah goal tercapai</span>
+
+<span class="st">Task: {task}</span>
+
+<span class="st">Format output:</span>
+<span class="st">Thought: [reasoning]</span>
+<span class="st">Action: function_name(args)</span>
+<span class="st">"""</span>
+    messages = [{"role":"user","content":prompt}]
+    
+    <span class="kw">for</span> step <span class="kw">in</span> <span class="fn">range</span>(max_steps):
+        response = client.chat.completions.<span class="fn">create</span>(
+            model=<span class="st">"gpt-4o"</span>, messages=messages)
+        output = response.choices[<span class="nm">0</span>].message.content
+        <span class="fn">print</span>(<span class="st">f"Step {step}: {output}"</span>)
+        
+        <span class="kw">if</span> <span class="st">"Action:"</span> <span class="kw">in</span> output:
+            action_line = [l <span class="kw">for</span> l <span class="kw">in</span> output.<span class="fn">split</span>(<span class="st">'\n'</span>) <span class="kw">if</span> l.<span class="fn">startswith</span>(<span class="st">'Action:'</span>)][<span class="nm">0</span>]
+            action_str = action_line.<span class="fn">replace</span>(<span class="st">'Action:'</span>,<span class="st">''</span>).<span class="fn">strip</span>()
+            obs = robot.<span class="fn">execute</span>(action_str)
+            messages.<span class="fn">append</span>({"role":"assistant","content":output})
+            messages.<span class="fn">append</span>({"role":"user","content":f"Observation: {obs}"})
+        <span class="kw">elif</span> <span class="st">"DONE"</span> <span class="kw">in</span> output:
+            <span class="kw">break</span>
+    <span class="kw">return</span> "Task complete"</pre></section><section class="sec" id="s7"><div class="sech"><div class="sn">07</div><div><div class="sc">LLM</div><h2>LOCAL LLM DENGAN OLLAMA</h2></div></div><p>Ollama memungkinkan menjalankan LLM (Llama 3, Mistral, Phi-3) secara offline di Jetson atau server lokal. Penting untuk privasi dan latensi rendah.</p><pre><span class="kw">import</span> ollama
+
+<span class="cm"># Install: curl -fsSL https://ollama.ai/install.sh | sh</span>
+<span class="cm"># Pull model: ollama pull llama3.2:3b</span>
+
+<span class="kw">class</span> <span class="tp3">LocalRobotLLM</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, model=<span class="st">'llama3.2:3b'</span>):
+        self.model = model
+        self.history = []
+        self.system = <span class="st">"""Kamu adalah robot AI bernama ARIA. Tugasmu membantu manusia dengan melakukan navigasi, mengambil objek, dan memberikan informasi. Gunakan Bahasa Indonesia."""</span>
+
+    <span class="kw">def</span> <span class="fn">chat</span>(self, user_msg):
+        self.history.<span class="fn">append</span>({"role":"user","content":user_msg})
+        response = ollama.<span class="fn">chat</span>(
+            model=self.model,
+            messages=[{"role":"system","content":self.system}] + self.history,
+            options={"temperature":<span class="nm">0.1</span>,"num_ctx":<span class="nm">4096</span>})
+        reply = response[<span class="st">'message'</span>][<span class="st">'content'</span>]
+        self.history.<span class="fn">append</span>({"role":"assistant","content":reply})
+        <span class="kw">return</span> reply
+
+    <span class="kw">def</span> <span class="fn">plan_task</span>(self, task, current_state):
+        prompt = <span class="st">f"Situasi robot: {current_state}\nTugas: {task}\nBuat rencana langkah demi langkah dalam format JSON."</span>
+        response = ollama.<span class="fn">generate</span>(
+            model=self.model, prompt=prompt,
+            format=<span class="st">'json'</span>, options={"temperature":<span class="nm">0</span>})
+        <span class="kw">import</span> json
+        <span class="kw">return</span> json.<span class="fn">loads</span>(response[<span class="st">'response'</span>])
+
+<span class="cm"># Contoh model size/speed on Jetson Orin NX 16GB:
+# phi3:mini (3.8B) → ~15 tok/s
+# llama3.2:3b     → ~12 tok/s
+# mistral:7b      → ~7  tok/s (butuh quantization)
+# llava:7b        → ~6  tok/s (multimodal, bisa lihat gambar)</span></pre></section><section class="sec" id="s8"><div class="sech"><div class="sn">08</div><div><div class="sc">Embodied AI</div><h2>PIPELINE EMBODIED AI</h2></div></div><p>Embodied AI mengintegrasikan persepsi (vision + audio), reasoning (LLM), dan aksi (robot control) dalam loop yang continuous.</p><div class="math">Embodied AI Loop:
+
+Perception:
+  Camera frame → VLM / YOLOv8 → object list, scene description
+  Microphone   → VAD → Whisper → text command
+  LiDAR scan   → local map update
+
+Reasoning (LLM):
+  scene_description + command + robot_state → action_plan
+
+Action:
+  action_plan → ROS2 Nav2 / Manipulator → execute
+  + TTS feedback</div><pre><span class="kw">import</span> asyncio, threading
+<span class="kw">from</span> queue <span class="kw">import</span> Queue
+
+<span class="kw">class</span> <span class="tp3">EmbodiedRobot</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.cmd_q  = Queue()
+        self.obs_q  = Queue()
+        self.llm    = <span class="fn">LocalRobotLLM</span>(<span class="st">'llava:7b'</span>)  <span class="cm"># multimodal</span>
+        self.stt    = <span class="fn">WhisperSTT</span>(<span class="st">'small'</span>)
+        self.vad    = <span class="fn">VoiceActivityDetector</span>()
+        self.camera = <span class="fn">cv2.VideoCapture</span>(<span class="nm">0</span>)
+
+    <span class="kw">def</span> <span class="fn">perception_thread</span>(self):
+        <span class="st">"""Continuous perception loop"""</span>
+        <span class="kw">while</span> <span class="nm">True</span>:
+            ret, frame = self.camera.<span class="fn">read</span>()
+            self.obs_q.<span class="fn">put</span>({"type":"vision","data":frame})
+            audio = self.vad.<span class="fn">record_utterance</span>()
+            <span class="kw">if</span> audio <span class="kw">is not None</span>:
+                text = self.stt.<span class="fn">transcribe</span>(audio)
+                self.cmd_q.<span class="fn">put</span>({"type":"speech","text":text})
+
+    <span class="kw">def</span> <span class="fn">reasoning_thread</span>(self):
+        <span class="st">"""LLM reasoning + action planning"""</span>
+        <span class="kw">while</span> <span class="nm">True</span>:
+            cmd = self.cmd_q.<span class="fn">get</span>()
+            obs = <span class="nm">None</span>
+            <span class="kw">try</span>: obs = self.obs_q.<span class="fn">get_nowait</span>()
+            <span class="kw">except</span>: <span class="kw">pass</span>
+            plan = self.llm.<span class="fn">plan_task</span>(cmd[<span class="st">'text'</span>], obs)
+            self.<span class="fn">execute_plan</span>(plan)
+
+    <span class="kw">def</span> <span class="fn">run</span>(self):
+        t1=threading.<span class="fn">Thread</span>(target=self.perception_thread, daemon=<span class="nm">True</span>)
+        t2=threading.<span class="fn">Thread</span>(target=self.reasoning_thread, daemon=<span class="nm">True</span>)
+        t1.<span class="fn">start</span>(); t2.<span class="fn">start</span>(); t1.<span class="fn">join</span>()</pre></section><section class="sec" id="s9"><div class="sech"><div class="sn">09</div><div><div class="sc">Memory</div><h2>RAG ROBOT MEMORY</h2></div></div><p>Robot dapat memiliki memori episodik yang bisa di-query dengan RAG (Retrieval Augmented Generation). Sangat berguna untuk robot yang bekerja di lingkungan familiar.</p><pre><span class="kw">from</span> langchain.vectorstores <span class="kw">import</span> Chroma
+<span class="kw">from</span> langchain.embeddings <span class="kw">import</span> OllamaEmbeddings
+<span class="kw">from</span> langchain.text_splitter <span class="kw">import</span> RecursiveCharacterTextSplitter
+<span class="kw">import</span> datetime
+
+<span class="kw">class</span> <span class="tp3">RobotMemory</span>:
+    <span class="st">"""Episodic memory dengan vector search"""</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.embed = <span class="fn">OllamaEmbeddings</span>(model=<span class="st">'nomic-embed-text'</span>)
+        self.db = <span class="fn">Chroma</span>(persist_directory=<span class="st">'robot_memory'</span>,
+                          embedding_function=self.embed)
+
+    <span class="kw">def</span> <span class="fn">remember</span>(self, event, metadata=<span class="nm">None</span>):
+        doc = <span class="st">f"[{datetime.datetime.now().isoformat()}] {event}"</span>
+        meta = metadata <span class="kw">or</span> {}
+        meta[<span class="st">'timestamp'</span>] = <span class="fn">str</span>(datetime.datetime.<span class="fn">now</span>())
+        self.db.<span class="fn">add_texts</span>([doc], metadatas=[meta])
+
+    <span class="kw">def</span> <span class="fn">recall</span>(self, query, k=<span class="nm">5</span>):
+        results = self.db.<span class="fn">similarity_search</span>(query, k=k)
+        <span class="kw">return</span> [r.page_content <span class="kw">for</span> r <span class="kw">in</span> results]
+
+    <span class="kw">def</span> <span class="fn">update_map_knowledge</span>(self, area, description):
+        self.<span class="fn">remember</span>(
+            <span class="st">f"Area {area}: {description}"</span>,
+            metadata={"type":"map","area":area})
+
+<span class="cm"># Contoh penggunaan:</span>
+memory = <span class="fn">RobotMemory</span>()
+memory.<span class="fn">remember</span>(<span class="st">"Ditemukan kotak merah di koordinat (2.5, 1.0)"</span>)
+memory.<span class="fn">remember</span>(<span class="st">"Pintu ruang tamu sering tertutup sore hari"</span>)
+memory.<span class="fn">update_map_knowledge</span>(<span class="st">"dapur"</span>, <span class="st">"Ada kulkas dan meja, pencahayaan terang"</span>)
+
+hasil = memory.<span class="fn">recall</span>(<span class="st">"dimana kotak merah?"</span>)
+<span class="fn">print</span>(hasil)  <span class="cm"># → "Ditemukan kotak merah di (2.5, 1.0)"</span></pre></section><section class="sec" id="s10"><div class="sech"><div class="sn">010</div><div><div class="sc">Vision LM</div><h2>VISION LANGUAGE MODEL</h2></div></div><p>Model seperti LLaVA, InternVL, atau Moondream memungkinkan robot memahami scene kamera dalam bahasa alami.</p><pre><span class="kw">import</span> ollama, cv2, base64, numpy <span class="kw">as</span> np
+
+<span class="kw">class</span> <span class="tp3">VisionLM</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, model=<span class="st">'llava:7b'</span>):
+        self.model = model
+
+    <span class="kw">def</span> <span class="fn">describe_scene</span>(self, frame):
+        _, buf = cv2.<span class="fn">imencode</span>(<span class="st">'.jpg'</span>, frame)
+        img_b64 = base64.<span class="fn">b64encode</span>(buf).<span class="fn">decode</span>()
+        res = ollama.<span class="fn">generate</span>(
+            model=self.model,
+            prompt=<span class="st">"Deskripsikan scene ini untuk robot. Sebutkan: objek, posisi relatif, hal yang perlu diperhatikan untuk navigasi. Bahasa Indonesia."</span>,
+            images=[img_b64])
+        <span class="kw">return</span> res[<span class="st">'response'</span>]
+
+    <span class="kw">def</span> <span class="fn">find_object</span>(self, frame, object_name):
+        _, buf = cv2.<span class="fn">imencode</span>(<span class="st">'.jpg'</span>, frame)
+        img_b64 = base64.<span class="fn">b64encode</span>(buf).<span class="fn">decode</span>()
+        res = ollama.<span class="fn">generate</span>(
+            model=self.model,
+            prompt=<span class="st">f"Apakah ada {object_name} dalam gambar? Jika ada, sebutkan posisinya (kiri/tengah/kanan, dekat/jauh). Jawab JSON: {{\"found\": bool, \"position\": string}}"</span>,
+            images=[img_b64],
+            format=<span class="st">'json'</span>)
+        <span class="kw">import</span> json
+        <span class="kw">return</span> json.<span class="fn">loads</span>(res[<span class="st">'response'</span>])
+
+<span class="cm"># Contoh: robot mencari gelas air</span>
+vlm = <span class="fn">VisionLM</span>()
+cap = cv2.<span class="fn">VideoCapture</span>(<span class="nm">0</span>)
+ret, frame = cap.<span class="fn">read</span>()
+result = vlm.<span class="fn">find_object</span>(frame, <span class="st">"gelas air"</span>)
+<span class="fn">print</span>(result)  <span class="cm"># {"found": true, "position": "kanan, dekat"}</span></pre></section>
+<div style="text-align:center;padding:40px 0;color:var(--text3);font-family:var(--mono);font-size:11px;border-top:1px solid var(--border);margin-top:40px">LLM & DEEP LEARNING ROBOT — DOC 02 / 07<br><span style="color:rgb(var(--ac));margin-top:8px;display:block">Antonius - bluedragonsec.com</span></div>
+</div></div><script>function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open')}
+document.getElementById('overlay').addEventListener('click',toggleSidebar);
+const secs=document.querySelectorAll('.sec'),nls=document.querySelectorAll('.ni');
+secs.forEach(s=>new IntersectionObserver(e=>{if(e[0].isIntersecting){const id=s.id;nls.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+id))}},{threshold:0.15,rootMargin:'-60px 0px -60% 0px'}).observe(s));
+nls.forEach(l=>l.addEventListener('click',()=>{if(window.innerWidth<=900)toggleSidebar()}));</script></body></html>

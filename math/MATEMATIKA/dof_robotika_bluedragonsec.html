@@ -1,0 +1,1998 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>DOF Robotika — Blue Dragon Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #060b14;
+    --surface:   #0c1524;
+    --surface2:  #101d30;
+    --border:    #1a3050;
+    --accent:    #00d4ff;
+    --accent2:   #0077ff;
+    --accent3:   #00ff88;
+    --dragon:    #0af;
+    --warn:      #ff6b35;
+    --text:      #c8d8e8;
+    --text-dim:  #5a7a9a;
+    --text-head: #e8f4ff;
+    --mono:      'Share Tech Mono', monospace;
+    --display:   'Orbitron', sans-serif;
+    --body:      'Rajdhani', sans-serif;
+    --r:         8px;
+    --glow:      0 0 20px rgba(0,212,255,0.25);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* === GRID NOISE BACKGROUND === */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* === HEADER === */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(6,11,20,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .logo-text {
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+
+  .header-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  /* === HERO === */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding: 80px 24px 60px;
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent3);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-label::before, .hero-label::after {
+    content: '';
+    display: inline-block;
+    width: 30px;
+    height: 1px;
+    background: var(--accent3);
+  }
+
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(2.2rem, 6vw, 4.2rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--text-head);
+    margin-bottom: 12px;
+    letter-spacing: -1px;
+  }
+
+  .hero h1 span {
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--text-dim);
+    max-width: 600px;
+    margin: 0 auto 36px;
+    font-weight: 300;
+  }
+
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  .badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .badge-blue  { border: 1px solid var(--accent2); color: var(--accent); background: rgba(0,119,255,0.08); }
+  .badge-green { border: 1px solid rgba(0,255,136,0.3); color: var(--accent3); background: rgba(0,255,136,0.06); }
+  .badge-warn  { border: 1px solid rgba(255,107,53,0.3); color: var(--warn); background: rgba(255,107,53,0.06); }
+
+  /* === LAYOUT === */
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* === SIDEBAR TOC === */
+  .toc {
+    position: sticky;
+    top: 70px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 20px;
+    overflow: hidden;
+  }
+
+  .toc::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+  }
+
+  .toc-title {
+    font-family: var(--display);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+
+  .toc a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 13px;
+    color: var(--text-dim);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    padding-left: 10px;
+    margin-left: -10px;
+    transition: all 0.2s;
+    font-weight: 400;
+  }
+
+  .toc a:hover {
+    color: var(--accent);
+    border-left-color: var(--accent);
+  }
+
+  .toc a span.num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent2);
+    min-width: 18px;
+  }
+
+  /* === MAIN CONTENT === */
+  .content { min-width: 0; }
+
+  /* Section cards */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 32px 36px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .section:hover { border-color: rgba(0,212,255,0.3); }
+
+  .section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent2), transparent);
+  }
+
+  .section-accent3::before { background: linear-gradient(90deg, var(--accent3), transparent); }
+  .section-warn::before   { background: linear-gradient(90deg, var(--warn), transparent); }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent2);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  h2 {
+    font-family: var(--display);
+    font-size: clamp(1.3rem, 3vw, 1.7rem);
+    font-weight: 700;
+    color: var(--text-head);
+    margin-bottom: 18px;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-family: var(--body);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 24px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  h3::before {
+    content: '▸';
+    font-size: 0.8em;
+    color: var(--accent2);
+  }
+
+  h4 {
+    font-family: var(--body);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent3);
+    margin: 16px 0 8px;
+  }
+
+  p { margin-bottom: 14px; font-size: 15px; }
+
+  strong { color: var(--text-head); font-weight: 600; }
+
+  em { color: var(--accent); font-style: normal; font-weight: 600; }
+
+  /* === CALLOUT BOXES === */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: rgba(0,119,255,0.06);
+    padding: 14px 18px;
+    border-radius: 0 var(--r) var(--r) 0;
+    margin: 18px 0;
+    font-size: 14.5px;
+  }
+
+  .callout.green { border-color: var(--accent3); background: rgba(0,255,136,0.05); }
+  .callout.warn  { border-color: var(--warn);    background: rgba(255,107,53,0.06); }
+
+  .callout-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .callout.blue  .callout-title { color: var(--accent); }
+  .callout.green .callout-title { color: var(--accent3); }
+  .callout.warn  .callout-title { color: var(--warn); }
+
+  /* === FORMULA BOX === */
+  .formula {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 18px 24px;
+    margin: 16px 0;
+    font-family: var(--mono);
+    font-size: 15px;
+    color: var(--accent);
+    text-align: center;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .formula::before {
+    content: 'FORMULA';
+    position: absolute;
+    top: 6px; right: 12px;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+  }
+
+  .formula sub, .formula sup {
+    font-size: 0.7em;
+  }
+
+  /* === GRID CARDS === */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin: 18px 0;
+  }
+
+  .card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 18px;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--glow);
+  }
+
+  .card-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .card-title {
+    font-family: var(--display);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .card-body {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .card-num {
+    position: absolute;
+    top: 10px; right: 14px;
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: rgba(0,212,255,0.12);
+    line-height: 1;
+  }
+
+  /* === TABLE === */
+  .tbl-wrap { overflow-x: auto; margin: 16px 0; border-radius: var(--r); border: 1px solid var(--border); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+
+  thead tr {
+    background: linear-gradient(90deg, var(--surface2), var(--surface));
+  }
+
+  th {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    text-transform: uppercase;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(26,48,80,0.5);
+    color: var(--text);
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(0,119,255,0.04); }
+
+  td:first-child { color: var(--accent3); font-weight: 600; font-family: var(--mono); font-size: 13px; }
+
+  /* === CODE BLOCK === */
+  pre {
+    background: #070e1a;
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 20px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: #a8d8f0;
+    position: relative;
+  }
+
+  pre::before {
+    content: attr(data-lang);
+    position: absolute;
+    top: 8px; right: 14px;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .kw  { color: #66b2ff; }
+  .fn  { color: #7ec8a8; }
+  .str { color: #f0c060; }
+  .cm  { color: #4a6a8a; }
+  .num { color: #f08060; }
+
+  /* === SVG ROBOT DIAGRAMS === */
+  .diagram-wrap {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 24px;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .diagram-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  /* === NUMBERED LIST === */
+  ol.styled { padding-left: 0; list-style: none; counter-reset: item; }
+
+  ol.styled li {
+    counter-increment: item;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 12px;
+    font-size: 15px;
+    align-items: flex-start;
+  }
+
+  ol.styled li::before {
+    content: counter(item, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    background: rgba(0,119,255,0.1);
+    border: 1px solid rgba(0,119,255,0.2);
+    border-radius: 4px;
+    padding: 1px 6px;
+    min-width: 36px;
+    text-align: center;
+    line-height: 1.6;
+    flex-shrink: 0;
+  }
+
+  /* === UL === */
+  ul.styled { list-style: none; padding-left: 0; }
+  ul.styled li {
+    padding: 5px 0 5px 20px;
+    position: relative;
+    font-size: 15px;
+  }
+  ul.styled li::before {
+    content: '◆';
+    position: absolute;
+    left: 0;
+    color: var(--accent2);
+    font-size: 8px;
+    top: 9px;
+  }
+
+  /* === FINGERPRINT FOOTER === */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    max-width: 1060px;
+    margin: 0 auto;
+  }
+
+  .fp-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 20px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fp-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent3), var(--accent));
+  }
+
+  .fp-dragon {
+    font-size: 2.5rem;
+    filter: drop-shadow(0 0 12px var(--accent));
+  }
+
+  .fp-info { flex: 1; min-width: 200px; }
+
+  .fp-name {
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+
+  .fp-detail {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.9;
+  }
+
+  .fp-detail a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .fp-hash {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 14px;
+    color: var(--text-dim);
+    line-height: 1.8;
+  }
+
+  .fp-hash span { color: var(--accent3); }
+
+  /* === PROGRESS BAR === */
+  .dof-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 6px 0;
+    font-size: 13px;
+  }
+
+  .dof-bar-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    min-width: 90px;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    animation: barLoad 1s ease both;
+  }
+
+  @keyframes barLoad {
+    from { width: 0 !important; }
+  }
+
+  .bar-val {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    min-width: 36px;
+    text-align: right;
+  }
+
+  /* === JOINT VISUAL === */
+  .joint-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .joint-card {
+    flex: 1;
+    min-width: 130px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.25s;
+    cursor: default;
+  }
+
+  .joint-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+  }
+
+  .joint-card svg { overflow: visible; }
+
+  .joint-name {
+    font-family: var(--display);
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .joint-dof {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-head);
+  }
+
+  .joint-desc {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  /* === TABS === */
+  .tabs { margin: 20px 0; }
+
+  .tab-nav {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tab-nav::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 10px 18px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .tab-btn:hover { color: var(--accent); }
+
+  .tab-panel {
+    display: none;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--r) var(--r);
+    padding: 24px;
+  }
+
+  .tab-panel.active { display: block; }
+
+  /* === HIGHLIGHT NUMBER === */
+  .hl-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: rgba(0,119,255,0.15);
+    border: 1px solid rgba(0,119,255,0.3);
+    border-radius: 50%;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-right: 4px;
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 800px) {
+    .wrapper {
+      grid-template-columns: 1fr;
+    }
+    .toc { position: static; display: none; }
+    .section { padding: 22px 18px; }
+    .hero { padding: 48px 16px 40px; }
+    header { padding: 0 16px; }
+    .fp-box { flex-direction: column; }
+  }
+
+  /* === SCROLL ANIMATIONS === */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.5s ease both;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section:nth-child(1)  { animation-delay: 0.05s; }
+  .section:nth-child(2)  { animation-delay: 0.10s; }
+  .section:nth-child(3)  { animation-delay: 0.15s; }
+  .section:nth-child(4)  { animation-delay: 0.20s; }
+  .section:nth-child(5)  { animation-delay: 0.25s; }
+  .section:nth-child(6)  { animation-delay: 0.30s; }
+  .section:nth-child(7)  { animation-delay: 0.35s; }
+  .section:nth-child(8)  { animation-delay: 0.40s; }
+  .section:nth-child(9)  { animation-delay: 0.45s; }
+  .section:nth-child(10) { animation-delay: 0.50s; }
+  .section:nth-child(11) { animation-delay: 0.55s; }
+
+  /* Tag pill */
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 2px;
+    letter-spacing: 0.5px;
+  }
+  .tag-b { background: rgba(0,119,255,0.12); color: var(--accent); border: 1px solid rgba(0,119,255,0.2); }
+  .tag-g { background: rgba(0,255,136,0.08); color: var(--accent3); border: 1px solid rgba(0,255,136,0.2); }
+  .tag-r { background: rgba(255,107,53,0.1); color: var(--warn); border: 1px solid rgba(255,107,53,0.2); }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 20px 0;
+  }
+
+  /* Glowing span */
+  .glow-text {
+    color: var(--accent);
+    text-shadow: 0 0 12px rgba(0,212,255,0.5);
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<header>
+  <a class="logo" href="#">
+    <div class="logo-icon">🐉</div>
+    <span class="logo-text">BLUE DRAGON SEC</span>
+  </a>
+  <span class="header-tag">ROBOTICS // DOF MODULE</span>
+</header>
+
+<!-- ══════════ HERO ══════════ -->
+<div class="hero fade-in">
+  <div class="hero-label">Tutorial Lengkap</div>
+  <h1><span>Degree of Freedom</span><br>dalam Robotika</h1>
+  <p class="hero-sub">Panduan komprehensif DOF: konsep dasar, kinematika, jenis joint, workspace analysis, dan aplikasi sistem robot nyata.</p>
+  <div class="hero-meta">
+    <span class="badge badge-blue">KINEMATIKA</span>
+    <span class="badge badge-blue">JOINT TYPES</span>
+    <span class="badge badge-green">WORKSPACE</span>
+    <span class="badge badge-green">DH PARAMETERS</span>
+    <span class="badge badge-warn">ROBOT DESIGN</span>
+  </div>
+</div>
+
+<!-- ══════════ BODY ══════════ -->
+<div class="wrapper">
+
+  <!-- SIDEBAR TOC -->
+  <nav class="toc">
+    <div class="toc-title">Daftar Isi</div>
+    <a href="#s1"><span class="num">01</span> Pengertian DOF</a>
+    <a href="#s2"><span class="num">02</span> DOF dalam Fisika & Mekanika</a>
+    <a href="#s3"><span class="num">03</span> Jenis-Jenis Joint</a>
+    <a href="#s4"><span class="num">04</span> Formula Grübler</a>
+    <a href="#s5"><span class="num">05</span> Konfigurasi Robot</a>
+    <a href="#s6"><span class="num">06</span> DOF & Kinematika</a>
+    <a href="#s7"><span class="num">07</span> DH Parameters</a>
+    <a href="#s8"><span class="num">08</span> Workspace & Dexterity</a>
+    <a href="#s9"><span class="num">09</span> Redundant Robots</a>
+    <a href="#s10"><span class="num">10</span> Contoh Robot Nyata</a>
+    <a href="#s11"><span class="num">11</span> Desain & Pemilihan DOF</a>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+
+    <!-- SECTION 1 -->
+    <section class="section fade-in" id="s1">
+      <div class="section-label">01 // Konsep Dasar</div>
+      <h2>Apa itu Degree of Freedom (DOF)?</h2>
+
+      <p><strong>Degree of Freedom (DOF)</strong> atau <em>Derajat Kebebasan</em> adalah jumlah parameter independen yang diperlukan untuk mendeskripsikan konfigurasi atau posisi suatu sistem secara lengkap. Dalam konteks robotika, DOF menggambarkan berapa banyak cara berbeda sebuah robot dapat bergerak.</p>
+
+      <div class="callout blue">
+        <div class="callout-title">⚡ Definisi Kritis</div>
+        DOF = Jumlah variabel independen yang dibutuhkan untuk sepenuhnya menentukan posisi dan orientasi semua bagian sistem mekanik.
+      </div>
+
+      <h3>Mengapa DOF Sangat Penting?</h3>
+
+      <div class="card-grid">
+        <div class="card">
+          <span class="card-icon">🎯</span>
+          <div class="card-title">Kemampuan Gerak</div>
+          <div class="card-body">Menentukan apa yang bisa dan tidak bisa dicapai robot dalam ruang kerja.</div>
+          <div class="card-num">01</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">⚙️</span>
+          <div class="card-title">Kompleksitas Kontrol</div>
+          <div class="card-body">Lebih banyak DOF = kontrol lebih kompleks, butuh lebih banyak aktuator & sensor.</div>
+          <div class="card-num">02</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">📐</span>
+          <div class="card-title">Workspace</div>
+          <div class="card-body">Mendefinisikan volume ruang yang dapat dijangkau end-effector robot.</div>
+          <div class="card-num">03</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🔧</span>
+          <div class="card-title">Desain Sistem</div>
+          <div class="card-body">Dasar penentuan jumlah joint, motor, dan struktur mekanik robot.</div>
+          <div class="card-num">04</div>
+        </div>
+      </div>
+
+      <h3>DOF pada Benda di Ruang Bebas</h3>
+      <p>Sebuah benda kaku (<em>rigid body</em>) yang bergerak bebas di ruang 3D memiliki <strong>6 DOF</strong>:</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <span class="card-icon">↔️</span>
+          <div class="card-title">Translasi</div>
+          <div class="card-body">
+            <strong>TX</strong> — Sumbu X (Surge)<br>
+            <strong>TY</strong> — Sumbu Y (Sway)<br>
+            <strong>TZ</strong> — Sumbu Z (Heave)
+          </div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🔄</span>
+          <div class="card-title">Rotasi</div>
+          <div class="card-body">
+            <strong>RX</strong> — Roll (sekitar X)<br>
+            <strong>RY</strong> — Pitch (sekitar Y)<br>
+            <strong>RZ</strong> — Yaw (sekitar Z)
+          </div>
+        </div>
+      </div>
+
+      <div class="diagram-wrap">
+        <div class="diagram-title">Visualisasi 6 DOF Rigid Body di Ruang 3D</div>
+        <svg width="420" height="260" viewBox="0 0 420 260">
+          <defs>
+            <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#00d4ff"/>
+            </marker>
+            <marker id="arrG" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#00ff88"/>
+            </marker>
+            <marker id="arrW" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#ff6b35"/>
+            </marker>
+          </defs>
+          <!-- Object box -->
+          <rect x="160" y="100" width="100" height="70" rx="6"
+                fill="rgba(0,119,255,0.08)" stroke="#1a3050" stroke-width="1.5"/>
+          <text x="210" y="140" text-anchor="middle" fill="#c8d8e8"
+                font-family="Rajdhani,sans-serif" font-size="15" font-weight="600">ROBOT BODY</text>
+
+          <!-- TX -->
+          <line x1="260" y1="135" x2="330" y2="135"
+                stroke="#00d4ff" stroke-width="2" marker-end="url(#arr)"/>
+          <text x="340" y="132" fill="#00d4ff" font-family="Share Tech Mono,monospace" font-size="12">TX</text>
+
+          <!-- TY -->
+          <line x1="210" y1="100" x2="210" y2="40"
+                stroke="#00d4ff" stroke-width="2" marker-end="url(#arr)"/>
+          <text x="216" y="30" fill="#00d4ff" font-family="Share Tech Mono,monospace" font-size="12">TY</text>
+
+          <!-- TZ (perspective) -->
+          <line x1="160" y1="135" x2="105" y2="175"
+                stroke="#00d4ff" stroke-width="2" marker-end="url(#arr)"/>
+          <text x="82" y="190" fill="#00d4ff" font-family="Share Tech Mono,monospace" font-size="12">TZ</text>
+
+          <!-- RX arc -->
+          <path d="M 310 180 A 30 15 0 1 0 310 182" fill="none" stroke="#00ff88" stroke-width="2" marker-end="url(#arrG)"/>
+          <text x="348" y="185" fill="#00ff88" font-family="Share Tech Mono,monospace" font-size="12">RX</text>
+
+          <!-- RY arc -->
+          <path d="M 195 40 A 15 30 0 1 0 197 40" fill="none" stroke="#00ff88" stroke-width="2" marker-end="url(#arrG)"/>
+          <text x="152" y="28" fill="#00ff88" font-family="Share Tech Mono,monospace" font-size="12">RY</text>
+
+          <!-- RZ arc -->
+          <path d="M 70 90 A 25 25 0 1 0 72 90" fill="none" stroke="#00ff88" stroke-width="2" marker-end="url(#arrG)"/>
+          <text x="48" y="75" fill="#00ff88" font-family="Share Tech Mono,monospace" font-size="12">RZ</text>
+
+          <!-- Labels -->
+          <text x="210" y="248" text-anchor="middle" fill="#5a7a9a"
+                font-family="Share Tech Mono,monospace" font-size="10">
+            TRANSLASI (3) + ROTASI (3) = 6 DOF
+          </text>
+          <text x="20" y="248" fill="#00d4ff" font-family="Share Tech Mono,monospace" font-size="10">— Translasi</text>
+          <text x="20" y="262" fill="#00ff88" font-family="Share Tech Mono,monospace" font-size="10">— Rotasi</text>
+        </svg>
+      </div>
+
+      <div class="callout green">
+        <div class="callout-title">💡 Analogi Sehari-hari</div>
+        Bayangkan Anda memarkir mobil di 3D: maju-mundur (TX), kiri-kanan (TY), naik-turun jika bisa terbang (TZ), plus tiga rotasi. Sebuah pesawat terbang memiliki semua 6 DOF penuh.
+      </div>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section class="section fade-in" id="s2">
+      <div class="section-label">02 // Fisika & Mekanika</div>
+      <h2>DOF dalam Fisika dan Mekanika Klasik</h2>
+
+      <p>Konsep DOF berakar pada mekanika analitik. <strong>Lagrange</strong> dan <strong>Hamilton</strong> menggunakan DOF sebagai fondasi dalam perumusan persamaan gerak sistem mekanik kompleks.</p>
+
+      <h3>DOF Berdasarkan Dimensi Ruang</h3>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Dimensi Ruang</th>
+              <th>DOF Benda Bebas</th>
+              <th>Translasi</th>
+              <th>Rotasi</th>
+              <th>Contoh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2D (Planar)</td>
+              <td>3 DOF</td>
+              <td>X, Y</td>
+              <td>θ (sekitar Z)</td>
+              <td>Robot planar, conveyor</td>
+            </tr>
+            <tr>
+              <td>3D (Spatial)</td>
+              <td>6 DOF</td>
+              <td>X, Y, Z</td>
+              <td>Roll, Pitch, Yaw</td>
+              <td>Robot arm industri, drone</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Kendala (Constraints) dan Pengaruhnya</h3>
+      <p>Setiap <em>constraint</em> (batasan gerak) yang diterapkan pada sistem akan <strong>mengurangi DOF</strong>. Constraint bisa berupa sambungan mekanis, joint, atau kontak permukaan.</p>
+
+      <div class="formula">
+        DOF<sub>sistem</sub> = DOF<sub>bebas</sub> − Σ(Constraint yang Aktif)
+      </div>
+
+      <p>Contoh: Dua benda kaku di ruang 3D memiliki 2 × 6 = 12 DOF total. Jika dihubungkan dengan revolute joint (memberikan 5 constraint), maka DOF sistem = 12 − 5 = <strong>7 DOF</strong>.</p>
+
+      <h3>Jenis Constraint</h3>
+      <ul class="styled">
+        <li><strong>Holonomic Constraint</strong>: Dapat diekspresikan sebagai fungsi posisi saja — f(q₁, q₂, ..., t) = 0</li>
+        <li><strong>Non-Holonomic Constraint</strong>: Melibatkan kecepatan, tidak dapat diintegrasikan menjadi fungsi posisi murni (contoh: roda tanpa slip)</li>
+        <li><strong>Rheonomic Constraint</strong>: Bergantung secara eksplisit terhadap waktu</li>
+        <li><strong>Scleronomic Constraint</strong>: Tidak bergantung pada waktu (stasioner)</li>
+      </ul>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section class="section section-accent3 fade-in" id="s3">
+      <div class="section-label">03 // Joint Types</div>
+      <h2>Jenis-Jenis Joint dalam Robotika</h2>
+
+      <p>Joint (sambungan mekanik) adalah elemen yang menghubungkan dua link robot dan mendefinisikan gerakan relatif di antara keduanya. Setiap tipe joint memiliki DOF berbeda dan karakteristik unik.</p>
+
+      <div class="joint-row">
+        <!-- Revolute -->
+        <div class="joint-card">
+          <svg width="60" height="60" viewBox="0 0 60 60">
+            <circle cx="30" cy="30" r="18" fill="none" stroke="#00d4ff" stroke-width="2"/>
+            <circle cx="30" cy="30" r="6" fill="#00d4ff" opacity="0.7"/>
+            <path d="M30 30 L30 10" stroke="#00ff88" stroke-width="2" stroke-dasharray="3,3"/>
+            <path d="M30 10 A20 20 0 0 1 48 22" fill="none" stroke="#ff6b35" stroke-width="2" marker-end="url(#arrW)"/>
+            <defs>
+              <marker id="arrW2" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+                <path d="M0,0 L5,2.5 L0,5 Z" fill="#ff6b35"/>
+              </marker>
+            </defs>
+          </svg>
+          <div class="joint-name">Revolute (R)</div>
+          <div class="joint-dof">1</div>
+          <div class="joint-desc">Rotasi murni 1 sumbu. Paling umum di robot arm.</div>
+        </div>
+
+        <!-- Prismatic -->
+        <div class="joint-card">
+          <svg width="60" height="60" viewBox="0 0 60 60">
+            <rect x="20" y="8" width="20" height="14" rx="3" fill="none" stroke="#1a3050" stroke-width="1.5"/>
+            <rect x="20" y="26" width="20" height="28" rx="3" fill="rgba(0,119,255,0.1)" stroke="#00d4ff" stroke-width="2"/>
+            <line x1="30" y1="8" x2="30" y2="26" stroke="#00ff88" stroke-width="1.5" stroke-dasharray="3,2"/>
+            <line x1="30" y1="2" x2="30" y2="8" stroke="#00d4ff" stroke-width="2" marker-end="url(#arr2)"/>
+            <defs>
+              <marker id="arr2" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+                <path d="M0,0 L5,2.5 L0,5 Z" fill="#00d4ff"/>
+              </marker>
+            </defs>
+          </svg>
+          <div class="joint-name">Prismatic (P)</div>
+          <div class="joint-dof">1</div>
+          <div class="joint-desc">Translasi linear 1 sumbu. Slide/telescoping.</div>
+        </div>
+
+        <!-- Helical -->
+        <div class="joint-card">
+          <svg width="60" height="60" viewBox="0 0 60 60">
+            <path d="M30 10 C40 18, 40 22, 30 30 C20 38, 20 42, 30 50"
+                  fill="none" stroke="#00d4ff" stroke-width="2.5"/>
+            <circle cx="30" cy="10" r="4" fill="#00ff88" opacity="0.8"/>
+            <circle cx="30" cy="50" r="4" fill="#ff6b35" opacity="0.8"/>
+          </svg>
+          <div class="joint-name">Helical (H)</div>
+          <div class="joint-dof">1</div>
+          <div class="joint-desc">Rotasi + translasi terkait (ulir/sekrup).</div>
+        </div>
+
+        <!-- Cylindrical -->
+        <div class="joint-card">
+          <svg width="60" height="60" viewBox="0 0 60 60">
+            <ellipse cx="30" cy="15" rx="16" ry="6" fill="none" stroke="#00d4ff" stroke-width="2"/>
+            <line x1="14" y1="15" x2="14" y2="45" stroke="#00d4ff" stroke-width="2"/>
+            <line x1="46" y1="15" x2="46" y2="45" stroke="#00d4ff" stroke-width="2"/>
+            <ellipse cx="30" cy="45" rx="16" ry="6" fill="rgba(0,119,255,0.08)" stroke="#00d4ff" stroke-width="2"/>
+            <line x1="30" y1="45" x2="30" y2="55" stroke="#00ff88" stroke-width="2" marker-end="url(#arrG2)"/>
+            <defs>
+              <marker id="arrG2" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+                <path d="M0,0 L5,2.5 L0,5 Z" fill="#00ff88"/>
+              </marker>
+            </defs>
+          </svg>
+          <div class="joint-name">Cylindrical (C)</div>
+          <div class="joint-dof">2</div>
+          <div class="joint-desc">Rotasi + translasi independen, 1 sumbu.</div>
+        </div>
+
+        <!-- Universal -->
+        <div class="joint-card">
+          <svg width="60" height="60" viewBox="0 0 60 60">
+            <circle cx="30" cy="30" r="12" fill="rgba(0,119,255,0.08)" stroke="#00d4ff" stroke-width="2"/>
+            <line x1="10" y1="30" x2="50" y2="30" stroke="#00ff88" stroke-width="2"/>
+            <line x1="30" y1="10" x2="30" y2="50" stroke="#ff6b35" stroke-width="2"/>
+            <circle cx="30" cy="30" r="4" fill="#00d4ff"/>
+          </svg>
+          <div class="joint-name">Universal (U)</div>
+          <div class="joint-dof">2</div>
+          <div class="joint-desc">Dua rotasi independen, 2 sumbu tegak lurus.</div>
+        </div>
+
+        <!-- Spherical -->
+        <div class="joint-card">
+          <svg width="60" height="60" viewBox="0 0 60 60">
+            <circle cx="30" cy="30" r="16" fill="rgba(0,119,255,0.06)" stroke="#00d4ff" stroke-width="2"/>
+            <ellipse cx="30" cy="30" rx="16" ry="5" fill="none" stroke="#00ff88" stroke-width="1" stroke-dasharray="3,2"/>
+            <ellipse cx="30" cy="30" rx="5" ry="16" fill="none" stroke="#ff6b35" stroke-width="1" stroke-dasharray="3,2"/>
+            <circle cx="30" cy="30" r="4" fill="#00d4ff"/>
+          </svg>
+          <div class="joint-name">Spherical (S)</div>
+          <div class="joint-dof">3</div>
+          <div class="joint-desc">Ball & socket — 3 rotasi bebas.</div>
+        </div>
+      </div>
+
+      <h3>Tabel Referensi Joint</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tipe Joint</th>
+              <th>Simbol</th>
+              <th>DOF</th>
+              <th>Constraint</th>
+              <th>Gerakan</th>
+              <th>Contoh Aplikasi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Revolute</td>
+              <td><span class="tag tag-b">R</span></td>
+              <td>1</td>
+              <td>5</td>
+              <td>Rotasi 1 sumbu</td>
+              <td>Siku, bahu robot KUKA</td>
+            </tr>
+            <tr>
+              <td>Prismatic</td>
+              <td><span class="tag tag-g">P</span></td>
+              <td>1</td>
+              <td>5</td>
+              <td>Translasi 1 sumbu</td>
+              <td>Linear actuator, SCARA Z-axis</td>
+            </tr>
+            <tr>
+              <td>Helical</td>
+              <td><span class="tag tag-b">H</span></td>
+              <td>1</td>
+              <td>5</td>
+              <td>Screw motion</td>
+              <td>Lead screw mechanism</td>
+            </tr>
+            <tr>
+              <td>Cylindrical</td>
+              <td><span class="tag tag-b">C</span></td>
+              <td>2</td>
+              <td>4</td>
+              <td>Rotasi + translasi 1 sumbu</td>
+              <td>CNC Z+Rotation, robot polar</td>
+            </tr>
+            <tr>
+              <td>Universal</td>
+              <td><span class="tag tag-g">U</span></td>
+              <td>2</td>
+              <td>4</td>
+              <td>2 rotasi orthogonal</td>
+              <td>Cardan joint, driveshaft</td>
+            </tr>
+            <tr>
+              <td>Spherical</td>
+              <td><span class="tag tag-r">S</span></td>
+              <td>3</td>
+              <td>3</td>
+              <td>3 rotasi bebas</td>
+              <td>Bahu manusia, wrist Stewart</td>
+            </tr>
+            <tr>
+              <td>Planar</td>
+              <td><span class="tag tag-b">E</span></td>
+              <td>3</td>
+              <td>3</td>
+              <td>2 translasi + 1 rotasi</td>
+              <td>Delta robot base</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section class="section fade-in" id="s4">
+      <div class="section-label">04 // Formula</div>
+      <h2>Formula Grübler (Kutzbach Criterion)</h2>
+
+      <p>Formula Grübler adalah persamaan fundamental untuk menghitung DOF sebuah mekanisme kinematik. Ini adalah tool utama engineer robotika dalam merancang sistem gerak.</p>
+
+      <h3>Formula untuk Mekanisme Planar (2D)</h3>
+
+      <div class="formula">
+        M = 3(n − 1) − 2j₁ − j₂
+      </div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Simbol</th><th>Arti</th></tr></thead>
+          <tbody>
+            <tr><td>M</td><td>DOF (Mobility) sistem</td></tr>
+            <tr><td>n</td><td>Jumlah link (termasuk ground/base)</td></tr>
+            <tr><td>j₁</td><td>Jumlah joint ber-DOF 1 (revolute, prismatic)</td></tr>
+            <tr><td>j₂</td><td>Jumlah joint ber-DOF 2</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Formula untuk Mekanisme Spatial (3D)</h3>
+
+      <div class="formula">
+        M = 6(n − 1) − Σ(6 − fᵢ)
+      </div>
+
+      <p>Atau dalam bentuk yang lebih umum:</p>
+
+      <div class="formula">
+        M = 6(n − 1 − j) + Σfᵢ
+      </div>
+
+      <div class="callout blue">
+        <div class="callout-title">📌 Catatan</div>
+        <strong>fᵢ</strong> = DOF joint ke-i, <strong>j</strong> = jumlah total joint, <strong>n</strong> = jumlah link termasuk ground
+      </div>
+
+      <h3>Contoh Perhitungan — Robot Arm 3 Link Planar</h3>
+
+      <div class="diagram-wrap">
+        <div class="diagram-title">3-Link Planar Robot — Grübler Calculation</div>
+        <svg width="400" height="160" viewBox="0 0 400 160">
+          <!-- Ground -->
+          <rect x="30" y="120" width="60" height="12" rx="3" fill="#1a3050" stroke="#1a3050"/>
+          <line x1="30" y1="132" x2="90" y2="132" stroke="#5a7a9a" stroke-width="1"/>
+          <!-- Hatching ground -->
+          <line x1="35" y1="132" x2="28" y2="142" stroke="#5a7a9a" stroke-width="1"/>
+          <line x1="45" y1="132" x2="38" y2="142" stroke="#5a7a9a" stroke-width="1"/>
+          <line x1="55" y1="132" x2="48" y2="142" stroke="#5a7a9a" stroke-width="1"/>
+          <line x1="65" y1="132" x2="58" y2="142" stroke="#5a7a9a" stroke-width="1"/>
+          <line x1="75" y1="132" x2="68" y2="142" stroke="#5a7a9a" stroke-width="1"/>
+          <line x1="85" y1="132" x2="78" y2="142" stroke="#5a7a9a" stroke-width="1"/>
+
+          <!-- Link 1 -->
+          <line x1="60" y1="120" x2="155" y2="60" stroke="#00d4ff" stroke-width="6" stroke-linecap="round"/>
+          <!-- Link 2 -->
+          <line x1="155" y1="60" x2="255" y2="80" stroke="#00ff88" stroke-width="6" stroke-linecap="round"/>
+          <!-- Link 3 -->
+          <line x1="255" y1="80" x2="335" y2="35" stroke="#ff6b35" stroke-width="6" stroke-linecap="round"/>
+
+          <!-- Joint 1 -->
+          <circle cx="60" cy="120" r="10" fill="#0c1524" stroke="#00d4ff" stroke-width="2.5"/>
+          <circle cx="60" cy="120" r="4" fill="#00d4ff"/>
+          <text x="50" y="145" fill="#00d4ff" font-family="Share Tech Mono,monospace" font-size="11">J₁(R)</text>
+
+          <!-- Joint 2 -->
+          <circle cx="155" cy="60" r="10" fill="#0c1524" stroke="#00ff88" stroke-width="2.5"/>
+          <circle cx="155" cy="60" r="4" fill="#00ff88"/>
+          <text x="145" y="47" fill="#00ff88" font-family="Share Tech Mono,monospace" font-size="11">J₂(R)</text>
+
+          <!-- Joint 3 -->
+          <circle cx="255" cy="80" r="10" fill="#0c1524" stroke="#ff6b35" stroke-width="2.5"/>
+          <circle cx="255" cy="80" r="4" fill="#ff6b35"/>
+          <text x="245" y="105" fill="#ff6b35" font-family="Share Tech Mono,monospace" font-size="11">J₃(R)</text>
+
+          <!-- End effector -->
+          <polygon points="335,28 341,42 329,42" fill="#00d4ff" opacity="0.8"/>
+          <text x="342" y="38" fill="#c8d8e8" font-family="Share Tech Mono,monospace" font-size="10">EE</text>
+
+          <!-- Labels -->
+          <text x="90" y="90" fill="#00d4ff" font-family="Share Tech Mono,monospace" font-size="10" transform="rotate(-32,90,90)">Link 1</text>
+          <text x="188" y="62" fill="#00ff88" font-family="Share Tech Mono,monospace" font-size="10" transform="rotate(11,188,62)">Link 2</text>
+          <text x="282" y="51" fill="#ff6b35" font-family="Share Tech Mono,monospace" font-size="10" transform="rotate(-28,282,51)">Link 3</text>
+        </svg>
+      </div>
+
+      <pre data-lang="GRÜBLER PLANAR">
+<span class="cm">// Robot Arm 3-Link Planar (RRR)</span>
+<span class="kw">n</span> = 4  <span class="cm">// 3 link + 1 ground</span>
+<span class="kw">j₁</span> = 3 <span class="cm">// 3 revolute joints (J1, J2, J3)</span>
+<span class="kw">j₂</span> = 0 <span class="cm">// tidak ada joint 2-DOF</span>
+
+M = 3(n - 1) - 2j₁ - j₂
+M = 3(4 - 1) - 2(3) - 0
+M = 3(3) - 6
+M = 9 - 6
+<span class="fn">M = 3 DOF</span> ✓  <span class="cm">// Benar! RRR planar = 3DOF</span>
+      </pre>
+
+      <h3>Contoh Perhitungan — Robot PUMA (6 DOF Spatial)</h3>
+
+      <pre data-lang="GRÜBLER SPATIAL">
+<span class="cm">// PUMA-type robot: 6R serial arm</span>
+<span class="kw">n</span> = 7   <span class="cm">// 6 link + 1 base/ground</span>
+<span class="kw">j</span> = 6   <span class="cm">// 6 revolute joints</span>
+<span class="kw">fᵢ</span> = 1  <span class="cm">// setiap revolute joint = 1 DOF</span>
+
+M = 6(n - 1 - j) + Σfᵢ
+M = 6(7 - 1 - 6) + 6(1)
+M = 6(0) + 6
+<span class="fn">M = 6 DOF</span> ✓
+      </pre>
+
+      <div class="callout warn">
+        <div class="callout-title">⚠️ Perhatian: Kinematic Singularity</div>
+        Formula Grübler memberikan DOF nominal. Dalam kenyataan, robot dapat mengalami <strong>singularitas kinematik</strong> — konfigurasi di mana beberapa DOF efektif hilang, meskipun secara teoritis sistem masih ber-DOF penuh.
+      </div>
+    </section>
+
+    <!-- SECTION 5 -->
+    <section class="section fade-in" id="s5">
+      <div class="section-label">05 // Konfigurasi Robot</div>
+      <h2>Konfigurasi Dasar Robot Berdasarkan DOF</h2>
+
+      <div class="tabs">
+        <div class="tab-nav">
+          <button class="tab-btn active" onclick="showTab(this,'t1')">CARTESIAN</button>
+          <button class="tab-btn" onclick="showTab(this,'t2')">CYLINDRICAL</button>
+          <button class="tab-btn" onclick="showTab(this,'t3')">SPHERICAL</button>
+          <button class="tab-btn" onclick="showTab(this,'t4')">SCARA</button>
+          <button class="tab-btn" onclick="showTab(this,'t5')">ARTICULATED</button>
+          <button class="tab-btn" onclick="showTab(this,'t6')">PARALLEL</button>
+        </div>
+
+        <div class="tab-panel active" id="t1">
+          <h4>🟦 Cartesian Robot (PPP) — 3 DOF</h4>
+          <p>Robot Cartesian menggunakan tiga <em>prismatic joint</em> bergerak sepanjang sumbu X, Y, dan Z. Workspace berbentuk <strong>kotak/balok</strong>.</p>
+          <ul class="styled">
+            <li>Konfigurasi: P-P-P (3 translasi linear)</li>
+            <li>Workspace: Rectangular parallelepiped</li>
+            <li>Presisi tinggi, struktur kaku, biaya relatif rendah</li>
+            <li>Keterbatasan: tidak bisa berotasi, workspace terbatas pada volume kotak</li>
+          </ul>
+          <div class="dof-bar"><div class="dof-bar-label">Translasi</div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><div class="bar-val">3/3</div></div>
+          <div class="dof-bar"><div class="dof-bar-label">Rotasi</div><div class="bar-track"><div class="bar-fill" style="width:0%; background: var(--text-dim)"></div></div><div class="bar-val">0/3</div></div>
+          <p style="margin-top:12px"><strong>Contoh:</strong> CNC milling machine, gantry crane, 3D printer (Cartesian)</p>
+        </div>
+
+        <div class="tab-panel" id="t2">
+          <h4>🔵 Cylindrical Robot (RPP) — 3 DOF</h4>
+          <p>Kombinasi satu rotasi dan dua translasi. Workspace berbentuk <strong>silinder hollow</strong>.</p>
+          <ul class="styled">
+            <li>Konfigurasi: R-P-P (rotasi, translasi radial, translasi vertikal)</li>
+            <li>Workspace: Annular cylinder (donut shape)</li>
+            <li>Baik untuk assembly di sekeliling sumbu vertikal</li>
+          </ul>
+          <div class="dof-bar"><div class="dof-bar-label">Translasi</div><div class="bar-track"><div class="bar-fill" style="width:66%"></div></div><div class="bar-val">2/3</div></div>
+          <div class="dof-bar"><div class="dof-bar-label">Rotasi</div><div class="bar-track"><div class="bar-fill" style="width:33%"></div></div><div class="bar-val">1/3</div></div>
+          <p style="margin-top:12px"><strong>Contoh:</strong> Fanuc M-710 series (partial), drum-style assembly robot</p>
+        </div>
+
+        <div class="tab-panel" id="t3">
+          <h4>🔴 Spherical/Polar Robot (RRP) — 3 DOF</h4>
+          <p>Dua rotasi + satu translasi. Workspace berbentuk <strong>bola/sphere</strong> dengan rongga di tengah.</p>
+          <ul class="styled">
+            <li>Konfigurasi: R-R-P</li>
+            <li>Workspace: Partial spherical shell</li>
+            <li>Jangkauan luas, cocok untuk spot welding</li>
+          </ul>
+          <div class="dof-bar"><div class="dof-bar-label">Translasi</div><div class="bar-track"><div class="bar-fill" style="width:33%"></div></div><div class="bar-val">1/3</div></div>
+          <div class="dof-bar"><div class="dof-bar-label">Rotasi</div><div class="bar-track"><div class="bar-fill" style="width:66%"></div></div><div class="bar-val">2/3</div></div>
+          <p style="margin-top:12px"><strong>Contoh:</strong> Unimate (robot industri pertama), Stanford Arm</p>
+        </div>
+
+        <div class="tab-panel" id="t4">
+          <h4>🟢 SCARA Robot (RRP atau RRPR) — 3-4 DOF</h4>
+          <p><em>Selective Compliance Assembly Robot Arm</em> — dirancang khusus untuk operasi vertikal (pick and place, assembly). Kaku secara vertikal, fleksibel secara horizontal.</p>
+          <ul class="styled">
+            <li>Konfigurasi: R-R-P (atau R-R-P-R dengan rotasi wrist)</li>
+            <li>Workspace: Donut-shaped dalam bidang horizontal</li>
+            <li>Sangat cepat untuk operasi 2D + Z</li>
+            <li>Standar de-facto untuk assembly elektronik</li>
+          </ul>
+          <div class="dof-bar"><div class="dof-bar-label">Speed</div><div class="bar-track"><div class="bar-fill" style="width:95%; background: linear-gradient(90deg,#00ff88,#00d4ff)"></div></div><div class="bar-val">★★★★★</div></div>
+          <p style="margin-top:12px"><strong>Contoh:</strong> Epson T-series, Yamaha SCARA, Bosch SR series</p>
+        </div>
+
+        <div class="tab-panel" id="t5">
+          <h4>⚙️ Articulated Robot (RRR…) — 5-7 DOF</h4>
+          <p>Semua revolute joint, meniru kinematika lengan manusia. <strong>Paling fleksibel dan paling umum</strong> di industri.</p>
+          <ul class="styled">
+            <li>Konfigurasi: R-R-R-R-R-R (6R standar) atau lebih</li>
+            <li>Workspace: Kompleks — volume bola tidak seragam</li>
+            <li>6 DOF = posisi (3) + orientasi penuh (3)</li>
+            <li>7 DOF = redundant, menghindari obstacle</li>
+          </ul>
+          <div class="dof-bar"><div class="dof-bar-label">Fleksibilitas</div><div class="bar-track"><div class="bar-fill" style="width:98%; background: linear-gradient(90deg,#0077ff,#00d4ff)"></div></div><div class="bar-val">★★★★★</div></div>
+          <p style="margin-top:12px"><strong>Contoh:</strong> KUKA KR6, ABB IRB 6700, Fanuc M-20, Universal Robots UR10</p>
+        </div>
+
+        <div class="tab-panel" id="t6">
+          <h4>🔷 Parallel Robot — Variable DOF</h4>
+          <p>Beberapa rantai kinematik tertutup bekerja paralel. <strong>Kekakuan dan presisi sangat tinggi</strong>, workspace terbatas.</p>
+          <ul class="styled">
+            <li>Delta Robot: 3 DOF (translasi 3D)</li>
+            <li>Stewart Platform: 6 DOF (full spatial)</li>
+            <li>Payload-to-weight ratio sangat tinggi</li>
+            <li>Kecepatan dan akselerasi ekstrem</li>
+          </ul>
+          <div class="dof-bar"><div class="dof-bar-label">Rigidity</div><div class="bar-track"><div class="bar-fill" style="width:100%; background: linear-gradient(90deg,#ff6b35,#ffd700)"></div></div><div class="bar-val">★★★★★</div></div>
+          <p style="margin-top:12px"><strong>Contoh:</strong> ABB FlexPicker (Delta), Hexapod motion simulator, Gough-Stewart platform</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6 -->
+    <section class="section fade-in" id="s6">
+      <div class="section-label">06 // Kinematika</div>
+      <h2>DOF dan Kinematika Robot</h2>
+
+      <p>DOF adalah fondasi dari dua masalah kinematika utama yang harus diselesaikan dalam setiap sistem robot.</p>
+
+      <h3>Forward Kinematics (FK)</h3>
+      <p><strong>Pertanyaan:</strong> Diberikan nilai semua joint (θ₁, θ₂, ..., θₙ), di mana posisi dan orientasi end-effector?</p>
+
+      <div class="formula">
+        T = T₁(θ₁) × T₂(θ₂) × T₃(θ₃) × ... × Tₙ(θₙ)
+      </div>
+
+      <p>FK selalu memiliki <strong>solusi unik</strong> (untuk konfigurasi tertentu). Komputasinya straightforward melalui perkalian matriks transformasi homogen.</p>
+
+      <h3>Inverse Kinematics (IK)</h3>
+      <p><strong>Pertanyaan:</strong> Diberikan posisi dan orientasi end-effector yang diinginkan, berapa nilai joint yang diperlukan?</p>
+
+      <div class="callout warn">
+        <div class="callout-title">⚠️ Kompleksitas IK</div>
+        IK jauh lebih sulit dari FK. Untuk 6-DOF robot, terdapat hingga <strong>16 solusi</strong> berbeda. Robot dengan DOF < 6 mungkin tidak bisa mencapai konfigurasi tertentu sama sekali.
+      </div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Kondisi DOF</th>
+              <th>Jenis Sistem</th>
+              <th>Jumlah Solusi IK</th>
+              <th>Implikasi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>DOF &lt; 6</td>
+              <td>Under-actuated</td>
+              <td>Bisa 0 atau ∞</td>
+              <td>Tidak bisa mencapai semua pose</td>
+            </tr>
+            <tr>
+              <td>DOF = 6</td>
+              <td>Fully-actuated</td>
+              <td>Hingga 16 solusi</td>
+              <td>Pose tertentu, beberapa elbow config</td>
+            </tr>
+            <tr>
+              <td>DOF &gt; 6</td>
+              <td>Redundant</td>
+              <td>∞ solusi</td>
+              <td>Optimisasi: hindari obstacle, singularitas</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Matriks Jacobian dan DOF</h3>
+      <p>Jacobian J menghubungkan kecepatan joint (q̇) dengan kecepatan end-effector (ẋ):</p>
+
+      <div class="formula">
+        ẋ = J(q) · q̇
+      </div>
+
+      <p>Dimensi J = 6 × n, di mana n = jumlah joint (DOF). Rank defisiensi Jacobian mengindikasikan <em>singularitas kinematik</em> — kondisi kritis yang harus dihindari saat perancangan trajectory.</p>
+
+      <pre data-lang="PYTHON — JACOBIAN ROBOT 2R">
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">jacobian_2R</span>(theta1, theta2, L1, L2):
+    <span class="str">"""Jacobian untuk robot 2-DOF planar"""</span>
+    J11 = -L1*np.sin(theta1) - L2*np.sin(theta1+theta2)
+    J12 = -L2*np.sin(theta1+theta2)
+    J21 =  L1*np.cos(theta1) + L2*np.cos(theta1+theta2)
+    J22 =  L2*np.cos(theta1+theta2)
+    
+    J = np.array([[J11, J12],
+                  [J21, J22]])
+    
+    det_J = np.linalg.det(J)
+    <span class="kw">if</span> abs(det_J) &lt; <span class="num">1e-6</span>:
+        <span class="kw">print</span>(<span class="str">"⚠️  SINGULARITAS TERDETEKSI!"</span>)
+    
+    <span class="kw">return</span> J, det_J
+
+<span class="cm"># Contoh: theta1=45°, theta2=90°, L1=L2=1</span>
+J, det = <span class="fn">jacobian_2R</span>(np.pi/4, np.pi/2, <span class="num">1.0</span>, <span class="num">1.0</span>)
+<span class="kw">print</span>(f<span class="str">"Determinan J = {det:.4f}"</span>)
+      </pre>
+    </section>
+
+    <!-- SECTION 7 -->
+    <section class="section fade-in" id="s7">
+      <div class="section-label">07 // DH Parameters</div>
+      <h2>Denavit-Hartenberg (DH) Parameters</h2>
+
+      <p>Notasi DH adalah framework standar untuk merepresentasikan geometri robot serial dengan cara sistematis. Setiap joint/link dideskripsikan dengan <strong>4 parameter</strong>.</p>
+
+      <h3>4 Parameter DH</h3>
+      <div class="card-grid">
+        <div class="card">
+          <span class="card-icon">📏</span>
+          <div class="card-title">a (Link Length)</div>
+          <div class="card-body">Jarak antara sumbu Zᵢ₋₁ dan Zᵢ diukur sepanjang sumbu Xᵢ</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🔢</span>
+          <div class="card-title">α (Link Twist)</div>
+          <div class="card-body">Sudut antara Zᵢ₋₁ dan Zᵢ diukur sekitar sumbu Xᵢ</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">📐</span>
+          <div class="card-title">d (Joint Offset)</div>
+          <div class="card-body">Jarak sepanjang Zᵢ₋₁ antara Xᵢ₋₁ dan Xᵢ</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🔄</span>
+          <div class="card-title">θ (Joint Angle)</div>
+          <div class="card-body">Sudut rotasi sekitar Zᵢ₋₁ antara Xᵢ₋₁ dan Xᵢ. <em>Variable untuk R-joint</em></div>
+        </div>
+      </div>
+
+      <h3>Matriks Transformasi DH</h3>
+      <div class="formula">
+        ᵢ₋₁Tᵢ = Rot(z,θ) · Trans(z,d) · Trans(x,a) · Rot(x,α)
+      </div>
+
+      <pre data-lang="MATRIX — DH TRANSFORM">
+        ⎡ cos θ  -sin θ·cos α   sin θ·sin α   a·cos θ ⎤
+ᵢ₋₁Tᵢ = ⎢ sin θ   cos θ·cos α  -cos θ·sin α   a·sin θ ⎥
+        ⎢  0        sin α          cos α          d    ⎥
+        ⎣  0          0              0             1    ⎦
+      </pre>
+
+      <h3>Contoh DH Table — PUMA 6R Robot</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Joint i</th><th>θᵢ (var)</th><th>dᵢ</th><th>aᵢ</th><th>αᵢ</th><th>Joint Type</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>θ₁*</td><td>d₁</td><td>0</td><td>−90°</td><td>Revolute</td></tr>
+            <tr><td>2</td><td>θ₂*</td><td>0</td><td>a₂</td><td>0°</td><td>Revolute</td></tr>
+            <tr><td>3</td><td>θ₃*</td><td>d₃</td><td>a₃</td><td>−90°</td><td>Revolute</td></tr>
+            <tr><td>4</td><td>θ₄*</td><td>d₄</td><td>0</td><td>+90°</td><td>Revolute (Wrist)</td></tr>
+            <tr><td>5</td><td>θ₅*</td><td>0</td><td>0</td><td>−90°</td><td>Revolute (Wrist)</td></tr>
+            <tr><td>6</td><td>θ₆*</td><td>d₆</td><td>0</td><td>0°</td><td>Revolute (Tool)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout green">
+        <div class="callout-title">💡 Modified DH vs Standard DH</div>
+        Notasi <strong>Modified DH</strong> (Craig, 1986) mendefinisikan frame di awal link, bukan di akhir. Kedua konvensi valid — yang penting <em>konsisten</em> dalam satu analisis. ROS/URDF menggunakan konvensi sendiri berbasis Modified DH.
+      </div>
+    </section>
+
+    <!-- SECTION 8 -->
+    <section class="section section-accent3 fade-in" id="s8">
+      <div class="section-label">08 // Workspace</div>
+      <h2>Workspace dan Dexterity</h2>
+
+      <p>Workspace robot adalah himpunan semua posisi (dan orientasi) yang dapat dicapai end-effector. DOF secara langsung menentukan ukuran dan bentuk workspace.</p>
+
+      <h3>Tipe Workspace</h3>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Tipe</th><th>Definisi</th><th>Relevansi DOF</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Reachable Workspace</td>
+              <td>Semua titik yang bisa dicapai end-effector dalam setidaknya SATU orientasi</td>
+              <td>Ditentukan oleh link length + joint range</td>
+            </tr>
+            <tr>
+              <td>Dexterous Workspace</td>
+              <td>Titik yang bisa dicapai dalam SEMUA orientasi yang mungkin</td>
+              <td>Membutuhkan DOF ≥ 6 untuk spatial</td>
+            </tr>
+            <tr>
+              <td>Operational Space</td>
+              <td>Space di mana tugas robot didefinisikan (x,y,z + roll,pitch,yaw)</td>
+              <td>Max 6D spatial</td>
+            </tr>
+            <tr>
+              <td>Joint Space</td>
+              <td>Space koordinat joint (θ₁,θ₂,...,θₙ)</td>
+              <td>Dimensi = n = DOF</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Workspace Berbagai Konfigurasi Robot</h3>
+
+      <div class="diagram-wrap">
+        <div class="diagram-title">Perbandingan Workspace Shape</div>
+        <svg width="450" height="200" viewBox="0 0 450 200">
+          <!-- Cartesian -->
+          <g>
+            <rect x="20" y="40" width="80" height="80" rx="2"
+                  fill="rgba(0,119,255,0.08)" stroke="#00d4ff" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <text x="60" y="145" text-anchor="middle" fill="#00d4ff" font-family="Share Tech Mono,monospace" font-size="10">CARTESIAN</text>
+            <text x="60" y="157" text-anchor="middle" fill="#5a7a9a" font-family="Share Tech Mono,monospace" font-size="9">PPP</text>
+          </g>
+          <!-- Cylindrical -->
+          <g>
+            <ellipse cx="185" cy="80" rx="40" ry="40"
+                     fill="rgba(0,255,136,0.06)" stroke="#00ff88" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <ellipse cx="185" cy="80" rx="15" ry="15"
+                     fill="var(--surface2)" stroke="#00ff88" stroke-width="1"/>
+            <text x="185" y="145" text-anchor="middle" fill="#00ff88" font-family="Share Tech Mono,monospace" font-size="10">CYLINDRICAL</text>
+            <text x="185" y="157" text-anchor="middle" fill="#5a7a9a" font-family="Share Tech Mono,monospace" font-size="9">RPP</text>
+          </g>
+          <!-- Spherical -->
+          <g>
+            <circle cx="310" cy="80" r="42"
+                    fill="rgba(255,107,53,0.06)" stroke="#ff6b35" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <circle cx="310" cy="80" r="18"
+                    fill="var(--surface2)" stroke="#ff6b35" stroke-width="1"/>
+            <text x="310" y="145" text-anchor="middle" fill="#ff6b35" font-family="Share Tech Mono,monospace" font-size="10">SPHERICAL</text>
+            <text x="310" y="157" text-anchor="middle" fill="#5a7a9a" font-family="Share Tech Mono,monospace" font-size="9">RRP</text>
+          </g>
+          <!-- Articulated simplified -->
+          <g>
+            <path d="M 400 80 m -38 0 a 38 38 0 1 0 76 0 a 38 38 0 1 0 -76 0"
+                  fill="rgba(0,200,255,0.06)" stroke="#00d4ff" stroke-width="1.5" stroke-dasharray="2,2"/>
+            <text x="400" y="145" text-anchor="middle" fill="#00d4ff" font-family="Share Tech Mono,monospace" font-size="10">ARTICULATED</text>
+            <text x="400" y="157" text-anchor="middle" fill="#5a7a9a" font-family="Share Tech Mono,monospace" font-size="9">RRR…</text>
+          </g>
+        </svg>
+      </div>
+
+      <h3>Manipulability (Kemampuan Manipulasi)</h3>
+      <p>Manipulability w mengukur seberapa jauh robot dari singularitas — seberapa bebas robot bergerak dari konfigurasi saat ini:</p>
+
+      <div class="formula">
+        w = √det(J · Jᵀ) = σ₁ · σ₂ · ... · σₙ
+      </div>
+
+      <p>w = 0 mengindikasikan singularitas. Nilai w maksimum saat robot dalam posisi paling dexterous. Ini digunakan dalam <em>task-space control</em> dan <em>motion planning</em>.</p>
+    </section>
+
+    <!-- SECTION 9 -->
+    <section class="section fade-in" id="s9">
+      <div class="section-label">09 // Redundancy</div>
+      <h2>Robot Redundant dan Hyper-DOF</h2>
+
+      <p>Robot dikatakan <em>kinematically redundant</em> jika DOF-nya melebihi jumlah DOF yang dibutuhkan untuk tugas tertentu.</p>
+
+      <div class="formula">
+        Redundancy = n (DOF robot) − m (DOF task space)
+      </div>
+
+      <h3>Keuntungan Robot Redundant</h3>
+      <div class="card-grid">
+        <div class="card">
+          <span class="card-icon">🚧</span>
+          <div class="card-title">Obstacle Avoidance</div>
+          <div class="card-body">Bisa menggerakkan elbow/shoulder untuk menghindari rintangan sambil end-effector tetap pada jalur target.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">⚡</span>
+          <div class="card-title">Singularity Avoidance</div>
+          <div class="card-body">Memanfaatkan DOF ekstra untuk selalu menjauhi konfigurasi singular.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">💪</span>
+          <div class="card-title">Torque Optimization</div>
+          <div class="card-body">Meminimalkan torque joint atau energi total melalui pemilihan konfigurasi optimal dari ∞ solusi IK.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🤖</span>
+          <div class="card-title">Human-like Motion</span>
+          <div class="card-body">Lengan manusia memiliki 7 DOF — gerakan lebih natural, cocok untuk HRI.</div>
+        </div>
+      </div>
+
+      <h3>Contoh Robot Redundant Terkenal</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Robot</th><th>DOF</th><th>Redundancy</th><th>Aplikasi</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>KUKA LBR iiwa</td><td>7</td><td>1</td><td>Collaborative, sensitive assembly</td></tr>
+            <tr><td>Franka Emika Panda</td><td>7</td><td>1</td><td>Research, precision manipulation</td></tr>
+            <tr><td>ABB YuMi</td><td>7+7</td><td>1 per arm</td><td>Dual-arm collaborative</td></tr>
+            <tr><td>Kinova Gen3</td><td>7</td><td>1</td><td>Assistive robotics</td></tr>
+            <tr><td>Boston Dynamics Spot Arm</td><td>6</td><td>0</td><td>Inspection, manipulation</td></tr>
+            <tr><td>Hyper-redundant (snake)</td><td>20+</td><td>14+</td><td>Search & rescue, endoscopy</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Null Space Motion</h3>
+      <p>Pada robot redundant, terdapat <em>null space</em> dalam pemetaan Jacobian — subset gerakan joint yang tidak menghasilkan gerakan end-effector. Ini dimanfaatkan untuk <strong>self-motion</strong>:</p>
+
+      <div class="formula">
+        q̇ = J⁺ẋ + (I − J⁺J) · q̇₀
+      </div>
+
+      <p>Di mana <strong>J⁺</strong> = pseudo-inverse Jacobian, <strong>(I − J⁺J)</strong> = null space projector, dan <strong>q̇₀</strong> = kecepatan joint arbitrary untuk optimisasi secondary task.</p>
+    </section>
+
+    <!-- SECTION 10 -->
+    <section class="section section-warn fade-in" id="s10">
+      <div class="section-label">10 // Aplikasi Nyata</div>
+      <h2>DOF pada Robot Nyata — Studi Kasus</h2>
+
+      <h3>Industrial Robots</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Robot</th><th>Konfigurasi</th><th>DOF</th><th>Payload</th><th>Typical Task</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>KUKA KR 6 R900</td><td>6R serial</td><td>6</td><td>6 kg</td><td>Welding, pick & place</td></tr>
+            <tr><td>ABB IRB 6700</td><td>6R serial</td><td>6</td><td>150–300 kg</td><td>Heavy welding, foundry</td></tr>
+            <tr><td>Fanuc M-20iD</td><td>6R serial</td><td>6</td><td>20 kg</td><td>Assembly, material handling</td></tr>
+            <tr><td>Epson G-series SCARA</td><td>RRPR</td><td>4</td><td>2–20 kg</td><td>PCB assembly, dispensing</td></tr>
+            <tr><td>ABB FlexPicker IRB 360</td><td>Delta Parallel</td><td>3</td><td>1–8 kg</td><td>Food packaging, pharma</td></tr>
+            <tr><td>Gough-Stewart Platform</td><td>Hexapod Parallel</td><td>6</td><td>Variable</td><td>Flight simulator, precision mfg</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Humanoid & Collaborative Robots</h3>
+      <div class="card-grid">
+        <div class="card">
+          <span class="card-icon">🦾</span>
+          <div class="card-title">Atlas (Boston Dynamics)</div>
+          <div class="card-body">28 DOF total. Setiap kaki 6 DOF, setiap arm 7 DOF. Kontrol dinamis real-time.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🤝</span>
+          <div class="card-title">KUKA LBR iiwa</div>
+          <div class="card-body">7 DOF, torque sensor di setiap joint. Kelas collaborative robot (cobot) terdepan.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🦿</span>
+          <div class="card-title">DLR Hand Arm</div>
+          <div class="card-body">7 DOF arm + 19 DOF hand = 26 DOF total. Human-like dexterity penelitian.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🏭</span>
+          <div class="card-title">Universal Robots UR10e</div>
+          <div class="card-body">6 DOF, 12.5 kg payload. Cobot paling populer untuk SME manufacturing.</div>
+        </div>
+      </div>
+
+      <h3>Mobile Robots dan DOF</h3>
+      <p>Robot mobile menambahkan kompleksitas dengan <em>non-holonomic constraints</em>:</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Platform</th><th>DOF Konfigurasi</th><th>DOF Controllable</th><th>Constraint</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Differential Drive</td><td>3 (x,y,θ)</td><td>2</td><td>Non-holo (no side slip)</td></tr>
+            <tr><td>Omnidirectional (Mecanum)</td><td>3</td><td>3</td><td>Holonomic</td></tr>
+            <tr><td>Quadruped (Spot)</td><td>18+ (body + legs)</td><td>12 (aktif)</td><td>Gait constraints</td></tr>
+            <tr><td>UAV Hexacopter</td><td>6</td><td>4 (under-actuated)</td><td>Thrust coupling</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 11 -->
+    <section class="section fade-in" id="s11">
+      <div class="section-label">11 // Desain</div>
+      <h2>Panduan Desain dan Pemilihan DOF</h2>
+
+      <p>Memilih jumlah DOF yang tepat adalah keputusan desain fundamental yang mempengaruhi seluruh sistem robot.</p>
+
+      <h3>Framework Pemilihan DOF</h3>
+
+      <ol class="styled">
+        <li>
+          <div>
+            <strong>Analisis Task Space</strong>
+            <p>Tentukan berapa DOF yang dibutuhkan task. Operasi planar: 3 DOF. Manipulasi 3D dengan orientasi penuh: 6 DOF. Mengambil objek dari conveyor flat: mungkin cukup 4 DOF.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Pertimbangkan Obstacle dan Environment</strong>
+            <p>Lingkungan cluttered atau perlu melewati celah sempit → tambah 1 DOF untuk redundancy. Environment terbuka dan terstruktur → DOF minimal cukup.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Evaluasi Cost vs Benefit</strong>
+            <p>Setiap DOF tambahan = 1 motor + 1 driver + 1 sensor + lebih banyak komputasi kontrol + kompleksitas mekanik. Hitung ROI dari DOF ekstra.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Pertimbangkan Singularitas</strong>
+            <p>Jika task space mendekati boundary workspace atau memerlukan konfigurasi dekat singular, redundant DOF memberikan margin keamanan.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Safety dan Compliance</strong>
+            <p>Untuk collaborative robot (cobot), DOF tambahan + torque sensing di setiap joint memungkinkan impedance control yang lebih baik untuk keselamatan manusia-robot.</p>
+          </div>
+        </li>
+      </ol>
+
+      <h3>DOF Rekomendasi per Aplikasi</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Aplikasi</th><th>DOF Min</th><th>DOF Ideal</th><th>Alasan</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>CNC Milling</td><td>3</td><td>5</td><td>+2 rotasi untuk 5-axis machining</td></tr>
+            <tr><td>Pick & Place 2D</td><td>3</td><td>4</td><td>+rotasi gripper</td></tr>
+            <tr><td>Pick & Place 3D</td><td>4</td><td>6</td><td>Full pose control</td></tr>
+            <tr><td>Arc Welding</td><td>5</td><td>6</td><td>Kontrol torch orientation</td></tr>
+            <tr><td>Surgical Robot</td><td>6</td><td>7</td><td>Redundancy untuk tremor compensation</td></tr>
+            <tr><td>Humanoid Arm</td><td>7</td><td>7</td><td>Human-level dexterity</td></tr>
+            <tr><td>Inspection (confined)</td><td>6</td><td>9+</td><td>Hyper-redundant untuk narrow space</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout green">
+        <div class="callout-title">🐲 Blue Dragon Insight</div>
+        Dalam pengembangan sistem robot untuk aplikasi intelijen dan keamanan, pertimbangan DOF harus seimbang antara <strong>kemampuan operasional</strong> (DOF tinggi = versatile), <strong>keandalan sistem</strong> (lebih sedikit moving parts = lebih reliable), dan <strong>latency kontrol</strong> (DOF tinggi membutuhkan komputasi lebih besar untuk real-time control).
+      </div>
+
+      <h3>Ringkasan Konsep Kunci</h3>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">6 DOF = Full Spatial</div>
+          <div class="card-body">Minimum untuk kontrol posisi + orientasi penuh dalam 3D space tanpa redundancy.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">DOF &lt; Task DOF</div>
+          <div class="card-body">Robot tidak bisa mencapai semua konfigurasi yang diinginkan → perlu redesign atau batasi task space.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">DOF &gt; 6 = Redundant</div>
+          <div class="card-body">∞ solusi IK, self-motion, obstacle avoidance, optimisasi sekunder dimungkinkan.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Grübler = Kalkulasi</div>
+          <div class="card-body">Formula utama untuk menghitung DOF sistem mekanik kompleks dari link dan joint count.</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ══════════ FINGERPRINT FOOTER ══════════ -->
+<footer>
+  <div class="fp-box">
+    <div class="fp-dragon">🐉</div>
+    <div class="fp-info">
+      <div class="fp-name">BLUE DRAGON SECURITY</div>
+      <div class="fp-detail">
+        Author: Antonius (bluedragonsec.com)<br>
+        Domain: <a href="https://bluedragonsec.com">bluedragonsec.com</a><br>
+        GitHub: <a href="https://github.com/bluedragonsecurity">github.com/bluedragonsecurity</a><br>
+        Contact: antonius@bluedragonsec.com
+      </div>
+    </div>
+    <div class="fp-hash">
+      <span>DOCUMENT:</span> DOF_ROBOTIKA_TUTORIAL_v1.0<br>
+      <span>AUTHOR:</span>   Antonius / Blue Dragon Security<br>
+      <span>TOPIC:</span>    Degree of Freedom — Robotika<br>
+      <span>SCOPE:</span>    Fundamentals → Advanced Design<br>
+      <span>TAGS:</span>     Kinematika · Joint · Grübler · DH · IK/FK<br>
+      <span>LICENSE:</span>  Educational / Non-Commercial<br>
+      <span>FINGERPRINT:</span> BDS-DOF-2026-RC1
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Tabs
+  function showTab(btn, id) {
+    const parent = btn.closest('.tabs');
+    parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    parent.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(id).classList.add('active');
+  }
+
+  // Animate bars on scroll
+  const bars = document.querySelectorAll('.bar-fill');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.animationPlayState = 'running';
+      }
+    });
+  }, { threshold: 0.3 });
+
+  bars.forEach(b => {
+    b.style.animationPlayState = 'paused';
+    io.observe(b);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Computer Vision Robot — Robotika</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>:root{--ac:96,192,232}:root{--bg:#0b0d0f;--bg2:#111417;--bg3:#181c21;--border:#2a3240;--border2:#3a4558;--text:#c8d4e0;--text2:#8a9ab0;--text3:#5a6a80;--mono:'IBM Plex Mono',monospace;--body:'IBM Plex Sans',sans-serif;--disp:'Bebas Neue',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.7;display:flex;min-height:100vh}
+#sidebar{width:280px;min-width:280px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;scrollbar-width:thin;transition:transform .3s ease}
+.sh{padding:22px 18px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:10}
+.sl{font-family:var(--disp);font-size:20px;letter-spacing:2px;line-height:1;margin-bottom:3px}
+.ss{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-family:var(--mono)}
+.nsec{padding:5px 18px 3px;font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--text3);margin-top:8px}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 18px;color:var(--text2);text-decoration:none;font-size:13px;transition:all .15s;border-left:2px solid transparent;line-height:1.3}
+.ni.active,.ni:hover{color:rgb(var(--ac));background:rgba(var(--ac),.07);border-left-color:rgb(var(--ac))}
+.nd{width:5px;height:5px;border-radius:50%;background:var(--border2);flex-shrink:0}
+.ni.active .nd,.ni:hover .nd{background:rgb(var(--ac))}
+#main{margin-left:280px;flex:1;min-width:0}
+#topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 36px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:90}
+.tbt{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:1px}
+#mbtn{display:none;background:none;border:1px solid var(--border2);color:var(--text);padding:5px 10px;border-radius:4px;cursor:pointer;font-size:15px}
+.content{max-width:920px;margin:0 auto;padding:44px 36px 80px}
+.hero{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:44px;margin-bottom:52px;position:relative;overflow:hidden}
+.hero::before{position:absolute;right:-10px;top:-10px;font-family:var(--disp);font-size:140px;color:rgba(var(--ac),.03);line-height:1;pointer-events:none;letter-spacing:4px}
+.hl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:3px;color:rgb(var(--ac));margin-bottom:14px}
+h1{font-family:var(--disp);font-size:48px;letter-spacing:3px;color:#fff;line-height:1.05;margin-bottom:14px}
+.hdesc{color:var(--text2);font-size:14.5px;max-width:620px;line-height:1.7}
+.htags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tag{padding:3px 10px;border:1px solid var(--border2);border-radius:3px;font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
+.ta{border-color:rgb(var(--ac));color:rgb(var(--ac))}.tb{border-color:#60c0e8;color:#60c0e8}.to{border-color:#e8a030;color:#e8a030}.tp2{border-color:#c060e0;color:#c060e0}.tr{border-color:#e06060;color:#e06060}
+.sec{margin-bottom:68px;scroll-margin-top:76px}
+.sech{display:flex;align-items:flex-start;gap:14px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.sn{font-family:var(--disp);font-size:44px;line-height:1;color:rgba(var(--ac),.15);flex-shrink:0;min-width:56px}
+.sc{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;color:rgb(var(--ac));margin-bottom:5px}
+h2{font-family:var(--disp);font-size:32px;letter-spacing:2px;color:#fff;line-height:1.1}
+h3{font-size:17px;font-weight:600;color:rgb(var(--ac));margin-top:32px;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+h3::before{content:'';width:3px;height:16px;background:rgb(var(--ac));border-radius:2px;flex-shrink:0}
+h4{font-size:14.5px;font-weight:600;color:#60c0e8;margin-top:22px;margin-bottom:9px}
+p{margin-bottom:13px;color:var(--text);font-size:14px}
+pre{background:var(--bg2);border:1px solid var(--border);border-left:3px solid rgb(var(--ac));border-radius:6px;padding:18px 22px;overflow-x:auto;margin:18px 0;font-family:var(--mono);font-size:12px;line-height:1.65;scrollbar-width:thin}
+pre::-webkit-scrollbar{height:4px}pre::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+code{font-family:var(--mono);font-size:12px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:rgb(var(--ac))}
+pre code{background:none;border:none;padding:0;color:var(--text)}
+.kw{color:#c060e0;font-weight:500}.fn{color:#60c0e8}.st{color:#80e060}.cm{color:#5a6a80;font-style:italic}.nm{color:#e8a030}.tp3{color:#f0c060}
+.math{background:var(--bg3);border:1px solid var(--border);border-left:3px solid #60c0e8;border-radius:6px;padding:18px 22px;margin:18px 0;font-family:var(--mono);font-size:13px;color:#c8ffd0;line-height:2;overflow-x:auto}
+.ib{border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin:18px 0;font-size:13.5px}
+.ib.note{border-left:3px solid #60c0e8;background:rgba(96,192,232,.05)}.ib.warn{border-left:3px solid #e8a030;background:rgba(232,160,48,.05)}.ib.tip{border-left:3px solid rgb(var(--ac));background:rgba(var(--ac),.05)}.ib.danger{border-left:3px solid #e06060;background:rgba(224,96,96,.06)}
+.ibl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;margin-bottom:7px;font-weight:600}.note .ibl{color:#60c0e8}.warn .ibl{color:#e8a030}.danger .ibl{color:#e06060}.tip .ibl{color:rgb(var(--ac))}
+.tw{overflow-x:auto;margin:18px 0}table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--bg3);color:rgb(var(--ac));font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:500;padding:11px 14px;text-align:left;border:1px solid var(--border)}
+td{padding:9px 14px;border:1px solid var(--border);color:var(--text);vertical-align:top}tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:18px 0}.card{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:16px}
+.ci{font-size:22px;margin-bottom:8px}.ct{font-weight:600;font-size:14px;color:var(--text);margin-bottom:5px}.cd{font-size:12px;color:var(--text2);line-height:1.5}
+.steps{counter-reset:sc;margin:18px 0}.step{display:flex;gap:18px;margin-bottom:18px;counter-increment:sc}.step::before{content:counter(sc,decimal-leading-zero);font-family:var(--disp);font-size:26px;color:rgba(var(--ac),.22);flex-shrink:0;min-width:38px;line-height:1;margin-top:2px}
+.stit{font-weight:600;color:var(--text);margin-bottom:5px;font-size:14px}.sdesc{font-size:13px;color:var(--text2);line-height:1.6}
+.divider{height:1px;background:linear-gradient(90deg,rgb(var(--ac)) 0%,var(--border) 60%,transparent 100%);margin:36px 0;opacity:.35}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99}
+@media(max-width:900px){#mbtn{display:block}#sidebar{transform:translateX(-100%)}#sidebar.open{transform:translateX(0)}#overlay.open{display:block}#main{margin-left:0}.content{padding:24px 18px 60px}h2{font-size:26px}.cg{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.cg{grid-template-columns:1fr}}.hero::before{content:'CV'}</style>
+</head><body>
+<nav id="sidebar"><div class="sh"><div class="sl" style="color:rgb(var(--ac))">CV</div><div class="ss">Computer Vision Robot</div></div>
+<div style="padding:14px 0"><div class="nsec">Dasar</div><a href="#s1" class="ni"><span class="nd"></span>Pipeline CV Robot</a><a href="#s2" class="ni"><span class="nd"></span>Kamera & Depth</a><div class="nsec">Detection</div><a href="#s3" class="ni"><span class="nd"></span>YOLOv8 Detection</a><a href="#s4" class="ni"><span class="nd"></span>Object Tracking</a><a href="#s5" class="ni"><span class="nd"></span>Semantic Segmentation</a><div class="nsec">3D Vision</div><a href="#s6" class="ni"><span class="nd"></span>Depth Estimation</a><a href="#s7" class="ni"><span class="nd"></span>Stereo Vision</a><a href="#s8" class="ni"><span class="nd"></span>Point Cloud</a><div class="nsec">Robot Integration</div><a href="#s9" class="ni"><span class="nd"></span>Grasp Detection</a><a href="#s10" class="ni"><span class="nd"></span>ArUco Markers</a><a href="#s11" class="ni"><span class="nd"></span>ROS2 Vision Pipeline</a></div></nav>
+<div id="overlay"></div>
+<div id="main">
+<div id="topbar"><span class="tbt">DOC 3 — COMPUTER VISION</span><button id="mbtn" onclick="toggleSidebar()">&#9776;</button></div>
+<div class="content">
+<div class="hero"><div class="hl">// DOC 03 / 07</div><h1>COMPUTER<br>VISION</h1><p class="hdesc">Computer vision komprehensif untuk robot: YOLOv8, object tracking ByteTrack, SAM segmentation, depth estimation, stereo vision, point cloud, grasp detection, ArUco markers, pipeline ROS2.</p><div class="htags"><span class="tag ta">YOLOv8</span><span class="tag tb">SAM</span><span class="tag to">Depth</span><span class="tag ta">Stereo 3D</span><span class="tag tb">ROS2</span></div></div>
+<section class="sec" id="s1"><div class="sech"><div class="sn">01</div><div><div class="sc">Overview</div><h2>PIPELINE CV ROBOT</h2></div></div><p>Computer vision untuk robot mencakup spektrum tugas mulai dari deteksi objek sederhana hingga 3D scene understanding. Pipeline umum:</p><div class="cg"><div class="card"><div class="ci">📷</div><div class="ct">Capture</div><div class="cd">Frame dari RGB cam, depth cam, atau stereo rig</div></div><div class="card"><div class="ci">🔍</div><div class="ct">Detect</div><div class="cd">YOLOv8/RT-DETR untuk bounding box + class</div></div><div class="card"><div class="ci">✂️</div><div class="ct">Segment</div><div class="cd">SAM/Mask R-CNN untuk pixel-level mask</div></div><div class="card"><div class="ci">📐</div><div class="ct">Depth</div><div class="cd">Stereo disparity, MiDaS, ZoeDepth</div></div><div class="card"><div class="ci">🤖</div><div class="ct">Act</div><div class="cd">Grasp point, navigation target, manipulation</div></div><div class="card"><div class="ci">🔄</div><div class="ct">Track</div><div class="cd">ByteTrack/DeepSORT untuk multi-object tracking</div></div></div><h3>Kamera untuk Robot</h3><div class="tw"><table><tr><th>Kamera</th><th>Type</th><th>Resolusi</th><th>Depth</th><th>FPS</th><th>Use Case</th></tr><tr><td>OAK-D Lite</td><td>Stereo+RGB</td><td>4K RGB / 640p depth</td><td>√ 0.2-35m</td><td>60</td><td>Manipulation, nav</td></tr><tr><td>Intel RealSense D435</td><td>Stereo IR</td><td>1920×1080</td><td>√ 0.3-3m</td><td>90</td><td>Indoor close range</td></tr><tr><td>ZED 2</td><td>Stereo HD</td><td>4K</td><td>√ 0.3-20m</td><td>100</td><td>Outdoor navigation</td></tr><tr><td>Picamera V3</td><td>Mono RGB</td><td>12MP</td><td>✗</td><td>30</td><td>Lightweight robot</td></tr><tr><td>OAK-1</td><td>Mono RGB</td><td>12MP</td><td>✗ (AI)</td><td>60</td><td>AI inference, low latency</td></tr></table></div></section><section class="sec" id="s2"><div class="sech"><div class="sn">02</div><div><div class="sc">Hardware</div><h2>KAMERA SETUP & KALIBRASI</h2></div></div><h3>Kalibrasi Kamera (OpenCV)</h3><div class="math">Camera Intrinsic Matrix K:
+    | fx  0  cx |
+K = |  0 fy  cy |
+    |  0  0   1 |
+
+Distortion: [k1, k2, p1, p2, k3]
+
+Undistort pixel:
+  x_corrected = (x - cx)/fx
+  r^2 = x^2 + y^2
+  x_distorted = x*(1 + k1*r^2 + k2*r^4) + 2*p1*x*y + p2*(r^2+2*x^2)</div><pre><span class="kw">import</span> cv2, numpy <span class="kw">as</span> np, glob
+
+<span class="kw">def</span> <span class="fn">calibrate_camera</span>(images_path, grid=(<span class="nm">9</span>,<span class="nm">6</span>), square_mm=<span class="nm">25</span>):
+    criteria=(<span class="nm">cv2</span>.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER,<span class="nm">30</span>,<span class="nm">0.001</span>)
+    objp=np.<span class="fn">zeros</span>((grid[<span class="nm">0</span>]*grid[<span class="nm">1</span>],<span class="nm">3</span>),np.float32)
+    objp[:,:<span class="nm">2</span>]=np.<span class="fn">mgrid</span>[<span class="nm">0</span>:grid[<span class="nm">0</span>],<span class="nm">0</span>:grid[<span class="nm">1</span>]].<span class="fn">T.reshape</span>(-<span class="nm">1</span>,<span class="nm">2</span>)*square_mm
+    obj_pts, img_pts = [], []
+    <span class="kw">for</span> fname <span class="kw">in</span> glob.<span class="fn">glob</span>(images_path):
+        img=cv2.<span class="fn">imread</span>(fname); gray=cv2.<span class="fn">cvtColor</span>(img,cv2.COLOR_BGR2GRAY)
+        ret,corners=cv2.<span class="fn">findChessboardCorners</span>(gray,grid)
+        <span class="kw">if</span> ret:
+            obj_pts.<span class="fn">append</span>(objp)
+            img_pts.<span class="fn">append</span>(cv2.<span class="fn">cornerSubPix</span>(gray,corners,(<span class="nm">11</span>,<span class="nm">11</span>),(-<span class="nm">1</span>,-<span class="nm">1</span>),criteria))
+    _, K, D, rvecs, tvecs = cv2.<span class="fn">calibrateCamera</span>(obj_pts,img_pts,gray.shape[::-<span class="nm">1</span>],<span class="nm">None</span>,<span class="nm">None</span>)
+    print(<span class="st">f"RMS error: {_:.4f}"</span>)
+    <span class="kw">return</span> K, D</pre></section><section class="sec" id="s3"><div class="sech"><div class="sn">03</div><div><div class="sc">Detection</div><h2>YOLOv8 OBJECT DETECTION</h2></div></div><h3>YOLOv8 Inference + Custom Training</h3><pre><span class="kw">from</span> ultralytics <span class="kw">import</span> YOLO
+<span class="kw">import</span> cv2, numpy <span class="kw">as</span> np
+
+model = <span class="fn">YOLO</span>(<span class="st">'yolov8n.pt'</span>)  <span class="cm"># n=nano, s=small, m=medium, l=large, x=xlarge</span>
+
+<span class="kw">class</span> <span class="tp3">ObjectDetector</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, model_path=<span class="st">'yolov8n.pt'</span>, conf=<span class="nm">0.5</span>, device=<span class="st">'cuda'</span>):
+        self.model = <span class="fn">YOLO</span>(model_path)
+        self.conf = conf
+        self.model.<span class="fn">to</span>(device)
+
+    <span class="kw">def</span> <span class="fn">detect</span>(self, frame):
+        results = self.model.<span class="fn">predict</span>(frame, conf=self.conf, verbose=<span class="nm">False</span>)
+        detections = []
+        <span class="kw">for</span> r <span class="kw">in</span> results:
+            boxes = r.boxes
+            <span class="kw">if</span> boxes <span class="kw">is None</span>: <span class="kw">continue</span>
+            <span class="kw">for</span> box <span class="kw">in</span> boxes:
+                x1,y1,x2,y2 = [<span class="fn">int</span>(v) <span class="kw">for</span> v <span class="kw">in</span> box.xyxy[<span class="nm">0</span>]]
+                cls = <span class="fn">int</span>(box.cls[<span class="nm">0</span>])
+                conf = <span class="fn">float</span>(box.conf[<span class="nm">0</span>])
+                cx, cy = (x1+x2)//<span class="nm">2</span>, (y1+y2)//<span class="nm">2</span>
+                detections.<span class="fn">append</span>({
+                    "bbox":[x1,y1,x2,y2], "class":cls,
+                    "label":self.model.names[cls], "conf":conf,
+                    "center":(cx,cy)})
+        <span class="kw">return</span> detections
+
+    <span class="kw">def</span> <span class="fn">detect_and_draw</span>(self, frame):
+        dets = self.<span class="fn">detect</span>(frame)
+        <span class="kw">for</span> d <span class="kw">in</span> dets:
+            x1,y1,x2,y2 = d[<span class="st">'bbox'</span>]
+            cv2.<span class="fn">rectangle</span>(frame,(x1,y1),(x2,y2),(<span class="nm">0</span>,<span class="nm">255</span>,<span class="nm">0</span>),<span class="nm">2</span>)
+            cv2.<span class="fn">putText</span>(frame,<span class="st">f"{d['label']} {d['conf']:.2f}"</span>,(x1,y1-<span class="nm">10</span>),
+                      cv2.FONT_HERSHEY_SIMPLEX,<span class="nm">0.5</span>,(<span class="nm">0</span>,<span class="nm">255</span>,<span class="nm">0</span>),<span class="nm">1</span>)
+        <span class="kw">return</span> frame, dets</pre><h3>Training Custom YOLOv8 (Dataset Sendiri)</h3><pre><span class="cm"># 1. Buat dataset.yaml</span>
+<span class="cm"># path: /data/robot_objects</span>
+<span class="cm"># train: images/train
+# val: images/val</span>
+<span class="cm"># names: {0: gelas, 1: botol, 2: buku, 3: kunci}</span>
+
+<span class="cm"># 2. Train</span>
+model = <span class="fn">YOLO</span>(<span class="st">'yolov8n.pt'</span>)
+model.<span class="fn">train</span>(
+    data=<span class="st">'dataset.yaml'</span>,
+    epochs=<span class="nm">100</span>,
+    imgsz=<span class="nm">640</span>,
+    batch=<span class="nm">16</span>,
+    device=<span class="nm">0</span>,
+    augment=<span class="nm">True</span>,
+    optimizer=<span class="st">'AdamW'</span>,
+    lr0=<span class="nm">0.001</span>,
+    project=<span class="st">'runs/robot'</span>)</pre></section><section class="sec" id="s4"><div class="sech"><div class="sn">04</div><div><div class="sc">Tracking</div><h2>MULTI-OBJECT TRACKING</h2></div></div><pre><span class="kw">from</span> ultralytics <span class="kw">import</span> YOLO
+<span class="kw">import</span> cv2
+
+model = <span class="fn">YOLO</span>(<span class="st">'yolov8n.pt'</span>)
+
+<span class="kw">class</span> <span class="tp3">RobotTracker</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.model = <span class="fn">YOLO</span>(<span class="st">'yolov8n.pt'</span>)
+        self.track_history = {}
+        self.colors = {}
+
+    <span class="kw">def</span> <span class="fn">track</span>(self, frame):
+        results = self.model.<span class="fn">track</span>(frame, persist=<span class="nm">True</span>, tracker=<span class="st">'bytetrack.yaml'</span>)
+        tracked = []
+        <span class="kw">if</span> results[<span class="nm">0</span>].boxes.id <span class="kw">is not None</span>:
+            boxes = results[<span class="nm">0</span>].boxes.xyxy.<span class="fn">cpu</span>()
+            ids   = results[<span class="nm">0</span>].boxes.id.<span class="fn">int</span>().<span class="fn">cpu</span>().<span class="fn">tolist</span>()
+            clss  = results[<span class="nm">0</span>].boxes.cls.<span class="fn">int</span>().<span class="fn">cpu</span>().<span class="fn">tolist</span>()
+
+            <span class="kw">for</span> box, tid, cls <span class="kw">in</span> <span class="fn">zip</span>(boxes, ids, clss):
+                x1,y1,x2,y2 = <span class="fn">map</span>(int, box)
+                cx,cy = (x1+x2)//<span class="nm">2</span>, (y1+y2)//<span class="nm">2</span>
+                <span class="kw">if</span> tid <span class="kw">not in</span> self.track_history:
+                    self.track_history[tid]=[]
+                    self.colors[tid]=<span class="fn">tuple</span>(int(c) <span class="kw">for</span> c <span class="kw">in</span> np.random.<span class="fn">randint</span>(<span class="nm">100</span>,<span class="nm">255</span>,<span class="nm">3</span>))
+                self.track_history[tid].<span class="fn">append</span>((cx,cy))
+                self.track_history[tid] = self.track_history[tid][-<span class="nm">30</span>:]  <span class="cm"># 30 frame trail</span>
+                tracked.<span class="fn">append</span>({"id":tid,"cls":cls,"bbox":[x1,y1,x2,y2],"center":(cx,cy)})
+        <span class="kw">return</span> tracked</pre></section><section class="sec" id="s5"><div class="sech"><div class="sn">05</div><div><div class="sc">Segmentation</div><h2>SEMANTIC SEGMENTATION</h2></div></div><pre><span class="kw">from</span> ultralytics <span class="kw">import</span> YOLO
+<span class="kw">import</span> cv2, numpy <span class="kw">as</span> np
+
+<span class="cm"># YOLOv8 instance segmentation</span>
+seg_model = <span class="fn">YOLO</span>(<span class="st">'yolov8n-seg.pt'</span>)
+
+<span class="kw">def</span> <span class="fn">segment_scene</span>(frame):
+    results = seg_model.<span class="fn">predict</span>(frame, conf=<span class="nm">0.5</span>, verbose=<span class="nm">False</span>)
+    masks_out = []
+    overlay = frame.<span class="fn">copy</span>()
+    <span class="kw">for</span> r <span class="kw">in</span> results:
+        <span class="kw">if</span> r.masks <span class="kw">is None</span>: <span class="kw">continue</span>
+        masks = r.masks.data.<span class="fn">cpu</span>().<span class="fn">numpy</span>()
+        boxes = r.boxes
+        <span class="kw">for</span> i, mask <span class="kw">in</span> <span class="fn">enumerate</span>(masks):
+            cls = <span class="fn">int</span>(boxes.cls[i])
+            label = seg_model.names[cls]
+            mask_resized = cv2.<span class="fn">resize</span>(mask, (frame.shape[<span class="nm">1</span>],frame.shape[<span class="nm">0</span>]))
+            color = np.random.<span class="fn">randint</span>(<span class="nm">100</span>,<span class="nm">255</span>,<span class="nm">3</span>).<span class="fn">tolist</span>()
+            overlay[mask_resized > <span class="nm">0.5</span>] = color
+            masks_out.<span class="fn">append</span>({"label":label,"mask":mask_resized})
+    return cv2.<span class="fn">addWeighted</span>(frame,<span class="nm">0.7</span>,overlay,<span class="nm">0.3</span>,<span class="nm">0</span>), masks_out</pre><h3>SAM — Segment Anything Model</h3><pre><span class="kw">from</span> segment_anything <span class="kw">import</span> sam_model_registry, SamPredictor
+<span class="kw">import</span> torch
+
+sam = sam_model_registry[<span class="st">'vit_b'</span>](checkpoint=<span class="st">'sam_vit_b.pth'</span>)
+sam.<span class="fn">to</span>(<span class="st">'cuda'</span>)
+predictor = <span class="fn">SamPredictor</span>(sam)
+
+<span class="kw">def</span> <span class="fn">segment_at_point</span>(frame, point_xy):
+    predictor.<span class="fn">set_image</span>(frame)
+    masks,scores,_ = predictor.<span class="fn">predict</span>(
+        point_coords=np.<span class="fn">array</span>([point_xy]),
+        point_labels=np.<span class="fn">array</span>([<span class="nm">1</span>]),
+        multimask_output=<span class="nm">True</span>)
+    best = masks[scores.<span class="fn">argmax</span>()]
+    <span class="kw">return</span> best  <span class="cm"># boolean mask HxW</span></pre></section><section class="sec" id="s6"><div class="sech"><div class="sn">06</div><div><div class="sc">Depth</div><h2>DEPTH ESTIMATION</h2></div></div><div class="math">Depth estimation approaches:
+1. Stereo: disparity d → depth Z = f*B/d (B=baseline, f=focal)
+2. Structured light: IR pattern, e.g. RealSense
+3. Monocular learned: MiDaS, ZoeDepth, DepthAnything
+   → relative depth, perlu scale factor untuk metric depth
+4. LiDAR fusion: sparse LiDAR + dense RGB → complete depth</div><pre><span class="kw">import</span> torch, cv2, numpy <span class="kw">as</span> np
+
+<span class="kw">class</span> <span class="tp3">DepthEstimator</span>:
+    <span class="st">"""ZoeDepth untuk metric monocular depth"""</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.model = torch.hub.<span class="fn">load</span>(<span class="st">'isl-org/ZoeDepth'</span>,<span class="st">'ZoeD_NK'</span>,pretrained=<span class="nm">True</span>)
+        self.model.<span class="fn">eval</span>().<span class="fn">cuda</span>()
+
+    <span class="kw">def</span> <span class="fn">estimate</span>(self, frame_rgb):
+        <span class="st">"""Returns depth in meters"""</span>
+        <span class="kw">from</span> zoedepth.utils.misc <span class="kw">import</span> pil_to_batched_tensor
+        <span class="kw">from</span> PIL <span class="kw">import</span> Image
+        pil = Image.<span class="fn">fromarray</span>(frame_rgb)
+        X = <span class="fn">pil_to_batched_tensor</span>(pil).<span class="fn">cuda</span>()
+        <span class="kw">with</span> torch.<span class="fn">no_grad</span>():
+            depth = self.model.<span class="fn">infer</span>(X)
+        <span class="kw">return</span> depth.<span class="fn">squeeze</span>().<span class="fn">cpu</span>().<span class="fn">numpy</span>()  <span class="cm"># HxW depth in meters</span>
+
+    <span class="kw">def</span> <span class="fn">get_object_depth</span>(self, depth_map, bbox):
+        x1,y1,x2,y2 = bbox
+        roi = depth_map[y1:y2, x1:x2]
+        valid = roi[roi > <span class="nm">0.1</span>]
+        <span class="kw">if</span> <span class="fn">len</span>(valid)==<span class="nm">0</span>: <span class="kw">return</span> <span class="nm">None</span>
+        <span class="kw">return</span> np.<span class="fn">percentile</span>(valid, <span class="nm">25</span>)  <span class="cm"># median bawah = lebih akurat</span></pre></section><section class="sec" id="s7"><div class="sech"><div class="sn">07</div><div><div class="sc">3D Vision</div><h2>STEREO VISION & DISPARITY</h2></div></div><div class="math">Stereo Geometry:
+Baseline B = jarak antara dua kamera (meter)
+Focal length f (pixels)
+Disparity d = x_left - x_right (pixels)
+
+Depth: Z = f * B / d
+3D point: X = (x - cx) * Z / fx
+          Y = (y - cy) * Z / fy
+
+Minimum measurable depth: Z_min = f*B/d_max
+Maximum depth limited by noise in disparity</div><pre><span class="kw">import</span> cv2, numpy <span class="kw">as</span> np
+
+<span class="kw">class</span> <span class="tp3">StereoDepth</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, K_L, D_L, K_R, D_R, R, T, img_size):
+        self.R1,self.R2,self.P1,self.P2,self.Q,*_ = cv2.<span class="fn">stereoRectify</span>(K_L,D_L,K_R,D_R,img_size,R,T,alpha=<span class="nm">0</span>)
+        self.map1L,self.map2L = cv2.<span class="fn">initUndistortRectifyMap</span>(K_L,D_L,self.R1,self.P1,img_size,cv2.CV_32FC1)
+        self.map1R,self.map2R = cv2.<span class="fn">initUndistortRectifyMap</span>(K_R,D_R,self.R2,self.P2,img_size,cv2.CV_32FC1)
+        self.stereo = cv2.StereoSGBM.<span class="fn">create</span>(
+            minDisparity=<span class="nm">0</span>, numDisparities=<span class="nm">128</span>, blockSize=<span class="nm">5</span>,
+            P1=<span class="nm">8</span>*<span class="nm">3</span>*<span class="nm">5</span>**<span class="nm">2</span>, P2=<span class="nm">32</span>*<span class="nm">3</span>*<span class="nm">5</span>**<span class="nm">2</span>,
+            disp12MaxDiff=<span class="nm">1</span>, uniquenessRatio=<span class="nm">10</span>,
+            speckleWindowSize=<span class="nm">100</span>, speckleRange=<span class="nm">32</span>)
+
+    <span class="kw">def</span> <span class="fn">compute_depth</span>(self, left, right):
+        rL = cv2.<span class="fn">remap</span>(left, self.map1L, self.map2L, cv2.INTER_LINEAR)
+        rR = cv2.<span class="fn">remap</span>(right,self.map1R, self.map2R, cv2.INTER_LINEAR)
+        gL = cv2.<span class="fn">cvtColor</span>(rL, cv2.COLOR_BGR2GRAY)
+        gR = cv2.<span class="fn">cvtColor</span>(rR, cv2.COLOR_BGR2GRAY)
+        disp = self.stereo.<span class="fn">compute</span>(gL,gR).<span class="fn">astype</span>(np.float32)/<span class="nm">16</span>
+        depth_3d = cv2.<span class="fn">reprojectImageTo3D</span>(disp, self.Q)
+        <span class="kw">return</span> disp, depth_3d</pre></section><section class="sec" id="s8"><div class="sech"><div class="sn">08</div><div><div class="sc">3D</div><h2>POINT CLOUD PROCESSING</h2></div></div><pre><span class="kw">import</span> open3d <span class="kw">as</span> o3d
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">depth_to_pointcloud</span>(depth, K, color=<span class="nm">None</span>):
+    h,w = depth.shape
+    fx,fy=K[<span class="nm">0</span>,<span class="nm">0</span>],K[<span class="nm">1</span>,<span class="nm">1</span>]; cx,cy=K[<span class="nm">0</span>,<span class="nm">2</span>],K[<span class="nm">1</span>,<span class="nm">2</span>]
+    u,v=np.<span class="fn">meshgrid</span>(np.<span class="fn">arange</span>(w),np.<span class="fn">arange</span>(h))
+    Z=depth; X=(u-cx)*Z/fx; Y=(v-cy)*Z/fy
+    pts=np.<span class="fn">stack</span>([X,Y,Z],axis=-<span class="nm">1</span>).<span class="fn">reshape</span>(-<span class="nm">1</span>,<span class="nm">3</span>)
+    valid=(Z.<span class="fn">flatten</span>()><span class="nm">0.1</span>) & (Z.<span class="fn">flatten</span>()<span class="nm">10</span>)
+    pcd=o3d.<span class="fn">geometry</span>.<span class="fn">PointCloud</span>()
+    pcd.points=o3d.<span class="fn">utility</span>.<span class="fn">Vector3dVector</span>(pts[valid])
+    <span class="kw">if</span> color <span class="kw">is not None</span>:
+        c=color.<span class="fn">reshape</span>(-<span class="nm">1</span>,<span class="nm">3</span>)/<span class="nm">255.0</span>
+        pcd.colors=o3d.<span class="fn">utility</span>.<span class="fn">Vector3dVector</span>(c[valid])
+    <span class="kw">return</span> pcd
+
+<span class="kw">def</span> <span class="fn">process_pointcloud</span>(pcd):
+    <span class="cm"># Voxel downsampling</span>
+    ds=pcd.<span class="fn">voxel_down_sample</span>(voxel_size=<span class="nm">0.02</span>)
+    <span class="cm"># Remove outliers</span>
+    cl,_=ds.<span class="fn">remove_statistical_outlier</span>(nb_neighbors=<span class="nm">20</span>,std_ratio=<span class="nm">2.0</span>)
+    <span class="cm"># Estimate normals</span>
+    cl.<span class="fn">estimate_normals</span>(search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=<span class="nm">0.1</span>,max_nn=<span class="nm">30</span>))
+    <span class="cm"># RANSAC plane segmentation (floor removal)</span>
+    plane,inliers=cl.<span class="fn">segment_plane</span>(distance_threshold=<span class="nm">0.01</span>,ransac_n=<span class="nm">3</span>,num_iterations=<span class="nm">1000</span>)
+    obstacles=cl.<span class="fn">select_by_index</span>(inliers, invert=<span class="nm">True</span>)
+    <span class="kw">return</span> obstacles</pre></section><section class="sec" id="s9"><div class="sech"><div class="sn">09</div><div><div class="sc">Manipulation</div><h2>GRASP POINT DETECTION</h2></div></div><div class="math">6-DOF Grasp Estimation:
+1. Point cloud dari depth camera
+2. Object segmentation (YOLO mask -> point subset)
+3. PCA untuk principal axes
+4. Approach vector = normal permukaan terbaik
+5. Grasp center = bounding box center
+Libraries: GraspNet-1Billion, Contact-GraspNet, AnyGrasp</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> sklearn.decomposition <span class="kw">import</span> PCA
+
+<span class="kw">def</span> <span class="fn">estimate_grasp</span>(points_3d):
+    <span class="st">"""Simple PCA-based grasp estimation"""</span>
+    center = points_3d.<span class="fn">mean</span>(axis=<span class="nm">0</span>)
+    pca = <span class="fn">PCA</span>(n_components=<span class="nm">3</span>).<span class="fn">fit</span>(points_3d)
+    axes = pca.components_  <span class="cm"># 3 principal axes</span>
+    widths = pca.explained_variance_**<span class="nm">0.5</span> * <span class="nm">2</span>
+
+    <span class="cm"># Approach direction: smallest axis (shortest dimension)</span>
+    approach = axes[<span class="fn">np.argmin</span>(widths)]
+    grip_width = <span class="fn">min</span>(widths[<span class="nm">0</span>], widths[<span class="nm">1</span>]) * <span class="nm">1.1</span>  <span class="cm"># 10% safety margin</span>
+
+    <span class="kw">return</span> {
+        "center": center,
+        "approach": approach,
+        "grip_width_m": grip_width,
+        "axes": axes
+    }</pre></section><section class="sec" id="s10"><div class="sech"><div class="sn">010</div><div><div class="sc">Fiducials</div><h2>ARUCO MARKERS</h2></div></div><pre><span class="kw">import</span> cv2, cv2.aruco <span class="kw">as</span> aruco
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">class</span> <span class="tp3">ArucoDetector</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, K, D, marker_size_m=<span class="nm">0.1</span>):
+        self.K=K; self.D=D; self.sz=marker_size_m
+        self.dict = aruco.<span class="fn">getPredefinedDictionary</span>(aruco.DICT_6X6_250)
+        self.params = aruco.<span class="fn">DetectorParameters</span>()
+        self.detector = aruco.<span class="fn">ArucoDetector</span>(self.dict, self.params)
+
+    <span class="kw">def</span> <span class="fn">detect</span>(self, frame):
+        gray = cv2.<span class="fn">cvtColor</span>(frame, cv2.COLOR_BGR2GRAY)
+        corners, ids, _ = self.detector.<span class="fn">detectMarkers</span>(gray)
+        poses = []
+        <span class="kw">if</span> ids <span class="kw">is None</span>: <span class="kw">return</span> poses
+        <span class="kw">for</span> i, c <span class="kw">in</span> <span class="fn">enumerate</span>(corners):
+            rvec, tvec, _ = cv2.<span class="fn">solvePnP</span>(
+                np.<span class="fn">array</span>([[<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0</span>],[self.sz,<span class="nm">0</span>,<span class="nm">0</span>],[self.sz,self.sz,<span class="nm">0</span>],[<span class="nm">0</span>,self.sz,<span class="nm">0</span>]],np.float32),
+                c.<span class="fn">reshape</span>(<span class="nm">4</span>,<span class="nm">2</span>), self.K, self.D)
+            R, _ = cv2.<span class="fn">Rodrigues</span>(rvec)
+            poses.<span class="fn">append</span>({"id":ids[i][<span class="nm">0</span>],"R":R,"t":tvec.<span class="fn">flatten</span>()})
+        <span class="kw">return</span> poses</pre></section><section class="sec" id="s11"><div class="sech"><div class="sn">011</div><div><div class="sc">ROS2</div><h2>ROS2 VISION PIPELINE</h2></div></div><pre><span class="kw">import</span> rclpy
+<span class="kw">from</span> rclpy.node <span class="kw">import</span> Node
+<span class="kw">from</span> sensor_msgs.msg <span class="kw">import</span> Image, CameraInfo
+<span class="kw">from</span> vision_msgs.msg <span class="kw">import</span> Detection2DArray, Detection2D
+<span class="kw">from</span> cv_bridge <span class="kw">import</span> CvBridge
+<span class="kw">from</span> ultralytics <span class="kw">import</span> YOLO
+
+<span class="kw">class</span> <span class="tp3">VisionNode</span>(Node):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        <span class="fn">super</span>().__init__(<span class="st">'vision_node'</span>)
+        self.bridge = <span class="fn">CvBridge</span>()
+        self.model  = <span class="fn">YOLO</span>(<span class="st">'yolov8n.pt'</span>)
+        self.det_pub = self.<span class="fn">create_publisher</span>(Detection2DArray,<span class="st">'/detections'</span>,<span class="nm">10</span>)
+        self.<span class="fn">create_subscription</span>(Image,<span class="st">'/camera/image_raw'</span>,self.<span class="fn">img_cb</span>,<span class="nm">10</span>)
+
+    <span class="kw">def</span> <span class="fn">img_cb</span>(self, msg):
+        frame = self.bridge.<span class="fn">imgmsg_to_cv2</span>(msg, desired_encoding=<span class="st">'bgr8'</span>)
+        results = self.model.<span class="fn">predict</span>(frame, verbose=<span class="nm">False</span>)
+        det_arr = Detection2DArray()
+        det_arr.header = msg.header
+        <span class="kw">for</span> r <span class="kw">in</span> results:
+            <span class="kw">for</span> box <span class="kw">in</span> r.boxes:
+                d = Detection2D()
+                d.bbox.center.position.x = float((box.xyxy[<span class="nm">0</span>][<span class="nm">0</span>]+box.xyxy[<span class="nm">0</span>][<span class="nm">2</span>])/<span class="nm">2</span>)
+                d.bbox.center.position.y = float((box.xyxy[<span class="nm">0</span>][<span class="nm">1</span>]+box.xyxy[<span class="nm">0</span>][<span class="nm">3</span>])/<span class="nm">2</span>)
+                d.bbox.size_x = float(box.xyxy[<span class="nm">0</span>][<span class="nm">2</span>]-box.xyxy[<span class="nm">0</span>][<span class="nm">0</span>])
+                d.bbox.size_y = float(box.xyxy[<span class="nm">0</span>][<span class="nm">3</span>]-box.xyxy[<span class="nm">0</span>][<span class="nm">1</span>])
+                det_arr.detections.<span class="fn">append</span>(d)
+        self.det_pub.<span class="fn">publish</span>(det_arr)
+
+rclpy.<span class="fn">init</span>(); n=<span class="fn">VisionNode</span>(); rclpy.<span class="fn">spin</span>(n)</pre></section>
+<div style="text-align:center;padding:40px 0;color:var(--text3);font-family:var(--mono);font-size:11px;border-top:1px solid var(--border);margin-top:40px">COMPUTER VISION ROBOT — DOC 03 / 07<br><span style="color:rgb(var(--ac));margin-top:8px;display:block">Antonius - bluedragonsec.com</span></div>
+</div></div><script>function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open')}
+document.getElementById('overlay').addEventListener('click',toggleSidebar);
+const secs=document.querySelectorAll('.sec'),nls=document.querySelectorAll('.ni');
+secs.forEach(s=>new IntersectionObserver(e=>{if(e[0].isIntersecting){const id=s.id;nls.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+id))}},{threshold:0.15,rootMargin:'-60px 0px -60% 0px'}).observe(s));
+nls.forEach(l=>l.addEventListener('click',()=>{if(window.innerWidth<=900)toggleSidebar()}));</script></body></html>

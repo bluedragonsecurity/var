@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Matematika & Fisika Robotika — Robotika</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>:root{--ac:96,224,192}:root{--bg:#0b0d0f;--bg2:#111417;--bg3:#181c21;--border:#2a3240;--border2:#3a4558;--text:#c8d4e0;--text2:#8a9ab0;--text3:#5a6a80;--mono:'IBM Plex Mono',monospace;--body:'IBM Plex Sans',sans-serif;--disp:'Bebas Neue',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.7;display:flex;min-height:100vh}
+#sidebar{width:280px;min-width:280px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;scrollbar-width:thin;transition:transform .3s ease}
+.sh{padding:22px 18px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:10}
+.sl{font-family:var(--disp);font-size:20px;letter-spacing:2px;line-height:1;margin-bottom:3px}
+.ss{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-family:var(--mono)}
+.nsec{padding:5px 18px 3px;font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--text3);margin-top:8px}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 18px;color:var(--text2);text-decoration:none;font-size:13px;transition:all .15s;border-left:2px solid transparent;line-height:1.3}
+.ni.active,.ni:hover{color:rgb(var(--ac));background:rgba(var(--ac),.07);border-left-color:rgb(var(--ac))}
+.nd{width:5px;height:5px;border-radius:50%;background:var(--border2);flex-shrink:0}
+.ni.active .nd,.ni:hover .nd{background:rgb(var(--ac))}
+#main{margin-left:280px;flex:1;min-width:0}
+#topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 36px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:90}
+.tbt{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:1px}
+#mbtn{display:none;background:none;border:1px solid var(--border2);color:var(--text);padding:5px 10px;border-radius:4px;cursor:pointer;font-size:15px}
+.content{max-width:920px;margin:0 auto;padding:44px 36px 80px}
+.hero{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:44px;margin-bottom:52px;position:relative;overflow:hidden}
+.hero::before{position:absolute;right:-10px;top:-10px;font-family:var(--disp);font-size:140px;color:rgba(var(--ac),.03);line-height:1;pointer-events:none;letter-spacing:4px}
+.hl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:3px;color:rgb(var(--ac));margin-bottom:14px}
+h1{font-family:var(--disp);font-size:48px;letter-spacing:3px;color:#fff;line-height:1.05;margin-bottom:14px}
+.hdesc{color:var(--text2);font-size:14.5px;max-width:620px;line-height:1.7}
+.htags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tag{padding:3px 10px;border:1px solid var(--border2);border-radius:3px;font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
+.ta{border-color:rgb(var(--ac));color:rgb(var(--ac))}.tb{border-color:#60c0e8;color:#60c0e8}.to{border-color:#e8a030;color:#e8a030}.tp2{border-color:#c060e0;color:#c060e0}.tr{border-color:#e06060;color:#e06060}
+.sec{margin-bottom:68px;scroll-margin-top:76px}
+.sech{display:flex;align-items:flex-start;gap:14px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.sn{font-family:var(--disp);font-size:44px;line-height:1;color:rgba(var(--ac),.15);flex-shrink:0;min-width:56px}
+.sc{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;color:rgb(var(--ac));margin-bottom:5px}
+h2{font-family:var(--disp);font-size:32px;letter-spacing:2px;color:#fff;line-height:1.1}
+h3{font-size:17px;font-weight:600;color:rgb(var(--ac));margin-top:32px;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+h3::before{content:'';width:3px;height:16px;background:rgb(var(--ac));border-radius:2px;flex-shrink:0}
+h4{font-size:14.5px;font-weight:600;color:#60c0e8;margin-top:22px;margin-bottom:9px}
+p{margin-bottom:13px;color:var(--text);font-size:14px}
+pre{background:var(--bg2);border:1px solid var(--border);border-left:3px solid rgb(var(--ac));border-radius:6px;padding:18px 22px;overflow-x:auto;margin:18px 0;font-family:var(--mono);font-size:12px;line-height:1.65;scrollbar-width:thin}
+pre::-webkit-scrollbar{height:4px}pre::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+code{font-family:var(--mono);font-size:12px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:rgb(var(--ac))}
+pre code{background:none;border:none;padding:0;color:var(--text)}
+.kw{color:#c060e0;font-weight:500}.fn{color:#60c0e8}.st{color:#80e060}.cm{color:#5a6a80;font-style:italic}.nm{color:#e8a030}.tp3{color:#f0c060}
+.math{background:var(--bg3);border:1px solid var(--border);border-left:3px solid #60c0e8;border-radius:6px;padding:18px 22px;margin:18px 0;font-family:var(--mono);font-size:13px;color:#c8ffd0;line-height:2;overflow-x:auto}
+.ib{border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin:18px 0;font-size:13.5px}
+.ib.note{border-left:3px solid #60c0e8;background:rgba(96,192,232,.05)}.ib.warn{border-left:3px solid #e8a030;background:rgba(232,160,48,.05)}.ib.tip{border-left:3px solid rgb(var(--ac));background:rgba(var(--ac),.05)}.ib.danger{border-left:3px solid #e06060;background:rgba(224,96,96,.06)}
+.ibl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;margin-bottom:7px;font-weight:600}.note .ibl{color:#60c0e8}.warn .ibl{color:#e8a030}.danger .ibl{color:#e06060}.tip .ibl{color:rgb(var(--ac))}
+.tw{overflow-x:auto;margin:18px 0}table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--bg3);color:rgb(var(--ac));font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:500;padding:11px 14px;text-align:left;border:1px solid var(--border)}
+td{padding:9px 14px;border:1px solid var(--border);color:var(--text);vertical-align:top}tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:18px 0}.card{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:16px}
+.ci{font-size:22px;margin-bottom:8px}.ct{font-weight:600;font-size:14px;color:var(--text);margin-bottom:5px}.cd{font-size:12px;color:var(--text2);line-height:1.5}
+.steps{counter-reset:sc;margin:18px 0}.step{display:flex;gap:18px;margin-bottom:18px;counter-increment:sc}.step::before{content:counter(sc,decimal-leading-zero);font-family:var(--disp);font-size:26px;color:rgba(var(--ac),.22);flex-shrink:0;min-width:38px;line-height:1;margin-top:2px}
+.stit{font-weight:600;color:var(--text);margin-bottom:5px;font-size:14px}.sdesc{font-size:13px;color:var(--text2);line-height:1.6}
+.divider{height:1px;background:linear-gradient(90deg,rgb(var(--ac)) 0%,var(--border) 60%,transparent 100%);margin:36px 0;opacity:.35}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99}
+@media(max-width:900px){#mbtn{display:block}#sidebar{transform:translateX(-100%)}#sidebar.open{transform:translateX(0)}#overlay.open{display:block}#main{margin-left:0}.content{padding:24px 18px 60px}h2{font-size:26px}.cg{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.cg{grid-template-columns:1fr}}.hero::before{content:'MATH'}</style>
+</head><body>
+<nav id="sidebar"><div class="sh"><div class="sl" style="color:rgb(var(--ac))">MATH</div><div class="ss">Matematika & Fisika Robotika</div></div>
+<div style="padding:14px 0"><div class="nsec">Linear Algebra</div><a href="#s1" class="ni"><span class="nd"></span>Matriks Transformasi</a><a href="#s2" class="ni"><span class="nd"></span>Quaternion & Rotasi</a><a href="#s3" class="ni"><span class="nd"></span>SO3 & SE3</a><div class="nsec">Kinematika</div><a href="#s4" class="ni"><span class="nd"></span>Jacobian & Kecepatan</a><a href="#s5" class="ni"><span class="nd"></span>Lagrangian Mechanics</a><div class="nsec">Estimasi</div><a href="#s6" class="ni"><span class="nd"></span>Kalman Filter</a><a href="#s7" class="ni"><span class="nd"></span>Extended Kalman Filter</a><div class="nsec">Kontrol</div><a href="#s8" class="ni"><span class="nd"></span>PID & Tuning</a><a href="#s9" class="ni"><span class="nd"></span>State Space Control</a><div class="nsec">Optimasi</div><a href="#s10" class="ni"><span class="nd"></span>Gradient Descent & Optimasi</a><a href="#s11" class="ni"><span class="nd"></span>Python Math Tools</a></div></nav>
+<div id="overlay"></div>
+<div id="main">
+<div id="topbar"><span class="tbt">DOC 7 — MATEMATIKA & FISIKA</span><button id="mbtn" onclick="toggleSidebar()">&#9776;</button></div>
+<div class="content">
+<div class="hero"><div class="hl">// DOC 07 / 07</div><h1>MATEMATIKA &amp;<br>FISIKA</h1><p class="hdesc">Matematika & fisika lengkap untuk robotika: transformasi homogen, quaternion, SO3/SE3, Jacobian, Lagrangian dynamics, Kalman Filter, EKF, PID, state-space LQR, optimasi, Python tools.</p><div class="htags"><span class="tag ta">Linear Algebra</span><span class="tag tb">Quaternion</span><span class="tag to">Kalman/EKF</span><span class="tag ta">LQR</span><span class="tag tb">SymPy</span></div></div>
+<section class="sec" id="s1"><div class="sech"><div class="sn">01</div><div><div class="sc">Linear Algebra</div><h2>MATRIKS TRANSFORMASI HOMOGEN</h2></div></div><p>Transformasi homogen adalah representasi seragam untuk translasi + rotasi dalam satu matriks 4×4. Fundamental untuk semua perhitungan pose robot.</p><div class="math">Homogeneous Transform T ∈ SE(3):
+  T = | R  p |    R ∈ SO(3): rotation matrix 3×3
+      | 0  1 |    p ∈ ℝ³:   translation vector
+
+Rotation matrices (basic):
+        |1   0    0  |         | cθ  0  sθ |         | cθ -sθ  0 |
+Rx(θ) = |0  cθ  -sθ |  Ry(θ)= |  0  1   0 |  Rz(θ)= | sθ  cθ  0 |
+        |0  sθ   cθ |         |-sθ  0  cθ |         |  0   0  1 |
+
+Composition: T_AC = T_AB · T_BC
+Inverse:     T^-1 = | R^T  -R^T·p |
+                    |  0      1   |</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">Rx</span>(t): c,s=np.<span class="fn">cos</span>(t),np.<span class="fn">sin</span>(t); <span class="kw">return</span> np.<span class="fn">array</span>([[<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">0</span>],[<span class="nm">0</span>,c,-s],[<span class="nm">0</span>,s,c]])
+<span class="kw">def</span> <span class="fn">Ry</span>(t): c,s=np.<span class="fn">cos</span>(t),np.<span class="fn">sin</span>(t); <span class="kw">return</span> np.<span class="fn">array</span>([[c,<span class="nm">0</span>,s],[<span class="nm">0</span>,<span class="nm">1</span>,<span class="nm">0</span>],[-s,<span class="nm">0</span>,c]])
+<span class="kw">def</span> <span class="fn">Rz</span>(t): c,s=np.<span class="fn">cos</span>(t),np.<span class="fn">sin</span>(t); <span class="kw">return</span> np.<span class="fn">array</span>([[c,-s,<span class="nm">0</span>],[s,c,<span class="nm">0</span>],[<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">1</span>]])
+
+<span class="kw">def</span> <span class="fn">T_mat</span>(R, p):
+    T = np.<span class="fn">eye</span>(<span class="nm">4</span>); T[:<span class="nm">3</span>,:<span class="nm">3</span>]=R; T[:<span class="nm">3</span>,<span class="nm">3</span>]=p; <span class="kw">return</span> T
+
+<span class="kw">def</span> <span class="fn">T_inv</span>(T):
+    R=T[:<span class="nm">3</span>,:<span class="nm">3</span>]; p=T[:<span class="nm">3</span>,<span class="nm">3</span>]
+    Ti=np.<span class="fn">eye</span>(<span class="nm">4</span>); Ti[:<span class="nm">3</span>,:<span class="nm">3</span>]=R.T; Ti[:<span class="nm">3</span>,<span class="nm">3</span>]=-R.T@p
+    <span class="kw">return</span> Ti
+
+<span class="cm"># Contoh: transformasi sensor → base frame</span>
+R_sensor = <span class="fn">Rz</span>(np.radians(<span class="nm">90</span>)) @ <span class="fn">Rx</span>(np.radians(-<span class="nm">10</span>))
+p_sensor = np.<span class="fn">array</span>([<span class="nm">0.15</span>, <span class="nm">0</span>, <span class="nm">0.30</span>])
+T_sensor = <span class="fn">T_mat</span>(R_sensor, p_sensor)
+
+<span class="cm"># Point di frame sensor → transformasi ke frame robot</span>
+p_s = np.<span class="fn">array</span>([<span class="nm">1.5</span>, <span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">1</span>])  <span class="cm"># homogeneous</span>
+p_robot = T_sensor @ p_s
+<span class="fn">print</span>(<span class="st">f"Point in robot frame: {p_robot[:3]}"</span>)</pre></section><section class="sec" id="s2"><div class="sech"><div class="sn">02</div><div><div class="sc">Rotasi</div><h2>QUATERNION & ROTASI 3D</h2></div></div><div class="math">Quaternion q = w + xi + yj + zk = (w, x, y, z)
+  w = cos(θ/2)
+  x = sin(θ/2)·nx,  y = sin(θ/2)·ny,  z = sin(θ/2)·nz
+  n̂ = (nx, ny, nz) = unit rotation axis
+
+Unit quaternion: w² + x² + y² + z² = 1
+
+Quaternion multiplication (Hamilton product):
+  q₁⊗q₂ = (w₁w₂ - x₁x₂ - y₁y₂ - z₁z₂,
+            w₁x₂ + x₁w₂ + y₁z₂ - z₁y₂,
+            w₁y₂ - x₁z₂ + y₁w₂ + z₁x₂,
+            w₁z₂ + x₁y₂ - y₁x₂ + z₁w₂)
+
+Quaternion conjugate q* = (w, -x, -y, -z)
+Rotation of vector v: v' = q ⊗ (0,v) ⊗ q*
+
+Kelebihan vs Euler angles: no gimbal lock, smooth interpolation (SLERP)</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">quat_mult</span>(q1, q2):
+    w1,x1,y1,z1 = q1; w2,x2,y2,z2 = q2
+    <span class="kw">return</span> np.<span class="fn">array</span>([
+        w1*w2 - x1*x2 - y1*y2 - z1*z2,
+        w1*x2 + x1*w2 + y1*z2 - z1*y2,
+        w1*y2 - x1*z2 + y1*w2 + z1*x2,
+        w1*z2 + x1*y2 - y1*x2 + z1*w2])
+
+<span class="kw">def</span> <span class="fn">quat_rotate</span>(q, v):
+    qv = np.<span class="fn">array</span>([<span class="nm">0</span>, *v])
+    q_conj = np.<span class="fn">array</span>([q[<span class="nm">0</span>], -q[<span class="nm">1</span>], -q[<span class="nm">2</span>], -q[<span class="nm">3</span>]])
+    <span class="kw">return</span> <span class="fn">quat_mult</span>(<span class="fn">quat_mult</span>(q, qv), q_conj)[<span class="nm">1</span>:]
+
+<span class="kw">def</span> <span class="fn">quat_from_axis_angle</span>(axis, angle_rad):
+    n = np.<span class="fn">array</span>(axis) / np.linalg.<span class="fn">norm</span>(axis)
+    s = np.<span class="fn">sin</span>(angle_rad/<span class="nm">2</span>)
+    <span class="kw">return</span> np.<span class="fn">array</span>([np.<span class="fn">cos</span>(angle_rad/<span class="nm">2</span>), *n*s])
+
+<span class="kw">def</span> <span class="fn">slerp</span>(q1, q2, t):
+    <span class="st">"""Spherical linear interpolation, t in [0,1]"""</span>
+    dot = np.<span class="fn">clip</span>(np.<span class="fn">dot</span>(q1,q2), -<span class="nm">1</span>,<span class="nm">1</span>)
+    <span class="kw">if</span> dot < <span class="nm">0</span>: q2=-q2; dot=-dot
+    <span class="kw">if</span> dot > <span class="nm">0.9995</span>: <span class="kw">return</span> (q1+t*(q2-q1)) / np.linalg.<span class="fn">norm</span>(q1+t*(q2-q1))
+    theta = np.<span class="fn">arccos</span>(dot)
+    <span class="kw">return</span> (np.<span class="fn">sin</span>((<span class="nm">1</span>-t)*theta)*q1 + np.<span class="fn">sin</span>(t*theta)*q2) / np.<span class="fn">sin</span>(theta)
+
+<span class="kw">def</span> <span class="fn">quat_to_euler</span>(q):
+    w,x,y,z = q
+    roll  = np.<span class="fn">arctan2</span>(<span class="nm">2</span>*(w*x+y*z), <span class="nm">1</span>-<span class="nm">2</span>*(x*x+y*y))
+    pitch = np.<span class="fn">arcsin</span>(np.<span class="fn">clip</span>(<span class="nm">2</span>*(w*y-z*x),-<span class="nm">1</span>,<span class="nm">1</span>))
+    yaw   = np.<span class="fn">arctan2</span>(<span class="nm">2</span>*(w*z+x*y), <span class="nm">1</span>-<span class="nm">2</span>*(y*y+z*z))
+    <span class="kw">return</span> np.<span class="fn">degrees</span>([roll, pitch, yaw])</pre></section><section class="sec" id="s3"><div class="sech"><div class="sn">03</div><div><div class="sc">Lie Groups</div><h2>SO(3) & SE(3)</h2></div></div><div class="math">Lie Groups untuk rotasi & pose:
+
+SO(3) — Special Orthogonal Group (pure rotation):
+  R ∈ SO(3) iff R^T·R = I dan det(R) = +1
+  Lie algebra so(3): skew-symmetric matrices
+  ω̂ = [  0  -ωz   ωy ]
+       [ ωz    0  -ωx ]
+       [-ωy   ωx    0 ]
+
+Rodrigues formula (axis-angle → rotation matrix):
+  R = I + sin(θ)·ω̂ + (1-cos(θ))·ω̂²
+  θ = |ω|,  ω̂ = ω/θ  (unit axis)
+
+SE(3) — Special Euclidean Group (rotation + translation):
+  T = [R|p; 0|1]  ∈ ℝ^(4×4)
+  Lie algebra se(3): [ω̂, v; 0, 0]</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">skew</span>(w):
+    <span class="st">"""Skew-symmetric matrix dari vektor 3D"""</span>
+    <span class="kw">return</span> np.<span class="fn">array</span>([[<span class="nm">0</span>,-w[<span class="nm">2</span>],w[<span class="nm">1</span>]],[w[<span class="nm">2</span>],<span class="nm">0</span>,-w[<span class="nm">0</span>]],[-w[<span class="nm">1</span>],w[<span class="nm">0</span>],<span class="nm">0</span>]])
+
+<span class="kw">def</span> <span class="fn">rodrigues</span>(omega):
+    <span class="st">"""Axis-angle vector omega → rotation matrix (Rodrigues)"""</span>
+    theta = np.linalg.<span class="fn">norm</span>(omega)
+    <span class="kw">if</span> theta < <span class="nm">1e-8</span>: <span class="kw">return</span> np.<span class="fn">eye</span>(<span class="nm">3</span>)
+    k = omega / theta
+    K = <span class="fn">skew</span>(k)
+    <span class="kw">return</span> np.<span class="fn">eye</span>(<span class="nm">3</span>) + np.<span class="fn">sin</span>(theta)*K + (<span class="nm">1</span>-np.<span class="fn">cos</span>(theta))*(K@K)
+
+<span class="kw">def</span> <span class="fn">log_SO3</span>(R):
+    <span class="st">"""Rotation matrix → axis-angle vector"""</span>
+    theta = np.<span class="fn">arccos</span>(np.<span class="fn">clip</span>((np.<span class="fn">trace</span>(R)-<span class="nm">1</span>)/<span class="nm">2</span>,-<span class="nm">1</span>,<span class="nm">1</span>))
+    <span class="kw">if</span> <span class="fn">abs</span>(theta) < <span class="nm">1e-8</span>: <span class="kw">return</span> np.<span class="fn">zeros</span>(<span class="nm">3</span>)
+    w = np.<span class="fn">array</span>([R[<span class="nm">2</span>,<span class="nm">1</span>]-R[<span class="nm">1</span>,<span class="nm">2</span>], R[<span class="nm">0</span>,<span class="nm">2</span>]-R[<span class="nm">2</span>,<span class="nm">0</span>], R[<span class="nm">1</span>,<span class="nm">0</span>]-R[<span class="nm">0</span>,<span class="nm">1</span>]])
+    <span class="kw">return</span> theta / (<span class="nm">2</span>*np.<span class="fn">sin</span>(theta)) * w</pre></section><section class="sec" id="s4"><div class="sech"><div class="sn">04</div><div><div class="sc">Kinematika</div><h2>JACOBIAN & ANALISIS KECEPATAN</h2></div></div><div class="math">Jacobian J memetakan joint velocities → end-effector velocities:
+
+  ẋ = J(q) · q̇
+
+  ẋ = [vx, vy, vz, ωx, ωy, ωz]^T  (6×1 spatial velocity)
+  q̇ = [q̇₁, q̇₂, ..., q̇ₙ]^T        (n×1 joint velocities)
+  J  = 6×n matrix (geometric Jacobian)
+
+Kolom i Jacobian untuk revolute joint:
+  J_i = [ z_{i-1} × (p_n - p_{i-1}) ]   (linear velocity)
+        [         z_{i-1}            ]   (angular velocity)
+
+Joint velocity dari task velocity:
+  q̇ = J⁺ · ẋ   (J⁺ = pseudo-inverse, least-norm solution)
+  q̇ = J⁺ · ẋ + (I - J⁺J) · z  (null-space projection)</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">geometric_jacobian</span>(T_list, joint_types=<span class="nm">None</span>):
+    <span class="st">"""Compute 6×n geometric Jacobian from list of transforms T_0_i"""</span>
+    n = <span class="fn">len</span>(T_list) - <span class="nm">1</span>
+    <span class="kw">if</span> joint_types <span class="kw">is None</span>: joint_types = [<span class="st">'R'</span>]*n  <span class="cm"># all revolute</span>
+    p_ee = T_list[-<span class="nm">1</span>][:<span class="nm">3</span>,<span class="nm">3</span>]  <span class="cm"># end-effector position</span>
+    J = np.<span class="fn">zeros</span>((<span class="nm">6</span>, n))
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+        z = T_list[i][:<span class="nm">3</span>,<span class="nm">2</span>]  <span class="cm"># z-axis of frame i</span>
+        p = T_list[i][:<span class="nm">3</span>,<span class="nm">3</span>]  <span class="cm"># origin of frame i</span>
+        <span class="kw">if</span> joint_types[i] == <span class="st">'R'</span>:
+            J[:<span class="nm">3</span>,i] = np.<span class="fn">cross</span>(z, p_ee - p)
+            J[<span class="nm">3</span>:,i] = z
+        <span class="kw">else</span>:  <span class="cm"># Prismatic</span>
+            J[:<span class="nm">3</span>,i] = z
+            J[<span class="nm">3</span>:,i] = np.<span class="fn">zeros</span>(<span class="nm">3</span>)
+    <span class="kw">return</span> J
+
+<span class="kw">def</span> <span class="fn">damped_pseudoinverse</span>(J, lam=<span class="nm">0.01</span>):
+    <span class="st">"""Damped least squares: lebih stabil di singularity"""</span>
+    <span class="kw">return</span> J.T @ np.linalg.<span class="fn">inv</span>(J@J.T + lam**<span class="nm">2</span>*np.<span class="fn">eye</span>(J.shape[<span class="nm">0</span>]))</pre></section><section class="sec" id="s5"><div class="sech"><div class="sn">05</div><div><div class="sc">Dinamika</div><h2>LAGRANGIAN MECHANICS</h2></div></div><div class="math">Lagrangian L = T - V
+  T = kinetic energy = ½ · q̇^T · M(q) · q̇
+  V = potential energy = Σ mᵢ · g · hᵢ(q)
+
+Euler-Lagrange equations:
+  d/dt(∂L/∂q̇ᵢ) - ∂L/∂qᵢ = τᵢ
+
+Result: M(q)·q̈ + C(q,q̇)·q̇ + G(q) = τ
+
+Inertia matrix M(q) element:
+  Mᵢⱼ = Σₖ(mₖ · (∂pₖ/∂qᵢ)^T · (∂pₖ/∂qⱼ) + ωₖᵢ^T · Iₖ · ωₖⱼ)
+
+Gravity vector:
+  Gᵢ = -∂V/∂qᵢ = -Σₖ mₖ · g^T · (∂pₖ/∂qᵢ)</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">robot_dynamics_2dof</span>(q, qdot, tau,
+                          m1=<span class="nm">1.0</span>, m2=<span class="nm">0.5</span>,
+                          l1=<span class="nm">0.3</span>, l2=<span class="nm">0.2</span>,
+                          lc1=<span class="nm">0.15</span>, lc2=<span class="nm">0.10</span>,
+                          I1=<span class="nm">0.05</span>, I2=<span class="nm">0.02</span>, g=<span class="nm">9.81</span>):
+    <span class="st">"""2-DOF planar robot dynamics via Lagrangian"""</span>
+    q1,q2 = q; dq1,dq2 = qdot
+    c2 = np.<span class="fn">cos</span>(q2)
+
+    <span class="cm"># Inertia matrix M(q)</span>
+    M11 = m1*lc1**<span class="nm">2</span> + I1 + m2*(l1**<span class="nm">2</span> + lc2**<span class="nm">2</span> + <span class="nm">2</span>*l1*lc2*c2) + I2
+    M12 = m2*(lc2**<span class="nm">2</span> + l1*lc2*c2) + I2
+    M22 = m2*lc2**<span class="nm">2</span> + I2
+    M = np.<span class="fn">array</span>([[M11,M12],[M12,M22]])
+
+    <span class="cm"># Coriolis + centripetal C(q,qdot)</span>
+    h = -m2*l1*lc2*np.<span class="fn">sin</span>(q2)
+    C = np.<span class="fn">array</span>([[h*dq2, h*(dq1+dq2)],[-h*dq1, <span class="nm">0</span>]])
+
+    <span class="cm"># Gravity G(q)</span>
+    G1 = (m1*lc1 + m2*l1)*g*np.<span class="fn">cos</span>(q1) + m2*g*lc2*np.<span class="fn">cos</span>(q1+q2)
+    G2 = m2*g*lc2*np.<span class="fn">cos</span>(q1+q2)
+    G = np.<span class="fn">array</span>([G1,G2])
+
+    <span class="cm"># Acceleration: M·qddot = tau - C·qdot - G</span>
+    qddot = np.linalg.<span class="fn">solve</span>(M, np.<span class="fn">array</span>(tau) - C@np.<span class="fn">array</span>(qdot) - G)
+    <span class="kw">return</span> qddot, M, C, G</pre></section><section class="sec" id="s6"><div class="sech"><div class="sn">06</div><div><div class="sc">Estimasi</div><h2>KALMAN FILTER</h2></div></div><div class="math">Kalman Filter: optimal linear state estimator
+
+State model:    x_k = F·x_{k-1} + B·u_k + w_k    (w ~ N(0,Q))
+Obs model:      z_k = H·x_k + v_k                 (v ~ N(0,R))
+
+Predict step:
+  x̂_k⁻ = F·x̂_{k-1} + B·u_k
+  P_k⁻  = F·P_{k-1}·F^T + Q
+
+Update step:
+  K_k = P_k⁻·H^T · (H·P_k⁻·H^T + R)^{-1}    ← Kalman gain
+  x̂_k = x̂_k⁻ + K_k·(z_k - H·x̂_k⁻)           ← posterior mean
+  P_k  = (I - K_k·H)·P_k⁻                       ← posterior covariance
+
+K_k → 0 jika R besar (sensor noise tinggi) → lebih percaya prediksi
+K_k → H^{-1} jika Q besar (model noise tinggi) → lebih percaya sensor</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">class</span> <span class="tp3">KalmanFilter</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, F, H, Q, R, x0, P0):
+        self.F=np.<span class="fn">array</span>(F); self.H=np.<span class="fn">array</span>(H)
+        self.Q=np.<span class="fn">array</span>(Q); self.R=np.<span class="fn">array</span>(R)
+        self.x=np.<span class="fn">array</span>(x0,dtype=float)
+        self.P=np.<span class="fn">array</span>(P0,dtype=float)
+        self.n=self.x.shape[<span class="nm">0</span>]
+
+    <span class="kw">def</span> <span class="fn">predict</span>(self, u=<span class="nm">None</span>, B=<span class="nm">None</span>):
+        self.x = self.F @ self.x
+        <span class="kw">if</span> u <span class="kw">is not None</span> <span class="kw">and</span> B <span class="kw">is not None</span>:
+            self.x += np.<span class="fn">array</span>(B) @ np.<span class="fn">array</span>(u)
+        self.P = self.F @ self.P @ self.F.T + self.Q
+
+    <span class="kw">def</span> <span class="fn">update</span>(self, z):
+        z = np.<span class="fn">array</span>(z)
+        S = self.H @ self.P @ self.H.T + self.R
+        K = self.P @ self.H.T @ np.linalg.<span class="fn">inv</span>(S)
+        self.x = self.x + K @ (z - self.H @ self.x)
+        self.P = (np.<span class="fn">eye</span>(self.n) - K @ self.H) @ self.P
+
+<span class="cm"># Contoh: estimasi posisi 1D dari GPS noisy</span>
+dt=<span class="nm">0.1</span>
+kf=<span class="fn">KalmanFilter</span>(
+  F=[[<span class="nm">1</span>,dt],[<span class="nm">0</span>,<span class="nm">1</span>]], H=[[<span class="nm">1</span>,<span class="nm">0</span>]],
+  Q=[[<span class="nm">0.01</span>,<span class="nm">0</span>],[<span class="nm">0</span>,<span class="nm">0.1</span>]], R=[[<span class="nm">0.5</span>]],
+  x0=[<span class="nm">0</span>,<span class="nm">0</span>], P0=np.<span class="fn">eye</span>(<span class="nm">2</span>)*<span class="nm">1.0</span>)
+<span class="kw">for</span> z <span class="kw">in</span> [<span class="nm">0.1</span>,<span class="nm">0.25</span>,<span class="nm">0.51</span>,<span class="nm">0.78</span>,<span class="nm">1.02</span>]:
+  kf.<span class="fn">predict</span>(); kf.<span class="fn">update</span>([z])
+  <span class="fn">print</span>(<span class="st">f"pos={kf.x[0]:.3f}, vel={kf.x[1]:.3f}"</span>)</pre></section><section class="sec" id="s7"><div class="sech"><div class="sn">07</div><div><div class="sc">Estimasi</div><h2>EXTENDED KALMAN FILTER (EKF)</h2></div></div><div class="math">EKF: Kalman Filter untuk sistem non-linear
+f(x,u) = state transition (non-linear)
+h(x)   = observation model (non-linear)
+
+Linearisasi via Jacobian:
+  F_k = ∂f/∂x |_{x̂_{k-1}}    (Jacobian of f w.r.t. x)
+  H_k = ∂h/∂x |_{x̂_k⁻}      (Jacobian of h w.r.t. x)
+
+Predict:
+  x̂_k⁻ = f(x̂_{k-1}, u_k)
+  P_k⁻  = F_k · P_{k-1} · F_k^T + Q
+
+Update:
+  K_k = P_k⁻ · H_k^T · (H_k · P_k⁻ · H_k^T + R)^{-1}
+  x̂_k = x̂_k⁻ + K_k · (z_k - h(x̂_k⁻))
+  P_k  = (I - K_k · H_k) · P_k⁻</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">class</span> <span class="tp3">RobotEKF</span>:
+    <span class="st">"""EKF untuk lokalisasi mobile robot: state=[x,y,θ,v,ω]"""</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, dt=<span class="nm">0.02</span>):
+        self.dt=dt; self.x=np.<span class="fn">zeros</span>(<span class="nm">5</span>)
+        self.P=np.<span class="fn">diag</span>([<span class="nm">0.1</span>,<span class="nm">0.1</span>,<span class="nm">0.05</span>,<span class="nm">0.01</span>,<span class="nm">0.01</span>])
+        self.Q=np.<span class="fn">diag</span>([<span class="nm">1e-4</span>,<span class="nm">1e-4</span>,<span class="nm">1e-4</span>,<span class="nm">0.001</span>,<span class="nm">0.001</span>])
+
+    <span class="kw">def</span> <span class="fn">f</span>(self, x, u=<span class="nm">None</span>):
+        dt=self.dt; xn=x.<span class="fn">copy</span>()
+        xn[<span class="nm">0</span>]+=x[<span class="nm">3</span>]*np.<span class="fn">cos</span>(x[<span class="nm">2</span>])*dt
+        xn[<span class="nm">1</span>]+=x[<span class="nm">3</span>]*np.<span class="fn">sin</span>(x[<span class="nm">2</span>])*dt
+        xn[<span class="nm">2</span>]+=x[<span class="nm">4</span>]*dt
+        <span class="kw">return</span> xn
+
+    <span class="kw">def</span> <span class="fn">F_jac</span>(self, x):
+        dt=self.dt; th=x[<span class="nm">2</span>]; v=x[<span class="nm">3</span>]
+        F=np.<span class="fn">eye</span>(<span class="nm">5</span>)
+        F[<span class="nm">0</span>,<span class="nm">2</span>]=-v*np.<span class="fn">sin</span>(th)*dt; F[<span class="nm">0</span>,<span class="nm">3</span>]=np.<span class="fn">cos</span>(th)*dt
+        F[<span class="nm">1</span>,<span class="nm">2</span>]= v*np.<span class="fn">cos</span>(th)*dt; F[<span class="nm">1</span>,<span class="nm">3</span>]=np.<span class="fn">sin</span>(th)*dt
+        F[<span class="nm">2</span>,<span class="nm">4</span>]=dt
+        <span class="kw">return</span> F
+
+    <span class="kw">def</span> <span class="fn">predict</span>(self):
+        F=self.<span class="fn">F_jac</span>(self.x)
+        self.x=self.<span class="fn">f</span>(self.x)
+        self.P=F@self.P@F.T+self.Q
+
+    <span class="kw">def</span> <span class="fn">update_gps</span>(self, gx, gy):
+        H=np.<span class="fn">zeros</span>((<span class="nm">2</span>,<span class="nm">5</span>)); H[<span class="nm">0</span>,<span class="nm">0</span>]=H[<span class="nm">1</span>,<span class="nm">1</span>]=<span class="nm">1</span>
+        R=np.<span class="fn">diag</span>([<span class="nm">0.5</span>,<span class="nm">0.5</span>])
+        z=np.<span class="fn">array</span>([gx,gy]); y=z-H@self.x
+        S=H@self.P@H.T+R; K=self.P@H.T@np.linalg.<span class="fn">inv</span>(S)
+        self.x+=K@y; self.P=(np.<span class="fn">eye</span>(<span class="nm">5</span>)-K@H)@self.P</pre></section><section class="sec" id="s8"><div class="sech"><div class="sn">08</div><div><div class="sc">Kontrol</div><h2>PID & TUNING</h2></div></div><div class="math">PID Controller:
+  u(t) = Kp·e(t) + Ki·∫e(t)dt + Kd·de(t)/dt
+
+Discrete (sampling time dt):
+  P = Kp · e
+  I = I_prev + Ki · e · dt      (clamp: -I_max ≤ I ≤ I_max)
+  D = Kd · (e - e_prev) / dt    (atau low-pass filter D)
+  u = P + I + D
+
+Ziegler-Nichols tuning (ultimate gain method):
+  1. Set Ki=Kd=0, naikkan Kp sampai osilasi stabil → Ku
+  2. Catat periode osilasi Pu
+  3. PID: Kp=0.6·Ku, Ki=1.2·Ku/Pu, Kd=0.075·Ku·Pu</div><pre><span class="kw">class</span> <span class="tp3">PID</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, kp, ki, kd, i_max=<span class="nm">100</span>, dt=<span class="nm">0.02</span>, d_filter=<span class="nm">0.1</span>):
+        self.kp=kp; self.ki=ki; self.kd=kd
+        self.i_max=i_max; self.dt=dt
+        self.i=<span class="nm">0</span>; self.e_prev=<span class="nm">0</span>; self.d_filt=<span class="nm">0</span>
+        self.alpha=d_filter  <span class="cm"># D term low-pass coeff</span>
+
+    <span class="kw">def</span> <span class="fn">compute</span>(self, setpoint, measured):
+        e = setpoint - measured
+        self.i += e * self.dt
+        self.i  = max(-self.i_max, min(self.i_max, self.i))
+        d_raw = (e - self.e_prev) / self.dt
+        self.d_filt = self.alpha*d_raw + (<span class="nm">1</span>-self.alpha)*self.d_filt
+        out = self.kp*e + self.ki*self.i + self.kd*self.d_filt
+        self.e_prev = e
+        <span class="kw">return</span> out
+
+    <span class="kw">def</span> <span class="fn">reset</span>(self): self.i=<span class="nm">0</span>; self.e_prev=<span class="nm">0</span>; self.d_filt=<span class="nm">0</span>
+
+<span class="cm"># Contoh: velocity PID untuk robot wheel</span>
+vel_pid = <span class="fn">PID</span>(kp=<span class="nm">200</span>, ki=<span class="nm">15</span>, kd=<span class="nm">8</span>, i_max=<span class="nm">80</span>)
+pwm = vel_pid.<span class="fn">compute</span>(target_vel_ms, actual_vel_ms)</pre><h3>Cascade Control (Position + Velocity)</h3><div class="math">Cascade: outer loop (position) → setpoint untuk inner loop (velocity)
+
+  e_pos = x_desired - x_actual
+  v_cmd = PID_outer(e_pos)      ← output = velocity setpoint
+  u     = PID_inner(v_cmd, v_actual)  ← output = motor PWM
+
+Inner loop harus 3-10× lebih cepat dari outer loop</div></section><section class="sec" id="s9"><div class="sech"><div class="sn">09</div><div><div class="sc">Kontrol</div><h2>STATE SPACE CONTROL</h2></div></div><div class="math">State Space Representation:
+  ẋ = Ax + Bu    (continuous)
+  y  = Cx + Du
+
+Discrete (ZOH, sampling time dt):
+  x_{k+1} = Ad·x_k + Bd·u_k
+  Ad = e^(A·dt) ≈ I + A·dt + (A·dt)²/2 + ...
+  Bd = A^{-1}(Ad-I)·B
+
+State Feedback Control:
+  u = -K·x + r    (K = gain matrix, r = reference)
+
+Pole Placement: pilih desired poles → solve for K
+  K = place(A, B, desired_poles)
+
+LQR: optimal K yang minimasi J = ∫(x^T·Q·x + u^T·R·u)dt
+  Solve: A^T·P + P·A - P·B·R^{-1}·B^T·P + Q = 0  (Riccati)
+  K = R^{-1}·B^T·P</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy.linalg <span class="kw">import</span> solve_continuous_are, expm
+<span class="kw">from</span> scipy.signal <span class="kw">import</span> place_poles
+
+<span class="kw">def</span> <span class="fn">lqr</span>(A, B, Q, R):
+    <span class="st">"""Linear Quadratic Regulator — optimal state feedback gain"""</span>
+    P = <span class="fn">solve_continuous_are</span>(A, B, Q, R)
+    K = np.linalg.<span class="fn">inv</span>(R) @ B.T @ P
+    <span class="kw">return</span> K, P
+
+<span class="cm"># Contoh: inverted pendulum balancing (linearized)</span>
+g=<span class="nm">9.81</span>; L=<span class="nm">0.3</span>; m=<span class="nm">0.1</span>; M=<span class="nm">0.5</span>
+A=np.<span class="fn">array</span>([[<span class="nm">0</span>,<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">0</span>],[<span class="nm">0</span>,<span class="nm">0</span>,-m*g/M,<span class="nm">0</span>],[<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">1</span>],[<span class="nm">0</span>,<span class="nm">0</span>,g*(M+m)/(M*L),<span class="nm">0</span>]])
+B=np.<span class="fn">array</span>([[<span class="nm">0</span>],[<span class="nm">1</span>/M],[<span class="nm">0</span>],[-<span class="nm">1</span>/(M*L)]])
+Q=np.<span class="fn">diag</span>([<span class="nm">1</span>,<span class="nm">1</span>,<span class="nm">10</span>,<span class="nm">1</span>])
+R=np.<span class="fn">array</span>([[<span class="nm">0.1</span>]])
+K,P = <span class="fn">lqr</span>(A,B,Q,R)
+<span class="fn">print</span>(<span class="st">"LQR gain K:"</span>, K)
+
+<span class="cm"># Discrete simulation:</span>
+dt=<span class="nm">0.01</span>
+Ad = <span class="fn">expm</span>(A*dt)
+Bd = np.linalg.<span class="fn">solve</span>(A, (Ad-np.<span class="fn">eye</span>(<span class="nm">4</span>))) @ B
+x=np.<span class="fn">array</span>([<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0.1</span>,<span class="nm">0</span>])  <span class="cm"># initial: 0.1 rad tilt</span>
+<span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">500</span>):
+    u = -K @ x
+    x = Ad @ x + Bd @ u
+<span class="fn">print</span>(<span class="st">f"Final angle: {np.degrees(x[2]):.4f}°"</span>)</pre></section><section class="sec" id="s10"><div class="sech"><div class="sn">010</div><div><div class="sc">Optimasi</div><h2>GRADIENT DESCENT & OPTIMASI</h2></div></div><div class="math">Gradient Descent:
+  θ_{k+1} = θ_k - α·∇L(θ_k)
+  α = learning rate
+
+Variasi:
+  SGD:       update dari satu sampel
+  Momentum:  v = β·v - α·∇L; θ += v
+  Adam:      adaptive learning rate per parameter
+    m = β₁·m + (1-β₁)·g          (1st moment)
+    v = β₂·v + (1-β₂)·g²         (2nd moment)
+    θ -= α · m̂/(√v̂ + ε)
+
+Untuk trajectory optimization:
+  min_q  J(q) = ∫(||q̈||² + w·||f_collision||²) dt
+  subject to: kinematics, joint limits, collision constraints</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">class</span> <span class="tp3">Adam</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, params, lr=<span class="nm">0.001</span>, b1=<span class="nm">0.9</span>, b2=<span class="nm">0.999</span>, eps=<span class="nm">1e-8</span>):
+        self.p=np.<span class="fn">array</span>(params,dtype=float)
+        self.lr=lr; self.b1=b1; self.b2=b2; self.eps=eps
+        self.m=np.<span class="fn">zeros_like</span>(self.p); self.v=np.<span class="fn">zeros_like</span>(self.p); self.t=<span class="nm">0</span>
+
+    <span class="kw">def</span> <span class="fn">step</span>(self, grad):
+        self.t+=<span class="nm">1</span>; g=np.<span class="fn">array</span>(grad)
+        self.m=self.b1*self.m+(<span class="nm">1</span>-self.b1)*g
+        self.v=self.b2*self.v+(<span class="nm">1</span>-self.b2)*g**<span class="nm">2</span>
+        mh=self.m/(<span class="nm">1</span>-self.b1**self.t)
+        vh=self.v/(<span class="nm">1</span>-self.b2**self.t)
+        self.p-=self.lr*mh/(np.<span class="fn">sqrt</span>(vh)+self.eps)
+        <span class="kw">return</span> self.p.<span class="fn">copy</span>()
+
+<span class="cm"># Nelder-Mead untuk PID tuning otomatis:</span>
+<span class="kw">from</span> scipy.optimize <span class="kw">import</span> minimize
+
+<span class="kw">def</span> <span class="fn">pid_cost</span>(params):
+    kp,ki,kd = params
+    <span class="kw">if</span> <span class="fn">any</span>(x < <span class="nm">0</span> <span class="kw">for</span> x <span class="kw">in</span> params): <span class="kw">return</span> <span class="nm">1e9</span>
+    sim = <span class="fn">simulate_robot</span>(kp, ki, kd)
+    overshoot = <span class="fn">max</span>(<span class="nm">0</span>, sim.<span class="fn">max</span>()-<span class="nm">1</span>) * <span class="nm">100</span>
+    settle = sim.<span class="fn">settle_time</span>()
+    sse = np.<span class="fn">sum</span>((sim.response-<span class="nm">1</span>)**<span class="nm">2</span>)
+    <span class="kw">return</span> overshoot*<span class="nm">0.5</span> + settle*<span class="nm">2</span> + sse*<span class="nm">0.1</span>
+
+result = <span class="fn">minimize</span>(pid_cost, [<span class="nm">100</span>,<span class="nm">10</span>,<span class="nm">5</span>], method=<span class="st">'Nelder-Mead'</span>)
+<span class="fn">print</span>(<span class="st">"Optimal PID:"</span>, result.x)</pre></section><section class="sec" id="s11"><div class="sech"><div class="sn">011</div><div><div class="sc">Python</div><h2>PYTHON MATH TOOLS ROBOTIKA</h2></div></div><h3>Library Ekosistem</h3><div class="tw"><table><tr><th>Library</th><th>Fungsi</th><th>Install</th><th>Use Case Robot</th></tr><tr><td>NumPy</td><td>Array, linear algebra</td><td>pip install numpy</td><td>Semua komputasi matrix, FK/IK</td></tr><tr><td>SciPy</td><td>Optimasi, signal, ODE</td><td>pip install scipy</td><td>LQR (linalg), filter sinyal, integrasi</td></tr><tr><td>SymPy</td><td>Symbolic math</td><td>pip install sympy</td><td>Derive Jacobian simbolik, Lagrangian otomatis</td></tr><tr><td>Robotics Toolbox</td><td>Robot kinematics/dynamics</td><td>pip install roboticstoolbox-python</td><td>FK, IK, Jacobian, trajectory, visualisasi</td></tr><tr><td>PyBullet</td><td>Physics simulation</td><td>pip install pybullet</td><td>Simulasi robot 3D, reinforcement learning</td></tr><tr><td>Pinocchio</td><td>Rigid body dynamics</td><td>conda install pinocchio</td><td>Dynamics cepat, MPC robot</td></tr><tr><td>control</td><td>Control systems</td><td>pip install control</td><td>Bode plot, LQR, pole placement, sisotool</td></tr></table></div><pre><span class="kw">import</span> sympy <span class="kw">as</span> sp
+
+<span class="cm"># Symbolic Jacobian derivation</span>
+q1, q2, L1, L2 = sp.<span class="fn">symbols</span>(<span class="st">'q1 q2 L1 L2'</span>)
+
+<span class="cm"># Forward kinematics 2-DOF planar</span>
+x = L1*sp.<span class="fn">cos</span>(q1) + L2*sp.<span class="fn">cos</span>(q1+q2)
+y = L1*sp.<span class="fn">sin</span>(q1) + L2*sp.<span class="fn">sin</span>(q1+q2)
+
+<span class="cm"># Symbolic Jacobian</span>
+J = sp.<span class="fn">Matrix</span>([[sp.<span class="fn">diff</span>(x,q1), sp.<span class="fn">diff</span>(x,q2)],
+               [sp.<span class="fn">diff</span>(y,q1), sp.<span class="fn">diff</span>(y,q2)]])
+J_simplified = sp.<span class="fn">simplify</span>(J)
+<span class="fn">print</span>(J_simplified)
+
+<span class="cm"># Determinant (untuk singularity analysis)</span>
+det_J = sp.<span class="fn">det</span>(J_simplified)
+<span class="fn">print</span>(<span class="st">"det(J) ="</span>, sp.<span class="fn">simplify</span>(det_J))
+<span class="cm"># det = 0 → singularity condition</span>
+
+<span class="cm"># Convert to numpy function:</span>
+J_func = sp.<span class="fn">lambdify</span>([q1,q2,L1,L2], J_simplified, <span class="st">'numpy'</span>)
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+J_num = <span class="fn">J_func</span>(np.radians(<span class="nm">30</span>), np.radians(<span class="nm">45</span>), <span class="nm">0.15</span>, <span class="nm">0.12</span>)
+<span class="fn">print</span>(<span class="st">"Numeric J:"</span>, J_num)</pre></section>
+<div style="text-align:center;padding:40px 0;color:var(--text3);font-family:var(--mono);font-size:11px;border-top:1px solid var(--border);margin-top:40px">MATEMATIKA & FISIKA ROBOTIKA — DOC 07 / 07<br><span style="color:rgb(var(--ac));margin-top:8px;display:block">Antonius - bluedragonsec.com</span></div>
+</div></div><script>function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open')}
+document.getElementById('overlay').addEventListener('click',toggleSidebar);
+const secs=document.querySelectorAll('.sec'),nls=document.querySelectorAll('.ni');
+secs.forEach(s=>new IntersectionObserver(e=>{if(e[0].isIntersecting){const id=s.id;nls.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+id))}},{threshold:0.15,rootMargin:'-60px 0px -60% 0px'}).observe(s));
+nls.forEach(l=>l.addEventListener('click',()=>{if(window.innerWidth<=900)toggleSidebar()}));</script></body></html>

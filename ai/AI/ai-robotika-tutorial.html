@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Kecerdasan Buatan dalam Robotika — Blue Dragon Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:         #060a0f;
+    --bg2:        #0b1018;
+    --bg3:        #111a24;
+    --surface:    #131d28;
+    --border:     #1e2e3f;
+    --accent:     #00c8ff;
+    --accent2:    #0066ff;
+    --accent3:    #00ff88;
+    --dragon:     #0a4aff;
+    --warn:       #ff6b35;
+    --text:       #c8dcea;
+    --text2:      #7a9ab5;
+    --text3:      #3d5a72;
+    --white:      #eaf4ff;
+    --code-bg:    #0d1620;
+    --glow:       0 0 20px rgba(0,200,255,0.15);
+    --glow2:      0 0 40px rgba(0,200,255,0.08);
+    --radius:     6px;
+    --radius2:    12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 3px; }
+
+  /* ── GRID BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,102,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,102,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(6,10,15,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-logo svg { width: 24px; height: 24px; }
+
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: var(--radius);
+    transition: color 0.2s, background 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-links a:hover { color: var(--accent); background: rgba(0,200,255,0.06); }
+
+  /* ── HAMBURGER ── */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px;
+    background: none;
+    border: none;
+  }
+  .hamburger span { display: block; width: 22px; height: 2px; background: var(--accent); border-radius: 2px; transition: 0.3s; }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 56px; left: 0; right: 0;
+    background: rgba(6,10,15,0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    z-index: 99;
+    padding: 16px;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--text2);
+    text-decoration: none;
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    transition: 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--accent); border-color: var(--border); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px 60px;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,102,255,0.12) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,200,255,0.07) 0%, transparent 70%);
+    top: 30%; right: 10%;
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 860px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(0,200,255,0.07);
+    border: 1px solid rgba(0,200,255,0.2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    margin-bottom: 28px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent3);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--white);
+    margin-bottom: 20px;
+    animation: fadeDown 0.6s 0.1s ease both;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 60%, var(--accent3) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    color: var(--text2);
+    max-width: 600px;
+    margin: 0 auto 36px;
+    animation: fadeDown 0.6s 0.2s ease both;
+  }
+
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    animation: fadeDown 0.6s 0.3s ease both;
+  }
+
+  .hero-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--text2);
+  }
+
+  .hero-stat .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── LAYOUT ── */
+  .page-wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── TOC ── */
+  .toc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 28px 32px;
+    margin-bottom: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .toc-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2));
+  }
+
+  .toc-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+  }
+
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 6px;
+  }
+
+  .toc-grid a {
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text2);
+    text-decoration: none;
+    padding: 7px 10px;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.2s;
+    border: 1px solid transparent;
+  }
+
+  .toc-grid a:hover {
+    color: var(--accent);
+    background: rgba(0,200,255,0.05);
+    border-color: rgba(0,200,255,0.12);
+  }
+
+  .toc-num {
+    font-size: 10px;
+    color: var(--text3);
+    min-width: 20px;
+  }
+
+  /* ── SECTION ── */
+  section {
+    margin-bottom: 56px;
+    scroll-margin-top: 70px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    background: rgba(0,102,255,0.1);
+    border: 1px solid rgba(0,102,255,0.2);
+    border-radius: var(--radius);
+    padding: 4px 8px;
+    margin-top: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .section-header h2 {
+    font-size: clamp(1.25rem, 3vw, 1.55rem);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--white);
+    margin: 28px 0 12px;
+  }
+
+  h3::before {
+    content: '▸ ';
+    color: var(--accent);
+    font-size: 0.85em;
+  }
+
+  p { margin-bottom: 14px; color: var(--text); font-size: 0.97rem; }
+
+  /* ── CARDS / INFO BOXES ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+
+  .info-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 20px;
+    position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .info-card:hover {
+    border-color: rgba(0,200,255,0.25);
+    transform: translateY(-2px);
+  }
+
+  .info-card-icon {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .info-card h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .info-card p {
+    font-size: 0.875rem;
+    color: var(--text2);
+    margin: 0;
+  }
+
+  /* ── CALLOUT BOXES ── */
+  .callout {
+    border-radius: var(--radius2);
+    padding: 18px 22px;
+    margin: 20px 0;
+    display: flex;
+    gap: 14px;
+    font-size: 0.9rem;
+  }
+
+  .callout-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+
+  .callout.note {
+    background: rgba(0,102,255,0.07);
+    border: 1px solid rgba(0,102,255,0.2);
+    color: var(--text);
+  }
+
+  .callout.tip {
+    background: rgba(0,255,136,0.06);
+    border: 1px solid rgba(0,255,136,0.2);
+    color: var(--text);
+  }
+
+  .callout.warn {
+    background: rgba(255,107,53,0.07);
+    border: 1px solid rgba(255,107,53,0.2);
+    color: var(--text);
+  }
+
+  /* ── CODE BLOCKS ── */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 20px 22px;
+    overflow-x: auto;
+    margin: 16px 0;
+    position: relative;
+  }
+
+  pre::before {
+    content: attr(data-lang);
+    position: absolute;
+    top: 10px; right: 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  code {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    color: #a8c8e8;
+    line-height: 1.6;
+  }
+
+  .kw { color: #6eb4ff; }
+  .fn { color: #7dd3b0; }
+  .str { color: #f0b060; }
+  .cm { color: #4a6478; font-style: italic; }
+  .num { color: #d4a8ff; }
+  .cls { color: #80d4e8; }
+
+  /* ── COMPARISON TABLE ── */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 20px 0;
+    border-radius: var(--radius2);
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.87rem;
+    min-width: 480px;
+  }
+
+  th {
+    background: var(--bg3);
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid rgba(30,46,63,0.6);
+    color: var(--text);
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,200,255,0.025); }
+
+  .tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .tag.green  { background: rgba(0,255,136,0.1); color: #00ff88; border: 1px solid rgba(0,255,136,0.2); }
+  .tag.blue   { background: rgba(0,200,255,0.1); color: #00c8ff; border: 1px solid rgba(0,200,255,0.2); }
+  .tag.orange { background: rgba(255,165,0,0.1); color: #ffa500; border: 1px solid rgba(255,165,0,0.2); }
+  .tag.red    { background: rgba(255,80,80,0.1); color: #ff5050; border: 1px solid rgba(255,80,80,0.2); }
+
+  /* ── STEPS ── */
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .steps li {
+    counter-increment: step;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 14px 18px 14px 56px;
+    position: relative;
+    font-size: 0.92rem;
+    transition: border-color 0.2s;
+  }
+
+  .steps li:hover { border-color: rgba(0,200,255,0.2); }
+
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px; height: 26px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    color: var(--bg);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── FORMULA ── */
+  .formula {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent3);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.88rem;
+    color: var(--accent3);
+    overflow-x: auto;
+  }
+
+  /* ── ARCH DIAGRAM ── */
+  .arch-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 28px;
+    margin: 20px 0;
+    overflow-x: auto;
+  }
+
+  .arch-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .arch-node {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text);
+    text-align: center;
+    white-space: nowrap;
+    min-width: 100px;
+  }
+
+  .arch-node.highlight {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,200,255,0.06);
+  }
+
+  .arch-arrow {
+    color: var(--text3);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  /* ── CHIP LIST ── */
+  .chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 14px 0;
+  }
+
+  .chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text2);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 4px 12px;
+    transition: 0.2s;
+  }
+
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── PROGRESS BARS ── */
+  .skill-bar {
+    margin: 10px 0;
+  }
+
+  .skill-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text2);
+    margin-bottom: 5px;
+  }
+
+  .skill-bar-track {
+    height: 6px;
+    background: var(--bg3);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .skill-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(to right, var(--accent2), var(--accent));
+    transition: width 1s ease;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+    margin: 20px 0;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent2), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 24px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -29px; top: 6px;
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  .timeline-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    margin-bottom: 4px;
+  }
+
+  .timeline-item h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .timeline-item p {
+    font-size: 0.875rem;
+    color: var(--text2);
+    margin: 0;
+  }
+
+  /* ── FINGERPRINT ── */
+  .fingerprint {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-top: 3px solid rgba(0,102,255,0.4);
+    border-radius: var(--radius2);
+    padding: 28px 32px;
+    margin-top: 56px;
+    font-family: 'Space Mono', monospace;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fingerprint::after {
+    content: '🐉';
+    position: absolute;
+    right: 24px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    opacity: 0.06;
+  }
+
+  .fp-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .fp-badge {
+    background: linear-gradient(135deg, var(--dragon), var(--accent));
+    color: var(--white);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  .fp-title {
+    font-size: 14px;
+    color: var(--white);
+    font-weight: 700;
+  }
+
+  .fp-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 6px 16px;
+    font-size: 11.5px;
+    line-height: 1.8;
+  }
+
+  .fp-key { color: var(--text3); }
+  .fp-val { color: var(--text2); }
+  .fp-val.accent { color: var(--accent); }
+  .fp-val.green  { color: var(--accent3); }
+
+  .fp-hash {
+    margin-top: 14px;
+    padding: 10px 14px;
+    background: var(--code-bg);
+    border-radius: var(--radius);
+    font-size: 11px;
+    color: var(--text3);
+    word-break: break-all;
+    border: 1px solid rgba(30,46,63,0.8);
+  }
+
+  .fp-hash span { color: var(--accent2); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    nav { padding: 0 16px; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .hero { padding: 80px 16px 50px; }
+    .page-wrap { padding: 0 16px 60px; }
+    .toc-card { padding: 20px 18px; }
+    .fingerprint { padding: 20px 18px; }
+    .fp-row { grid-template-columns: 110px 1fr; font-size: 11px; }
+    .info-grid { grid-template-columns: 1fr; }
+    .arch-flow { flex-direction: column; }
+    .arch-arrow { transform: rotate(90deg); }
+    h3 { font-size: 1rem; }
+    pre { padding: 14px 16px; font-size: 0.78rem; }
+  }
+
+  @media (max-width: 380px) {
+    body { font-size: 14.5px; }
+    .hero h1 { font-size: 1.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     NAV
+══════════════════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M12 2L3 7l9 5 9-5-9-5z"/><path d="M3 17l9 5 9-5"/><path d="M3 12l9 5 9-5"/>
+    </svg>
+    BLUEDRAGONSEC
+  </a>
+  <ul class="nav-links">
+    <li><a href="#intro">Intro</a></li>
+    <li><a href="#komponen">Komponen</a></li>
+    <li><a href="#persepsi">Persepsi</a></li>
+    <li><a href="#ml">Machine Learning</a></li>
+    <li><a href="#perencanaan">Perencanaan</a></li>
+    <li><a href="#kontrol">Kontrol</a></li>
+    <li><a href="#implementasi">Implementasi</a></li>
+    <li><a href="#masa-depan">Masa Depan</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#intro"        onclick="toggleMenu()">01 — Pengantar</a>
+  <a href="#komponen"     onclick="toggleMenu()">02 — Komponen AI Robot</a>
+  <a href="#persepsi"     onclick="toggleMenu()">03 — Persepsi & Sensor</a>
+  <a href="#ml"           onclick="toggleMenu()">04 — Machine Learning</a>
+  <a href="#perencanaan"  onclick="toggleMenu()">05 — Perencanaan Gerak</a>
+  <a href="#kontrol"      onclick="toggleMenu()">06 — Sistem Kontrol</a>
+  <a href="#implementasi" onclick="toggleMenu()">07 — Implementasi</a>
+  <a href="#masa-depan"   onclick="toggleMenu()">08 — Masa Depan</a>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">Blue Dragon Security · Tutorial Series</div>
+    <h1>Kecerdasan Buatan<br>dalam <em>Robotika</em></h1>
+    <p class="hero-sub">Panduan komprehensif dari sensor hingga reinforcement learning — arsitektur, algoritma, dan implementasi nyata sistem robot cerdas.</p>
+    <div class="hero-meta">
+      <span class="hero-stat"><span class="dot"></span>8 Modul Lengkap</span>
+      <span class="hero-stat"><span class="dot"></span>Kode Python &amp; ROS2</span>
+      <span class="hero-stat"><span class="dot"></span>Diagram Arsitektur</span>
+      <span class="hero-stat"><span class="dot"></span>Referensi Akademis</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CONTENT
+══════════════════════════════════════════════ -->
+<div class="page-wrap">
+
+  <!-- TOC -->
+  <div class="toc-card">
+    <div class="toc-title">// Daftar Isi</div>
+    <div class="toc-grid">
+      <a href="#intro">        <span class="toc-num">01</span>Pengantar AI Robotika</a>
+      <a href="#komponen">     <span class="toc-num">02</span>Komponen Sistem Robot</a>
+      <a href="#persepsi">     <span class="toc-num">03</span>Persepsi &amp; Sensor Fusion</a>
+      <a href="#ml">           <span class="toc-num">04</span>Machine Learning</a>
+      <a href="#perencanaan">  <span class="toc-num">05</span>Perencanaan Gerak</a>
+      <a href="#kontrol">      <span class="toc-num">06</span>Sistem Kontrol</a>
+      <a href="#implementasi"> <span class="toc-num">07</span>Implementasi (ROS2)</a>
+      <a href="#masa-depan">   <span class="toc-num">08</span>Masa Depan &amp; Referensi</a>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────
+       1. PENGANTAR
+  ──────────────────────────────────────────── -->
+  <section id="intro">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Pengantar Kecerdasan Buatan dalam Robotika</h2>
+    </div>
+
+    <p>Kecerdasan buatan (AI) dalam robotika adalah bidang interdisipliner yang menggabungkan <strong>ilmu komputer, teknik mekanika, elektronika, dan matematika</strong> untuk menciptakan mesin yang mampu berinteraksi secara cerdas dengan lingkungannya. Robot modern bukan sekadar otomasi mekanik — mereka adalah agen kognitif yang dapat mempersepsi, memutuskan, dan bertindak secara adaptif.</p>
+
+    <p>Sejak Alan Turing mengemukakan konsep "Thinking Machine" pada 1950 hingga era Large Language Models dan Embodied AI saat ini, perjalanan AI dalam robotika telah melalui revolusi paradigma yang mendasar.</p>
+
+    <div class="callout note">
+      <span class="callout-icon">ℹ️</span>
+      <div>
+        <strong>Definisi Operasional:</strong> Robot cerdas adalah sistem fisik yang dilengkapi sensor, aktuator, dan lapisan AI untuk mengeksekusi tugas secara otonom dalam lingkungan tidak terstruktur. Kata kunci: <em>adaptif, otonom, dan embodied</em>.
+      </div>
+    </div>
+
+    <h3>Sejarah Singkat</h3>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">1950–1960</div>
+        <h4>Fondasi Teoritis</h4>
+        <p>Turing Test, Mesin Von Neumann, robot elektro-mekanik pertama (Unimate di GM, 1961).</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1970–1980</div>
+        <h4>Expert Systems &amp; Manipulator</h4>
+        <p>SHAKEY (Stanford), WABOT-1 (Waseda), robot industri berbasis logika simbolik, algoritma A*.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1990–2000</div>
+        <h4>Probabilistic Robotics</h4>
+        <p>Kalman Filter, Particle Filter, Bayes Network. Robot Cye, AIBO (Sony), Roomba prototype.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2005–2015</div>
+        <h4>Deep Learning Revolution</h4>
+        <p>AlexNet (2012), CNN untuk visi robot, SLAM modern, ROS dirilis (2007), DARPA Challenge.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2016–sekarang</div>
+        <h4>Foundation Models &amp; Embodied AI</h4>
+        <p>RT-2, PaLM-E, AlphaFold untuk robotika protein, sim-to-real transfer, LLM sebagai planner.</p>
+      </div>
+    </div>
+
+    <h3>Taksonomi Robot Cerdas</h3>
+    <div class="info-grid">
+      <div class="info-card">
+        <span class="info-card-icon">🦾</span>
+        <h4>Robot Industri</h4>
+        <p>Manipulator 6-DOF, welding robot, pick-and-place. Presisi tinggi, lingkungan terstruktur.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🚗</span>
+        <h4>Mobile Robot</h4>
+        <p>AMR/AGV di gudang, kendaraan otonom, drone. Navigasi dinamis, obstacle avoidance.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🤖</span>
+        <h4>Humanoid</h4>
+        <p>Atlas (Boston Dynamics), Optimus (Tesla), H1 (Unitree). Locomotion biped, dexterous manipulation.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🏥</span>
+        <h4>Surgical Robot</h4>
+        <p>da Vinci System, haptic feedback, tremor filtering. AI untuk segmentasi jaringan real-time.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🌊</span>
+        <h4>Underwater &amp; Aerial</h4>
+        <p>AUV/ROV, drone surveying. GPS-denied navigation, visual-inertial odometry.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🐾</span>
+        <h4>Soft &amp; Bio-Inspired</h4>
+        <p>Tentacle robot, pneumatic gripper, robot lebah. Compliance control, morfologi adaptif.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────
+       2. KOMPONEN
+  ──────────────────────────────────────────── -->
+  <section id="komponen">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Komponen Sistem Robot Cerdas</h2>
+    </div>
+
+    <p>Arsitektur sebuah robot cerdas dapat didekomposisi menjadi tiga lapisan utama yang saling berinteraksi: lapisan <strong>persepsi</strong>, lapisan <strong>pemrosesan kognitif</strong>, dan lapisan <strong>aktuasi</strong>. Ketiganya beroperasi dalam loop kontrol tertutup (closed-loop control).</p>
+
+    <div class="arch-box">
+      <p style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text3);margin-bottom:18px;text-transform:uppercase;letter-spacing:.1em;">// Pipeline Kognitif Robot</p>
+      <div class="arch-flow">
+        <div class="arch-node">🌍<br>Lingkungan</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node highlight">📡<br>Sensor Layer</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node highlight">🧠<br>AI Core<br><small>Perception · Plan · Learn</small></div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node highlight">⚙️<br>Actuator Layer</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">🌍<br>State Baru</div>
+      </div>
+      <p style="text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);margin-top:14px;">Feedback loop: aktuasi mengubah state lingkungan → sensor membaca ulang → siklus berlanjut</p>
+    </div>
+
+    <h3>Hardware Layer</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Komponen</th>
+            <th>Contoh</th>
+            <th>Fungsi AI</th>
+            <th>Kompleksitas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>CPU/GPU/TPU</strong></td>
+            <td>NVIDIA Jetson Orin, RPi 5</td>
+            <td>Inferensi model neural network real-time</td>
+            <td><span class="tag blue">Tinggi</span></td>
+          </tr>
+          <tr>
+            <td><strong>IMU</strong></td>
+            <td>ICM-42688, BMI088</td>
+            <td>State estimation, dead reckoning</td>
+            <td><span class="tag green">Rendah</span></td>
+          </tr>
+          <tr>
+            <td><strong>LiDAR</strong></td>
+            <td>Ouster OS1, Livox MID-360</td>
+            <td>3D point cloud, SLAM, object detection</td>
+            <td><span class="tag orange">Sedang</span></td>
+          </tr>
+          <tr>
+            <td><strong>Depth Camera</strong></td>
+            <td>Intel RealSense D435i, ZED 2</td>
+            <td>RGB-D SLAM, grasp planning</td>
+            <td><span class="tag orange">Sedang</span></td>
+          </tr>
+          <tr>
+            <td><strong>Force/Torque</strong></td>
+            <td>ATI Mini45, OnRobot HEX-E</td>
+            <td>Compliant control, contact detection</td>
+            <td><span class="tag orange">Sedang</span></td>
+          </tr>
+          <tr>
+            <td><strong>Motor Controller</strong></td>
+            <td>ODrive, VESC, Moteus</td>
+            <td>Low-level torque control, FOC</td>
+            <td><span class="tag blue">Tinggi</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Software Layer</h3>
+    <div class="chip-list">
+      <span class="chip">ROS2 Humble/Jazzy</span>
+      <span class="chip">PyTorch / TensorFlow</span>
+      <span class="chip">OpenCV</span>
+      <span class="chip">Open3D</span>
+      <span class="chip">MoveIt 2</span>
+      <span class="chip">Nav2</span>
+      <span class="chip">Isaac Sim (NVIDIA)</span>
+      <span class="chip">Gazebo Harmonic</span>
+      <span class="chip">OMPL</span>
+      <span class="chip">PCL (Point Cloud Lib)</span>
+      <span class="chip">Stable Baselines3</span>
+      <span class="chip">Isaac Lab</span>
+    </div>
+
+    <div class="callout tip">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>Arsitektur Compute:</strong> Untuk robotika produksi, gunakan <strong>Jetson Orin NX 16GB</strong> sebagai edge AI compute. CPU ARM + 1024-core GPU Ampere mampu menjalankan YOLOv8 pada 60+ FPS + SLAM + planner secara bersamaan dalam daya ≤15W.
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────
+       3. PERSEPSI
+  ──────────────────────────────────────────── -->
+  <section id="persepsi">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Persepsi, Sensor Fusion &amp; SLAM</h2>
+    </div>
+
+    <p>Persepsi adalah kemampuan robot untuk menginterpretasikan sinyal sensor menjadi representasi lingkungan yang berguna untuk pengambilan keputusan. Karena setiap sensor memiliki noise dan keterbatasan, <strong>sensor fusion</strong> menggabungkan multiple modalitas untuk meningkatkan akurasi dan ketahanan.</p>
+
+    <h3>Sensor Fusion dengan Extended Kalman Filter (EKF)</h3>
+
+    <p>EKF adalah metode paling umum untuk menggabungkan data IMU (frekuensi tinggi, drift) dengan data GPS atau LiDAR (frekuensi rendah, akurat absolut).</p>
+
+    <div class="formula">
+      Prediction:  x̂ₖ|ₖ₋₁ = f(x̂ₖ₋₁|ₖ₋₁, uₖ)<br>
+                   Pₖ|ₖ₋₁  = FₖPₖ₋₁|ₖ₋₁Fₖᵀ + Qₖ<br><br>
+      Update:      Kₖ = Pₖ|ₖ₋₁Hₖᵀ(HₖPₖ|ₖ₋₁Hₖᵀ + Rₖ)⁻¹<br>
+                   x̂ₖ|ₖ = x̂ₖ|ₖ₋₁ + Kₖ(zₖ - h(x̂ₖ|ₖ₋₁))<br>
+                   Pₖ|ₖ  = (I - KₖHₖ)Pₖ|ₖ₋₁
+    </div>
+
+    <pre data-lang="python"><code><span class="cm"># EKF IMU + Odometry fusion (simplified)</span>
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">class</span> <span class="cls">EKFRobot</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        <span class="cm"># State: [x, y, theta, vx, vy, omega]</span>
+        self.x  = np.zeros(<span class="num">6</span>)
+        self.P  = np.eye(<span class="num">6</span>) * <span class="num">0.1</span>        <span class="cm"># covariance</span>
+        self.Q  = np.diag([<span class="num">0.01</span>]*<span class="num">6</span>)       <span class="cm"># process noise</span>
+        self.R  = np.diag([<span class="num">0.05</span>, <span class="num">0.05</span>])   <span class="cm"># measurement noise</span>
+        self.dt = <span class="num">0.01</span>                    <span class="cm"># 100Hz IMU</span>
+
+    <span class="kw">def</span> <span class="fn">predict</span>(self, accel, gyro):
+        <span class="cm"># Motion model: integrate IMU</span>
+        th = self.x[<span class="num">2</span>]
+        F  = np.eye(<span class="num">6</span>)
+        F[<span class="num">0</span>,<span class="num">3</span>] = self.dt * np.cos(th)
+        F[<span class="num">1</span>,<span class="num">4</span>] = self.dt * np.sin(th)
+        F[<span class="num">2</span>,<span class="num">5</span>] = self.dt
+
+        self.x[<span class="num">0</span>] += self.x[<span class="num">3</span>] * self.dt
+        self.x[<span class="num">1</span>] += self.x[<span class="num">4</span>] * self.dt
+        self.x[<span class="num">2</span>] += self.x[<span class="num">5</span>] * self.dt
+        self.x[<span class="num">3</span>] += accel[<span class="num">0</span>] * self.dt
+        self.x[<span class="num">4</span>] += accel[<span class="num">1</span>] * self.dt
+        self.x[<span class="num">5</span>]  = gyro[<span class="num">2</span>]
+        self.P     = F @ self.P @ F.T + self.Q
+        <span class="kw">return</span> self.x.copy()
+
+    <span class="kw">def</span> <span class="fn">update</span>(self, gps_pos):
+        <span class="cm"># Measurement: GPS [x, y]</span>
+        H   = np.zeros((<span class="num">2</span>,<span class="num">6</span>))
+        H[<span class="num">0</span>,<span class="num">0</span>] = H[<span class="num">1</span>,<span class="num">1</span>] = <span class="num">1.0</span>
+        y   = gps_pos - H @ self.x
+        S   = H @ self.P @ H.T + self.R
+        K   = self.P @ H.T @ np.linalg.inv(S)
+        self.x += K @ y
+        self.P  = (np.eye(<span class="num">6</span>) - K @ H) @ self.P
+        <span class="kw">return</span> self.x.copy()</code></pre>
+
+    <h3>SLAM — Simultaneous Localization and Mapping</h3>
+
+    <p>SLAM memecahkan masalah ayam-telur: robot perlu peta untuk lokalisasi, tetapi perlu lokalisasi untuk membuat peta. Solusi modern menggunakan <strong>faktor graf (factor graph optimization)</strong>.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Algoritma SLAM</th><th>Sensor</th><th>Keunggulan</th><th>Use Case</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>GMapping</strong></td>
+            <td>2D LiDAR</td>
+            <td>Simpel, stabil</td>
+            <td><span class="tag green">Indoor 2D</span></td>
+          </tr>
+          <tr>
+            <td><strong>Cartographer</strong></td>
+            <td>2D/3D LiDAR</td>
+            <td>Loop closure, Google</td>
+            <td><span class="tag blue">Warehouse</span></td>
+          </tr>
+          <tr>
+            <td><strong>LIO-SAM</strong></td>
+            <td>LiDAR + IMU</td>
+            <td>Akurasi tinggi outdoor</td>
+            <td><span class="tag orange">Outdoor 3D</span></td>
+          </tr>
+          <tr>
+            <td><strong>ORB-SLAM3</strong></td>
+            <td>Mono/Stereo/RGBD</td>
+            <td>Visual, tanpa LiDAR</td>
+            <td><span class="tag green">Low-cost</span></td>
+          </tr>
+          <tr>
+            <td><strong>RTAB-Map</strong></td>
+            <td>RGBD + LiDAR</td>
+            <td>Multi-modal, ROS native</span></td>
+            <td><span class="tag blue">Research</span></td>
+          </tr>
+          <tr>
+            <td><strong>KISS-ICP</strong></td>
+            <td>LiDAR</td>
+            <td>Tanpa tuning, real-time</td>
+            <td><span class="tag green">Production</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Computer Vision untuk Robotika</h3>
+
+    <p>Persepsi visual menggunakan deep learning CNN/Transformer untuk menyelesaikan tugas persepsi tingkat tinggi:</p>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <span class="info-card-icon">🎯</span>
+        <h4>Object Detection</h4>
+        <p>YOLOv8/v11, RT-DETR. Bounding box + klasifikasi real-time untuk obstacle &amp; target identification.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🗺️</span>
+        <h4>Semantic Segmentation</h4>
+        <p>SegFormer, SAM2. Klasifikasi per-piksel untuk pemahaman scene: lantai, dinding, objek.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">✋</span>
+        <h4>Pose Estimation</h4>
+        <p>6-DoF object pose (FoundationPose), human pose (MediaPipe). Kritis untuk grasping.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">📐</span>
+        <h4>Depth Estimation</h4>
+        <p>Depth Anything v2, ZoeDepth. Monocular depth untuk robot tanpa sensor 3D aktif.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────
+       4. MACHINE LEARNING
+  ──────────────────────────────────────────── -->
+  <section id="ml">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Machine Learning dalam Robotika</h2>
+    </div>
+
+    <p>ML dalam robotika mencakup spektrum luas dari supervised learning untuk klasifikasi sensor hingga reinforcement learning untuk policy yang kompleks. Berikut adalah kategori utama beserta algoritma dan implementasinya.</p>
+
+    <h3>Supervised Learning — Object Recognition</h3>
+
+    <pre data-lang="python"><code><span class="kw">import</span> torch
+<span class="kw">from</span> ultralytics <span class="kw">import</span> YOLO
+<span class="kw">import</span> cv2
+
+<span class="kw">class</span> <span class="cls">RobotVision</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, model_path=<span class="str">'yolov8n.pt'</span>):
+        self.model  = YOLO(model_path)
+        self.device = <span class="str">'cuda'</span> <span class="kw">if</span> torch.cuda.is_available() <span class="kw">else</span> <span class="str">'cpu'</span>
+        self.model.to(self.device)
+        <span class="fn">print</span>(<span class="str">f"[RobotVision] Running on {self.device}"</span>)
+
+    <span class="kw">def</span> <span class="fn">detect</span>(self, frame: np.ndarray, conf_threshold=<span class="num">0.5</span>):
+        results = self.model(frame, conf=conf_threshold, verbose=<span class="kw">False</span>)[<span class="num">0</span>]
+        detections = []
+        <span class="kw">for</span> box <span class="kw">in</span> results.boxes:
+            x1,y1,x2,y2 = box.xyxy[<span class="num">0</span>].cpu().numpy()
+            detections.append({
+                <span class="str">'class'</span>: results.names[<span class="fn">int</span>(box.cls)],
+                <span class="str">'conf'</span>:  <span class="fn">float</span>(box.conf),
+                <span class="str">'bbox'</span>:  (x1,y1,x2,y2),
+                <span class="str">'center'</span>: ((x1+x2)/<span class="num">2</span>, (y1+y2)/<span class="num">2</span>)
+            })
+        <span class="kw">return</span> detections
+
+    <span class="kw">def</span> <span class="fn">compute_grasp_center</span>(self, detection, depth_img):
+        <span class="cm"># Project pixel center to 3D using depth</span>
+        cx, cy = [<span class="fn">int</span>(v) <span class="kw">for</span> v <span class="kw">in</span> detection[<span class="str">'center'</span>]]
+        depth  = depth_img[cy, cx]
+        <span class="cm"># Camera intrinsics (fx,fy,cx0,cy0) — replace with actual</span>
+        fx, fy, cx0, cy0 = <span class="num">615.0</span>, <span class="num">615.0</span>, <span class="num">320.0</span>, <span class="num">240.0</span>
+        X = (cx - cx0) * depth / fx
+        Y = (cy - cy0) * depth / fy
+        Z = depth
+        <span class="kw">return</span> np.array([X, Y, Z]) / <span class="num">1000.0</span>  <span class="cm"># mm → m</span></code></pre>
+
+    <h3>Reinforcement Learning untuk Kontrol Robot</h3>
+
+    <p>RL memungkinkan robot belajar policy melalui trial-and-error dalam simulasi, kemudian di-transfer ke hardware nyata (sim-to-real transfer).</p>
+
+    <div class="formula">
+      Objective:  max_π  𝔼[Σₜ γᵗ r(sₜ, aₜ)]<br><br>
+      Policy Gradient (PPO):  L(θ) = 𝔼ₜ[min(rₜ(θ)Âₜ, clip(rₜ(θ), 1-ε, 1+ε)Âₜ)]<br>
+      dimana rₜ(θ) = π_θ(aₜ|sₜ) / π_θ_old(aₜ|sₜ)
+    </div>
+
+    <pre data-lang="python"><code><span class="kw">import</span> gymnasium <span class="kw">as</span> gym
+<span class="kw">from</span> stable_baselines3 <span class="kw">import</span> PPO
+<span class="kw">from</span> stable_baselines3.common.vec_env <span class="kw">import</span> SubprocVecEnv
+<span class="kw">from</span> stable_baselines3.common.callbacks <span class="kw">import</span> EvalCallback
+
+<span class="kw">def</span> <span class="fn">make_env</span>(env_id, seed):
+    <span class="kw">def</span> <span class="fn">_init</span>():
+        env = gym.make(env_id)
+        env.reset(seed=seed)
+        <span class="kw">return</span> env
+    <span class="kw">return</span> _init
+
+<span class="cm"># Parallel env untuk training lebih cepat</span>
+n_envs = <span class="num">8</span>
+envs   = SubprocVecEnv([<span class="fn">make_env</span>(<span class="str">"AntBulletEnv-v0"</span>, i) <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n_envs)])
+
+model = PPO(
+    <span class="str">"MlpPolicy"</span>, envs,
+    learning_rate   = <span class="num">3e-4</span>,
+    n_steps         = <span class="num">2048</span>,
+    batch_size      = <span class="num">512</span>,
+    n_epochs        = <span class="num">10</span>,
+    gamma           = <span class="num">0.99</span>,
+    gae_lambda      = <span class="num">0.95</span>,
+    clip_range      = <span class="num">0.2</span>,
+    ent_coef        = <span class="num">0.005</span>,    <span class="cm"># entropy bonus</span>
+    policy_kwargs   = <span class="fn">dict</span>(net_arch=[<span class="num">256</span>,<span class="num">256</span>]),
+    verbose         = <span class="num">1</span>,
+    device          = <span class="str">"cuda"</span>
+)
+
+eval_cb = EvalCallback(
+    gym.make(<span class="str">"AntBulletEnv-v0"</span>),
+    eval_freq        = <span class="num">10000</span>,
+    n_eval_episodes  = <span class="num">5</span>,
+    best_model_save_path = <span class="str">"./best_ant_model"</span>
+)
+
+model.learn(total_timesteps=<span class="num">5_000_000</span>, callback=eval_cb)
+model.save(<span class="str">"ant_locomotion_ppo"</span>)</code></pre>
+
+    <h3>Imitation Learning (IL)</h3>
+
+    <p>IL memungkinkan robot belajar dari demonstrasi manusia tanpa perlu desain reward function yang kompleks. Dua pendekatan utama:</p>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <span class="info-card-icon">📝</span>
+        <h4>Behavioral Cloning (BC)</h4>
+        <p>Supervised learning dari pasangan (state, action) demonstrasi. Cepat, tapi rentan terhadap covariate shift.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🔄</span>
+        <h4>DAgger</h4>
+        <p>Dataset Aggregation — secara iteratif menambah data dengan meminta expert koreksi pada state yang dikunjungi learner.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🎭</span>
+        <h4>ACT (Action Chunking)</h4>
+        <p>Transformer-based, prediksi sekuens aksi. State-of-the-art untuk robot manipulation (digunakan di Mobile ALOHA).</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🌊</span>
+        <h4>Diffusion Policy</h4>
+        <p>Denoising diffusion untuk generasi aksi. Menangkap distribusi multi-modal dari demonstrasi, performa superior di manipulation tasks.</p>
+      </div>
+    </div>
+
+    <h3>Tingkat Kematangan Algoritma ML Robotika</h3>
+    <div style="margin:16px 0;">
+      <div class="skill-bar">
+        <div class="skill-bar-label"><span>Supervised Learning (Detection/Segmentation)</span><span>95%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:95%"></div></div>
+      </div>
+      <div class="skill-bar">
+        <div class="skill-bar-label"><span>Model Predictive Control (MPC)</span><span>88%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div>
+      </div>
+      <div class="skill-bar">
+        <div class="skill-bar-label"><span>Reinforcement Learning (Locomotion)</span><span>78%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:78%"></div></div>
+      </div>
+      <div class="skill-bar">
+        <div class="skill-bar-label"><span>Diffusion Policy / ACT (Manipulation)</span><span>65%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:65%"></div></div>
+      </div>
+      <div class="skill-bar">
+        <div class="skill-bar-label"><span>Foundation Model Robotics (RT-2, π0)</span><span>45%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:45%"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────
+       5. PERENCANAAN GERAK
+  ──────────────────────────────────────────── -->
+  <section id="perencanaan">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>Perencanaan Gerak (Motion Planning)</h2>
+    </div>
+
+    <p>Motion planning adalah masalah menemukan trajectory dari konfigurasi awal ke tujuan sambil menghindari obstacle dan memenuhi constraint kinematik/dinamik robot.</p>
+
+    <h3>Hierarki Perencanaan</h3>
+    <div class="arch-box">
+      <div class="arch-flow" style="flex-direction:column;align-items:flex-start;gap:0;">
+        <div style="display:flex;align-items:center;gap:12px;margin:4px 0;">
+          <div class="arch-node highlight" style="min-width:180px;">Task Planner (LLM/PDDL)</div>
+          <span style="color:var(--text3);font-family:'DM Mono',monospace;font-size:12px;">— "pick bottle, place on table"</span>
+        </div>
+        <div style="width:2px;height:20px;background:var(--border);margin-left:90px;"></div>
+        <div style="display:flex;align-items:center;gap:12px;margin:4px 0;">
+          <div class="arch-node highlight" style="min-width:180px;">Global Planner (A*, RRT*)</div>
+          <span style="color:var(--text3);font-family:'DM Mono',monospace;font-size:12px;">— waypoint sequence di C-space</span>
+        </div>
+        <div style="width:2px;height:20px;background:var(--border);margin-left:90px;"></div>
+        <div style="display:flex;align-items:center;gap:12px;margin:4px 0;">
+          <div class="arch-node highlight" style="min-width:180px;">Local Planner (DWA, TEB)</div>
+          <span style="color:var(--text3);font-family:'DM Mono',monospace;font-size:12px;">— collision avoidance realtime</span>
+        </div>
+        <div style="width:2px;height:20px;background:var(--border);margin-left:90px;"></div>
+        <div style="display:flex;align-items:center;gap:12px;margin:4px 0;">
+          <div class="arch-node" style="min-width:180px;">Controller (PID/MPC)</div>
+          <span style="color:var(--text3);font-family:'DM Mono',monospace;font-size:12px;">— joint torque/velocity commands</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>Algoritma Sampling-Based Planning: RRT*</h3>
+
+    <pre data-lang="python"><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy.spatial <span class="kw">import</span> KDTree
+
+<span class="kw">class</span> <span class="cls">RRTStar</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, start, goal, bounds, obstacles,
+                 max_iter=<span class="num">5000</span>, step=<span class="num">0.1</span>, radius=<span class="num">0.5</span>):
+        self.start     = np.array(start)
+        self.goal      = np.array(goal)
+        self.bounds    = bounds         <span class="cm"># [(xmin,xmax),(ymin,ymax)]</span>
+        self.obstacles = obstacles      <span class="cm"># list of (center, radius)</span>
+        self.max_iter  = max_iter
+        self.step      = step
+        self.radius    = radius
+        self.nodes     = [self.start]
+        self.parents   = {<span class="num">0</span>: <span class="kw">None</span>}
+        self.costs     = {<span class="num">0</span>: <span class="num">0.0</span>}
+
+    <span class="kw">def</span> <span class="fn">sample</span>(self):
+        <span class="kw">if</span> np.random.rand() < <span class="num">0.1</span>:  <span class="cm"># goal bias</span>
+            <span class="kw">return</span> self.goal
+        <span class="kw">return</span> np.array([
+            np.random.uniform(*b) <span class="kw">for</span> b <span class="kw">in</span> self.bounds
+        ])
+
+    <span class="kw">def</span> <span class="fn">collision_free</span>(self, p1, p2):
+        <span class="kw">for</span> (c, r) <span class="kw">in</span> self.obstacles:
+            <span class="cm"># Check segment-circle intersection</span>
+            d  = p2 - p1
+            f  = p1 - c
+            a  = d @ d;  b = <span class="num">2</span>*(f @ d);  cc = f @ f - r**<span class="num">2</span>
+            disc = b*b - <span class="num">4</span>*a*cc
+            <span class="kw">if</span> disc >= <span class="num">0</span>:
+                t1 = (-b - disc**<span class="num">0.5</span>) / (<span class="num">2</span>*a)
+                t2 = (-b + disc**<span class="num">0.5</span>) / (<span class="num">2</span>*a)
+                <span class="kw">if</span> <span class="num">0</span> <= t1 <= <span class="num">1</span> <span class="kw">or</span> <span class="num">0</span> <= t2 <= <span class="num">1</span>:
+                    <span class="kw">return False</span>
+        <span class="kw">return True</span>
+
+    <span class="kw">def</span> <span class="fn">plan</span>(self):
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(self.max_iter):
+            q_rand    = self.fn_sample()
+            tree      = KDTree(self.nodes)
+            _, near_i = tree.query(q_rand)
+            q_near    = self.nodes[near_i]
+            direction = q_rand - q_near
+            dist      = np.linalg.norm(direction)
+            q_new     = q_near + (direction/dist) * <span class="fn">min</span>(self.step, dist)
+
+            <span class="kw">if not</span> self.fn_collision_free(q_near, q_new):
+                <span class="kw">continue</span>
+
+            <span class="cm"># RRT* rewire</span>
+            new_i      = <span class="fn">len</span>(self.nodes)
+            near_inds  = [i <span class="kw">for</span> i,n <span class="kw">in</span> <span class="fn">enumerate</span>(self.nodes)
+                          <span class="kw">if</span> np.linalg.norm(n - q_new) < self.radius]
+            best_parent, best_cost = near_i, self.costs[near_i] + np.linalg.norm(q_new - q_near)
+
+            <span class="kw">for</span> ni <span class="kw">in</span> near_inds:
+                c = self.costs[ni] + np.linalg.norm(q_new - self.nodes[ni])
+                <span class="kw">if</span> c < best_cost <span class="kw">and</span> self.fn_collision_free(self.nodes[ni], q_new):
+                    best_parent, best_cost = ni, c
+
+            self.nodes.append(q_new)
+            self.parents[new_i] = best_parent
+            self.costs[new_i]   = best_cost
+
+        <span class="kw">return</span> self.fn_extract_path()</code></pre>
+
+    <h3>Perencanaan untuk Manipulator: MoveIt 2</h3>
+
+    <pre data-lang="python"><code><span class="kw">import</span> rclpy
+<span class="kw">from</span> moveit.planning <span class="kw">import</span> MoveItPy
+
+<span class="kw">def</span> <span class="fn">pick_place_demo</span>():
+    rclpy.init()
+    robot = MoveItPy(node_name=<span class="str">"robot_arm"</span>)
+    arm   = robot.get_planning_component(<span class="str">"manipulator"</span>)
+
+    <span class="cm"># Set start state</span>
+    arm.set_start_state_to_current_state()
+
+    <span class="cm"># Define target pose (SE3)</span>
+    <span class="kw">from</span> geometry_msgs.msg <span class="kw">import</span> Pose
+    target = Pose()
+    target.position.x    = <span class="num">0.4</span>
+    target.position.y    = <span class="num">0.1</span>
+    target.position.z    = <span class="num">0.3</span>
+    target.orientation.w = <span class="num">1.0</span>
+
+    arm.set_goal_state(pose_stamped_msg=target,
+                       pose_link=<span class="str">"tool0"</span>)
+
+    <span class="cm"># Plan with RRTConnect / STOMP / OMPL</span>
+    plan_result = arm.plan()
+    <span class="kw">if</span> plan_result:
+        robot.execute(plan_result.trajectory,
+                      controllers=[<span class="str">"joint_trajectory_controller"</span>])
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">"Planning FAILED — check collision objects"</span>)
+
+    rclpy.shutdown()</code></pre>
+
+  </section>
+
+  <!-- ────────────────────────────────────────────
+       6. SISTEM KONTROL
+  ──────────────────────────────────────────── -->
+  <section id="kontrol">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Sistem Kontrol Robot</h2>
+    </div>
+
+    <p>Kontrol robot adalah disiplin yang menjembatani output planner (trajectory setpoint) dengan aktuator fisik melalui algoritma feedback. Ketepatan, kecepatan respons, dan stabilitas adalah tiga metrik utama.</p>
+
+    <h3>PID Controller</h3>
+
+    <p>PID (Proportional-Integral-Derivative) adalah kontroler paling umum digunakan untuk single-joint position/velocity control:</p>
+
+    <div class="formula">
+      u(t) = Kp·e(t) + Ki·∫₀ᵗ e(τ)dτ + Kd·(de/dt)<br><br>
+      Kp = proportional gain  |  Ki = integral gain  |  Kd = derivative gain<br>
+      e(t) = setpoint − process_variable
+    </div>
+
+    <pre data-lang="python"><code><span class="kw">class</span> <span class="cls">PIDController</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, Kp, Ki, Kd, dt,
+                 out_min=-<span class="fn">float</span>(<span class="str">'inf'</span>), out_max=<span class="fn">float</span>(<span class="str">'inf'</span>)):
+        self.Kp, self.Ki, self.Kd = Kp, Ki, Kd
+        self.dt = dt
+        self.out_min, self.out_max = out_min, out_max
+        self._integral = <span class="num">0.0</span>
+        self._prev_err = <span class="num">0.0</span>
+
+    <span class="kw">def</span> <span class="fn">update</span>(self, setpoint, measurement):
+        err           = setpoint - measurement
+        self._integral = np.clip(
+            self._integral + err * self.dt,
+            self.out_min / self.Ki <span class="kw">if</span> self.Ki != <span class="num">0</span> <span class="kw">else</span> -<span class="num">1e9</span>,
+            self.out_max / self.Ki <span class="kw">if</span> self.Ki != <span class="num">0</span> <span class="kw">else</span>  <span class="num">1e9</span>
+        )
+        derivative    = (err - self._prev_err) / self.dt
+        output        = self.Kp*err + self.Ki*self._integral + self.Kd*derivative
+        self._prev_err = err
+        <span class="kw">return</span> np.clip(output, self.out_min, self.out_max)
+
+<span class="cm"># Contoh: Joint position control @ 1kHz</span>
+pid  = PIDController(Kp=<span class="num">150.0</span>, Ki=<span class="num">5.0</span>, Kd=<span class="num">8.0</span>, dt=<span class="num">0.001</span>,
+                     out_min=-<span class="num">20.0</span>, out_max=<span class="num">20.0</span>)
+torque = pid.update(setpoint=<span class="num">1.57</span>, measurement=current_angle)</code></pre>
+
+    <h3>Model Predictive Control (MPC)</h3>
+
+    <p>MPC mengoptimalkan sekuens kontrol N-langkah ke depan pada setiap timestep, mempertimbangkan constraint secara eksplisit. Sangat cocok untuk legged robot dan autonomous driving.</p>
+
+    <div class="formula">
+      min_{u₀,...,u_{N-1}}  Σₖ [xₖᵀQxₖ + uₖᵀRuₖ] + x_NᵀP_fx_N<br><br>
+      s.t.  xₖ₊₁ = Axₖ + Buₖ   (dynamics)<br>
+            x_min ≤ xₖ ≤ x_max  (state bounds)<br>
+            u_min ≤ uₖ ≤ u_max  (actuator limits)
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <strong>MPC vs PID:</strong> MPC unggul pada sistem MIMO dengan coupling antar joint (misalnya quadruped locomotion) dan constraint keras. Namun memerlukan model dinamik yang akurat dan komputasi real-time solver (OSQP, acados). Gunakan PID untuk single-joint sederhana, MPC untuk sistem kompleks.
+      </div>
+    </div>
+
+    <h3>Whole-Body Control (WBC) untuk Humanoid</h3>
+
+    <p>WBC memungkinkan robot humanoid menyelesaikan multiple task secara simultan (balance + manipulation + gaze) dengan task-space prioritization:</p>
+
+    <ol class="steps">
+      <li>Definisikan <strong>task hierarchy</strong>: T₁=CoM stability &gt; T₂=end-effector pose &gt; T₃=posture regulation</li>
+      <li>Formulasikan sebagai <strong>Quadratic Program (QP)</strong>: min ‖Jᵢq̈ - ẍᵢ_des‖² + λ‖τ‖²</li>
+      <li>Tambahkan <strong>inequality constraints</strong>: friction cone, joint torque limits, unilateral contact</li>
+      <li>Solve dengan <strong>OSQP / qpOASES</strong> pada 500–1000 Hz loop rate</li>
+      <li>Output: joint torque commands → motor driver (FOC)</li>
+    </ol>
+
+    <h3>Perbandingan Metode Kontrol</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Metode</th><th>Kelebihan</th><th>Kekurangan</th><th>Aplikasi Ideal</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>PID</strong></td><td>Simpel, stabil, fast</td><td>Tidak handle constraint</td><td>Single joint, servo</td></tr>
+          <tr><td><strong>Feedforward + PID</strong></td><td>Kompensasi gravitasi</td><td>Perlu model</td><td>Manipulator industri</td></tr>
+          <tr><td><strong>MPC</strong></td><td>Constraint-aware</td><td>Komputasi berat</td><td>Autonomous vehicle, legged</td></tr>
+          <tr><td><strong>WBC / QP</strong></td><td>Multi-task</td><td>Sangat kompleks</td><td>Humanoid robot</td></tr>
+          <tr><td><strong>RL Policy</strong></td><td>Adaptive, robust</td><td>Butuh training, black-box</td><td>Locomotion, dexterous hand</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────
+       7. IMPLEMENTASI ROS2
+  ──────────────────────────────────────────── -->
+  <section id="implementasi">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Implementasi Praktis dengan ROS2</h2>
+    </div>
+
+    <p>ROS2 (Robot Operating System 2) adalah middleware standar industri untuk pengembangan robot. Berbeda dengan ROS1, ROS2 menggunakan DDS (Data Distribution Service) untuk komunikasi real-time yang deterministik dan mendukung sistem embedded.</p>
+
+    <h3>Setup Workspace ROS2 Humble</h3>
+
+    <pre data-lang="bash"><code><span class="cm"># Install ROS2 Humble (Ubuntu 22.04)</span>
+sudo apt install ros-humble-desktop python3-colcon-common-extensions
+
+<span class="cm"># Install robotics packages</span>
+sudo apt install \
+  ros-humble-moveit \
+  ros-humble-nav2-bringup \
+  ros-humble-slam-toolbox \
+  ros-humble-ros2-control \
+  ros-humble-hardware-interface
+
+<span class="cm"># Create workspace</span>
+mkdir -p ~/robot_ws/src
+cd ~/robot_ws
+colcon build --symlink-install
+source install/setup.bash
+
+<span class="cm"># Create package</span>
+cd src
+ros2 pkg create --build-type ament_python ai_robot_demo \
+  --dependencies rclpy sensor_msgs geometry_msgs cv_bridge</code></pre>
+
+    <h3>Node AI Robot Lengkap</h3>
+
+    <pre data-lang="python"><code><span class="cm">#!/usr/bin/env python3
+# ai_robot_demo/vision_node.py
+# Blue Dragon Security — AI Robotics Tutorial</span>
+
+<span class="kw">import</span> rclpy
+<span class="kw">from</span> rclpy.node <span class="kw">import</span> Node
+<span class="kw">from</span> sensor_msgs.msg <span class="kw">import</span> Image, PointCloud2
+<span class="kw">from</span> geometry_msgs.msg <span class="kw">import</span> PoseArray, Pose
+<span class="kw">from</span> std_msgs.msg <span class="kw">import</span> String
+<span class="kw">from</span> cv_bridge <span class="kw">import</span> CvBridge
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> cv2
+<span class="kw">from</span> ultralytics <span class="kw">import</span> YOLO
+
+<span class="kw">class</span> <span class="cls">AIRobotVisionNode</span>(Node):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        <span class="fn">super</span>().<span class="fn">__init__</span>(<span class="str">'ai_robot_vision'</span>)
+
+        <span class="cm"># Parameters</span>
+        self.declare_parameter(<span class="str">'model_path'</span>, <span class="str">'yolov8n.pt'</span>)
+        self.declare_parameter(<span class="str">'confidence'</span>, <span class="num">0.5</span>)
+        model_path = self.get_parameter(<span class="str">'model_path'</span>).value
+        self.conf  = self.get_parameter(<span class="str">'confidence'</span>).value
+
+        <span class="cm"># Load model</span>
+        self.model  = YOLO(model_path)
+        self.bridge = CvBridge()
+
+        <span class="cm"># Subscribers</span>
+        self.create_subscription(Image, <span class="str">'/camera/color/image_raw'</span>,
+                                  self.fn_rgb_callback, <span class="num">10</span>)
+        self.create_subscription(Image, <span class="str">'/camera/depth/image_rect_raw'</span>,
+                                  self.fn_depth_callback, <span class="num">10</span>)
+
+        <span class="cm"># Publishers</span>
+        self.det_pub  = self.create_publisher(String,    <span class="str">'/detections'</span>,    <span class="num">10</span>)
+        self.pose_pub = self.create_publisher(PoseArray, <span class="str">'/object_poses'</span>,  <span class="num">10</span>)
+        self.vis_pub  = self.create_publisher(Image,     <span class="str">'/vision/overlay'</span>, <span class="num">10</span>)
+
+        self._depth_img = <span class="kw">None</span>
+        self.get_logger().info(<span class="str">"🐉 AIRobotVisionNode started"</span>)
+
+    <span class="kw">def</span> <span class="fn">depth_callback</span>(self, msg):
+        self._depth_img = self.bridge.imgmsg_to_cv2(msg, <span class="str">'passthrough'</span>)
+
+    <span class="kw">def</span> <span class="fn">rgb_callback</span>(self, msg):
+        frame     = self.bridge.imgmsg_to_cv2(msg, <span class="str">'bgr8'</span>)
+        results   = self.model(frame, conf=self.conf, verbose=<span class="kw">False</span>)[<span class="num">0</span>]
+        poses     = PoseArray()
+        poses.header.stamp = self.get_clock().now().to_msg()
+        poses.header.frame_id = <span class="str">'camera_link'</span>
+        detections = []
+
+        <span class="kw">for</span> box <span class="kw">in</span> results.boxes:
+            cls_name = results.names[<span class="fn">int</span>(box.cls)]
+            conf     = <span class="fn">float</span>(box.conf)
+            x1,y1,x2,y2 = [<span class="fn">int</span>(v) <span class="kw">for</span> v <span class="kw">in</span> box.xyxy[<span class="num">0</span>]]
+            cx, cy   = (x1+x2)//<span class="num">2</span>, (y1+y2)//<span class="num">2</span>
+            detections.append(<span class="str">f"{cls_name}:{conf:.2f}"</span>)
+
+            <span class="cm"># 3D pose from depth</span>
+            <span class="kw">if</span> self._depth_img <span class="kw">is not None</span>:
+                depth = self._depth_img[cy, cx]
+                p     = Pose()
+                p.position.x = (cx - <span class="num">320</span>) * depth / <span class="num">615000.0</span>
+                p.position.y = (cy - <span class="num">240</span>) * depth / <span class="num">615000.0</span>
+                p.position.z = depth / <span class="num">1000.0</span>
+                p.orientation.w = <span class="num">1.0</span>
+                poses.poses.append(p)
+
+            <span class="cm"># Draw overlay</span>
+            cv2.rectangle(frame, (x1,y1), (x2,y2), (<span class="num">0</span>,<span class="num">200</span>,<span class="num">255</span>), <span class="num">2</span>)
+            cv2.putText(frame, <span class="str">f"{cls_name} {conf:.0%}"</span>,
+                        (x1, y1-<span class="num">8</span>), cv2.FONT_HERSHEY_SIMPLEX,
+                        <span class="num">0.5</span>, (<span class="num">0</span>,<span class="num">200</span>,<span class="num">255</span>), <span class="num">1</span>)
+
+        self.det_pub.publish(String(data=<span class="str">','</span>.join(detections)))
+        self.pose_pub.publish(poses)
+        self.vis_pub.publish(self.bridge.cv2_to_imgmsg(frame, <span class="str">'bgr8'</span>))
+
+
+<span class="kw">def</span> <span class="fn">main</span>():
+    rclpy.init()
+    node = AIRobotVisionNode()
+    rclpy.spin(node)
+    rclpy.shutdown()
+
+<span class="kw">if</span> __name__ == <span class="str">'__main__'</span>:
+    <span class="fn">main</span>()</code></pre>
+
+    <h3>Launch File dan Integrasi Nav2</h3>
+
+    <pre data-lang="python"><code><span class="cm"># launch/robot_ai.launch.py</span>
+<span class="kw">from</span> launch <span class="kw">import</span> LaunchDescription
+<span class="kw">from</span> launch_ros.actions <span class="kw">import</span> Node
+
+<span class="kw">def</span> <span class="fn">generate_launch_description</span>():
+    <span class="kw">return</span> LaunchDescription([
+        Node(package=<span class="str">'ai_robot_demo'</span>, executable=<span class="str">'vision_node'</span>,
+             name=<span class="str">'vision'</span>,
+             parameters=[{<span class="str">'model_path'</span>: <span class="str">'yolov8s.pt'</span>, <span class="str">'confidence'</span>: <span class="num">0.6</span>}]),
+
+        Node(package=<span class="str">'slam_toolbox'</span>, executable=<span class="str">'async_slam_toolbox_node'</span>,
+             name=<span class="str">'slam'</span>,
+             parameters=[<span class="str">'config/slam_params.yaml'</span>]),
+
+        Node(package=<span class="str">'nav2_bringup'</span>, executable=<span class="str">'bringup_launch'</span>,
+             name=<span class="str">'nav2'</span>),
+
+        Node(package=<span class="str">'ai_robot_demo'</span>, executable=<span class="str">'task_planner_node'</span>,
+             name=<span class="str">'task_planner'</span>),
+    ])</code></pre>
+
+    <div class="callout tip">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>Sim-to-Real Tips:</strong> Gunakan <strong>domain randomization</strong> saat training di simulator (randomize friction, mass, visual texture). Ini meningkatkan robustness policy saat dijalankan di hardware nyata. NVIDIA Isaac Lab menyediakan infrastructure ini untuk skala besar.
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────
+       8. MASA DEPAN
+  ──────────────────────────────────────────── -->
+  <section id="masa-depan">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2>Masa Depan AI Robotika &amp; Referensi</h2>
+    </div>
+
+    <p>Robotika AI sedang memasuki era baru yang dipicu oleh konvergensi foundation models, hardware yang semakin powerful, dan dataset berskala besar. Beberapa tren yang akan mendefinisikan dekade berikutnya:</p>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <span class="info-card-icon">🧠</span>
+        <h4>Embodied Foundation Models</h4>
+        <p>RT-2, π0, OpenVLA — model yang ditraining dari internet-scale data dan dapat di-prompt dengan bahasa natural untuk task baru tanpa fine-tuning.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🏭</span>
+        <h4>Physical AI</h4>
+        <p>NVIDIA Isaac, 1X Technologies, Figure AI — robot humanoid generasi pertama yang siap produksi untuk manufaktur dan logistik.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🔬</span>
+        <h4>Neuromorphic Computing</h4>
+        <p>Intel Loihi 3, IBM NorthPole — chip yang meniru arsitektur otak untuk inferensi ultra-low-power pada edge robot.</span></p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🤝</span>
+        <h4>Human-Robot Collaboration</h4>
+        <p>Cobots yang benar-benar aman berbagi ruang kerja, komunikasi intent melalui NLU, dan shared autonomy untuk assistive robotics.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🌐</span>
+        <h4>Swarm Intelligence</h4>
+        <p>Multi-agent RL untuk koordinasi ratusan robot, desentralisasi, emergent behavior dari aturan lokal sederhana.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🔒</span>
+        <h4>Robot Security</h4>
+        <p>Adversarial attacks pada model persepsi, firmware exploitation pada motor controller, threat modeling untuk critical robot infrastructure.</p>
+      </div>
+    </div>
+
+    <h3>Roadmap Belajar</h3>
+    <ol class="steps">
+      <li><strong>Matematika Fondasi:</strong> Linear algebra (SVD, eigendecomp), kalkulus multivariabel, probabilitas bayesian, optimasi konveks.</li>
+      <li><strong>Kinematik &amp; Dinamik:</strong> Denavit-Hartenberg, Newton-Euler, Lagrangian mechanics, forward/inverse kinematics.</li>
+      <li><strong>Programming:</strong> Python (NumPy, PyTorch), C++ (real-time control), ROS2 (middleware), URDF/SDF (robot modeling).</li>
+      <li><strong>Persepsi:</strong> OpenCV, PCL (point cloud), ORB-SLAM3, YOLO, segmentasi semantik, depth estimation.</li>
+      <li><strong>Kontrol:</strong> PID → State Space → MPC → WBC. Implementasi pada simulasi Gazebo/Isaac.</li>
+      <li><strong>Machine Learning:</strong> Supervised (detection), RL (locomotion/navigation), IL/BC (manipulation), sim-to-real transfer.</li>
+      <li><strong>Proyek Integrasi:</strong> Mobile robot navigation + manipulation + task planning terintegrasi penuh dalam ROS2.</li>
+    </ol>
+
+    <h3>Referensi Utama</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Sumber</th><th>Topik</th><th>Level</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Probabilistic Robotics</strong> — Thrun, Burgard, Fox</td><td>SLAM, sensor fusion, Bayes</td><td><span class="tag blue">Intermediate</span></td></tr>
+          <tr><td><strong>Modern Robotics</strong> — Lynch &amp; Park</td><td>Kinematik, dinamik, kontrol</td><td><span class="tag orange">Advanced</span></td></tr>
+          <tr><td><strong>Deep RL</strong> — Sutton &amp; Barto</td><td>Reinforcement Learning teori</td><td><span class="tag blue">Intermediate</span></td></tr>
+          <tr><td><strong>Springer Handbook of Robotics</strong></td><td>Ensiklopedia komprehensif</td><td><span class="tag orange">Advanced</span></td></tr>
+          <tr><td><strong>ROS2 Documentation</strong> — docs.ros.org</td><td>Middleware, tooling</td><td><span class="tag green">Beginner</span></td></tr>
+          <tr><td><strong>NVIDIA Isaac Lab Docs</strong></td><td>Sim-to-real RL, GPU sim</td><td><span class="tag blue">Intermediate</span></td></tr>
+          <tr><td><strong>Papers: RT-2, ACT, Diffusion Policy</strong></td><td>Foundation model robotics</td><td><span class="tag red">Research</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       FINGERPRINT
+  ══════════════════════════════════════════════ -->
+  <div class="fingerprint">
+    <div class="fp-header">
+      <div class="fp-badge">🐉 BDS</div>
+      <div class="fp-title">Blue Dragon Security · Document Fingerprint</div>
+    </div>
+    <div class="fp-row">
+      <span class="fp-key">Author</span>
+      <span class="fp-val accent">Antonius · Blue Dragon Security</span>
+
+      <span class="fp-key">Organization</span>
+      <span class="fp-val">bluedragonsec.com</span>
+
+      <span class="fp-key">Document</span>
+      <span class="fp-val">AI dalam Robotika — Tutorial Lengkap</span>
+
+      <span class="fp-key">Version</span>
+      <span class="fp-val green">v1.0.0-stable</span>
+
+      <span class="fp-key">Date</span>
+      <span class="fp-val">2026-04-15 · Tangerang, Indonesia</span>
+
+      <span class="fp-key">Scope</span>
+      <span class="fp-val">Security Researcher Master Class · Robotika Modul</span>
+
+      <span class="fp-key">Audience</span>
+      <span class="fp-val">Brimob · BIN · BAIS · Internal Researcher</span>
+
+      <span class="fp-key">License</span>
+      <span class="fp-val">Confidential · Internal Distribution Only</span>
+
+      <span class="fp-key">Contact</span>
+      <span class="fp-val">antonius@bluedragonsec.com</span>
+    </div>
+    <div class="fp-hash">
+      SHA-256: <span>bds::2026::ai-robotika::v1.0</span> |
+      fp: <span>4e2f9a1c-7d08-4b3e-a5f2-bluedragonsec</span> |
+      <span>© 2026 Blue Dragon Security — All rights reserved</span>
+    </div>
+  </div>
+
+</div><!-- /page-wrap -->
+
+<script>
+  function toggleMenu() {
+    const m = document.getElementById('mobileMenu');
+    m.classList.toggle('open');
+  }
+
+  // Animate skill bars on scroll
+  const bars = document.querySelectorAll('.skill-bar-fill');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.width = e.target.style.width; // trigger
+      }
+    });
+  }, { threshold: 0.1 });
+  bars.forEach(b => { const w = b.style.width; b.style.width='0'; io.observe(b); setTimeout(()=>b.style.width=w, 300); });
+
+  // Active nav highlighting
+  const sections = document.querySelectorAll('section[id]');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 80) current = s.id;
+    });
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.style.color = a.href.includes(current) ? 'var(--accent)' : '';
+    });
+  }, { passive: true });
+</script>
+</body>
+</html>

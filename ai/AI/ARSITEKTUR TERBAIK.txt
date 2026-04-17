@@ -1,0 +1,15 @@
+
+hybrid transformer + mamba
+Zamba2
+https://huggingface.co/Zyphra
+
+Jamba2
+https://huggingface.co/ai21labs
+
+Minimal GPU Requirement
+RTX 3060 with 12 gb vram
+
+
+
+
+

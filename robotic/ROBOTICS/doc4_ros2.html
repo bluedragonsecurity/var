@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ROS2 Tutorial Robotika — Robotika</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>:root{--ac:128,224,160}:root{--bg:#0b0d0f;--bg2:#111417;--bg3:#181c21;--border:#2a3240;--border2:#3a4558;--text:#c8d4e0;--text2:#8a9ab0;--text3:#5a6a80;--mono:'IBM Plex Mono',monospace;--body:'IBM Plex Sans',sans-serif;--disp:'Bebas Neue',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.7;display:flex;min-height:100vh}
+#sidebar{width:280px;min-width:280px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;scrollbar-width:thin;transition:transform .3s ease}
+.sh{padding:22px 18px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:10}
+.sl{font-family:var(--disp);font-size:20px;letter-spacing:2px;line-height:1;margin-bottom:3px}
+.ss{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-family:var(--mono)}
+.nsec{padding:5px 18px 3px;font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--text3);margin-top:8px}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 18px;color:var(--text2);text-decoration:none;font-size:13px;transition:all .15s;border-left:2px solid transparent;line-height:1.3}
+.ni.active,.ni:hover{color:rgb(var(--ac));background:rgba(var(--ac),.07);border-left-color:rgb(var(--ac))}
+.nd{width:5px;height:5px;border-radius:50%;background:var(--border2);flex-shrink:0}
+.ni.active .nd,.ni:hover .nd{background:rgb(var(--ac))}
+#main{margin-left:280px;flex:1;min-width:0}
+#topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 36px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:90}
+.tbt{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:1px}
+#mbtn{display:none;background:none;border:1px solid var(--border2);color:var(--text);padding:5px 10px;border-radius:4px;cursor:pointer;font-size:15px}
+.content{max-width:920px;margin:0 auto;padding:44px 36px 80px}
+.hero{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:44px;margin-bottom:52px;position:relative;overflow:hidden}
+.hero::before{position:absolute;right:-10px;top:-10px;font-family:var(--disp);font-size:140px;color:rgba(var(--ac),.03);line-height:1;pointer-events:none;letter-spacing:4px}
+.hl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:3px;color:rgb(var(--ac));margin-bottom:14px}
+h1{font-family:var(--disp);font-size:48px;letter-spacing:3px;color:#fff;line-height:1.05;margin-bottom:14px}
+.hdesc{color:var(--text2);font-size:14.5px;max-width:620px;line-height:1.7}
+.htags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tag{padding:3px 10px;border:1px solid var(--border2);border-radius:3px;font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
+.ta{border-color:rgb(var(--ac));color:rgb(var(--ac))}.tb{border-color:#60c0e8;color:#60c0e8}.to{border-color:#e8a030;color:#e8a030}.tp2{border-color:#c060e0;color:#c060e0}.tr{border-color:#e06060;color:#e06060}
+.sec{margin-bottom:68px;scroll-margin-top:76px}
+.sech{display:flex;align-items:flex-start;gap:14px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.sn{font-family:var(--disp);font-size:44px;line-height:1;color:rgba(var(--ac),.15);flex-shrink:0;min-width:56px}
+.sc{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;color:rgb(var(--ac));margin-bottom:5px}
+h2{font-family:var(--disp);font-size:32px;letter-spacing:2px;color:#fff;line-height:1.1}
+h3{font-size:17px;font-weight:600;color:rgb(var(--ac));margin-top:32px;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+h3::before{content:'';width:3px;height:16px;background:rgb(var(--ac));border-radius:2px;flex-shrink:0}
+h4{font-size:14.5px;font-weight:600;color:#60c0e8;margin-top:22px;margin-bottom:9px}
+p{margin-bottom:13px;color:var(--text);font-size:14px}
+pre{background:var(--bg2);border:1px solid var(--border);border-left:3px solid rgb(var(--ac));border-radius:6px;padding:18px 22px;overflow-x:auto;margin:18px 0;font-family:var(--mono);font-size:12px;line-height:1.65;scrollbar-width:thin}
+pre::-webkit-scrollbar{height:4px}pre::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+code{font-family:var(--mono);font-size:12px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:rgb(var(--ac))}
+pre code{background:none;border:none;padding:0;color:var(--text)}
+.kw{color:#c060e0;font-weight:500}.fn{color:#60c0e8}.st{color:#80e060}.cm{color:#5a6a80;font-style:italic}.nm{color:#e8a030}.tp3{color:#f0c060}
+.math{background:var(--bg3);border:1px solid var(--border);border-left:3px solid #60c0e8;border-radius:6px;padding:18px 22px;margin:18px 0;font-family:var(--mono);font-size:13px;color:#c8ffd0;line-height:2;overflow-x:auto}
+.ib{border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin:18px 0;font-size:13.5px}
+.ib.note{border-left:3px solid #60c0e8;background:rgba(96,192,232,.05)}.ib.warn{border-left:3px solid #e8a030;background:rgba(232,160,48,.05)}.ib.tip{border-left:3px solid rgb(var(--ac));background:rgba(var(--ac),.05)}.ib.danger{border-left:3px solid #e06060;background:rgba(224,96,96,.06)}
+.ibl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;margin-bottom:7px;font-weight:600}.note .ibl{color:#60c0e8}.warn .ibl{color:#e8a030}.danger .ibl{color:#e06060}.tip .ibl{color:rgb(var(--ac))}
+.tw{overflow-x:auto;margin:18px 0}table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--bg3);color:rgb(var(--ac));font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:500;padding:11px 14px;text-align:left;border:1px solid var(--border)}
+td{padding:9px 14px;border:1px solid var(--border);color:var(--text);vertical-align:top}tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:18px 0}.card{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:16px}
+.ci{font-size:22px;margin-bottom:8px}.ct{font-weight:600;font-size:14px;color:var(--text);margin-bottom:5px}.cd{font-size:12px;color:var(--text2);line-height:1.5}
+.steps{counter-reset:sc;margin:18px 0}.step{display:flex;gap:18px;margin-bottom:18px;counter-increment:sc}.step::before{content:counter(sc,decimal-leading-zero);font-family:var(--disp);font-size:26px;color:rgba(var(--ac),.22);flex-shrink:0;min-width:38px;line-height:1;margin-top:2px}
+.stit{font-weight:600;color:var(--text);margin-bottom:5px;font-size:14px}.sdesc{font-size:13px;color:var(--text2);line-height:1.6}
+.divider{height:1px;background:linear-gradient(90deg,rgb(var(--ac)) 0%,var(--border) 60%,transparent 100%);margin:36px 0;opacity:.35}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99}
+@media(max-width:900px){#mbtn{display:block}#sidebar{transform:translateX(-100%)}#sidebar.open{transform:translateX(0)}#overlay.open{display:block}#main{margin-left:0}.content{padding:24px 18px 60px}h2{font-size:26px}.cg{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.cg{grid-template-columns:1fr}}.hero::before{content:'ROS'}</style>
+</head><body>
+<nav id="sidebar"><div class="sh"><div class="sl" style="color:rgb(var(--ac))">ROS2</div><div class="ss">ROS2 Tutorial Robotika</div></div>
+<div style="padding:14px 0"><div class="nsec">Dasar</div><a href="#s1" class="ni"><span class="nd"></span>Konsep ROS2</a><a href="#s2" class="ni"><span class="nd"></span>Setup & Instalasi</a><div class="nsec">Core API</div><a href="#s3" class="ni"><span class="nd"></span>Publishers & Subscribers</a><a href="#s4" class="ni"><span class="nd"></span>Services & Actions</a><a href="#s5" class="ni"><span class="nd"></span>Parameters & Launch</a><div class="nsec">Robot Tools</div><a href="#s6" class="ni"><span class="nd"></span>TF2 Transform</a><a href="#s7" class="ni"><span class="nd"></span>Nav2 Setup</a><a href="#s8" class="ni"><span class="nd"></span>MoveIt2 Arm</a><a href="#s9" class="ni"><span class="nd"></span>ros2_control</a><a href="#s10" class="ni"><span class="nd"></span>Debugging</a></div></nav>
+<div id="overlay"></div>
+<div id="main">
+<div id="topbar"><span class="tbt">DOC 4 — ROS2 ROBOTICS</span><button id="mbtn" onclick="toggleSidebar()">&#9776;</button></div>
+<div class="content">
+<div class="hero"><div class="hl">// DOC 04 / 07</div><h1>ROS2<br>TUTORIAL</h1><p class="hdesc">Tutorial lengkap ROS2 (Jazzy/Humble): konsep, publishers/subscribers, services, actions, TF2, Nav2, MoveIt2, ros2_control, URDF, SLAM, debugging tools — panduan praktis dari nol.</p><div class="htags"><span class="tag ta">Jazzy/Humble</span><span class="tag tb">Nav2</span><span class="tag to">MoveIt2</span><span class="tag ta">TF2</span><span class="tag tb">SLAM</span></div></div>
+<section class="sec" id="s1"><div class="sech"><div class="sn">01</div><div><div class="sc">Konsep</div><h2>FUNDAMENTAL ROS2</h2></div></div><p>ROS2 (Robot Operating System 2) adalah framework komunikasi terdistribusi untuk robotika. Dibangun di atas DDS (Data Distribution Service) untuk real-time, reliable communication.</p><div class="cg"><div class="card"><div class="ci">📡</div><div class="ct">Topics</div><div class="cd">Publish/Subscribe async. Satu-ke-banyak. Untuk sensor data stream.</div></div><div class="card"><div class="ci">🔧</div><div class="ct">Services</div><div class="cd">Request/Response sync. Satu-ke-satu. Untuk satu kali query.</div></div><div class="card"><div class="ci">⚡</div><div class="ct">Actions</div><div class="cd">Goal/Feedback/Result. Long-running cancelable tasks. Nav, manipulation.</div></div><div class="card"><div class="ci">🔑</div><div class="ct">Parameters</div><div class="cd">Key-value store per node. Runtime configuration.</div></div><div class="card"><div class="ci">🔄</div><div class="ct">TF2</div><div class="cd">Transform tree. Koordinat antar frame robot.</div></div><div class="card"><div class="ci">📦</div><div class="ct">Lifecycle</div><div class="cd">Managed node state machine. Predictable startup/shutdown.</div></div></div><h3>ROS2 vs ROS1</h3><div class="tw"><table><tr><th>Fitur</th><th>ROS1</th><th>ROS2</th></tr><tr><td>Middleware</td><td>Custom TCP/UDP</td><td>DDS (standard)</td></tr><tr><td>Real-time</td><td>Tidak</td><td>Ya (dengan RT OS)</td></tr><tr><td>Security</td><td>Tidak</td><td>SROS2 (DDS security)</td></tr><tr><td>Python API</td><td>rospy</td><td>rclpy (async/await)</td></tr><tr><td>C++ API</td><td>roscpp</td><td>rclcpp (modern C++)</td></tr><tr><td>Multi-robot</td><td>Tidak native</td><td>Ya (domain ID)</td></tr><tr><td>Build system</td><td>catkin</td><td>ament_cmake / colcon</td></tr><tr><td>Latest LTS</td><td>Noetic (2020)</td><td>Jazzy (2024), Humble (2022)</td></tr></table></div><h3>Distribusi ROS2</h3><div class="ib tip"><div class="ibl">Rekomendasi 2024-2025</div><b>ROS2 Jazzy Jalisco</b> (LTS, May 2024, Ubuntu 24.04) — untuk proyek baru<br><b>ROS2 Humble Hawksbill</b> (LTS, May 2022, Ubuntu 22.04) — paling banyak tutorial, ekosistem matang</div></section><section class="sec" id="s2"><div class="sech"><div class="sn">02</div><div><div class="sc">Setup</div><h2>INSTALASI & SETUP</h2></div></div><pre><span class="cm"># Install ROS2 Jazzy di Ubuntu 24.04</span>
+<span class="cm"># 1. Set locale</span>
+locale-gen en_US en_US.UTF-8
+update-locale LC_ALL=en_US.UTF-8
+
+<span class="cm"># 2. Add ROS2 apt repository</span>
+curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list
+
+<span class="cm"># 3. Install</span>
+apt update && apt install -y ros-jazzy-desktop
+pip install colcon-common-extensions
+
+<span class="cm"># 4. Source dan setup workspace</span>
+source /opt/ros/jazzy/setup.bash
+mkdir -p ~/robot_ws/src && cd ~/robot_ws
+colcon build --symlink-install
+source install/setup.bash
+
+<span class="cm"># 5. Test</span>
+ros2 run demo_nodes_cpp talker &
+ros2 run demo_nodes_py listener
+
+<span class="cm"># Paket penting untuk navigasi:</span>
+apt install -y ros-jazzy-navigation2 ros-jazzy-nav2-bringup
+apt install -y ros-jazzy-slam-toolbox ros-jazzy-robot-localization
+apt install -y ros-jazzy-moveit ros-jazzy-ros2-control</pre><h3>Buat Package Baru</h3><pre>cd ~/robot_ws/src
+
+<span class="cm"># Python package</span>
+ros2 pkg create --build-type ament_python robot_brain \
+  --dependencies rclpy std_msgs geometry_msgs nav_msgs sensor_msgs
+
+<span class="cm"># C++ package</span>
+ros2 pkg create --build-type ament_cmake robot_hal \
+  --dependencies rclcpp std_msgs geometry_msgs
+
+colcon build --packages-select robot_brain</pre></section><section class="sec" id="s3"><div class="sech"><div class="sn">03</div><div><div class="sc">Core API</div><h2>PUBLISHERS & SUBSCRIBERS</h2></div></div><pre><span class="cm">#!/usr/bin/env python3</span>
+<span class="cm"># Robot sensor publisher node</span>
+<span class="kw">import</span> rclpy
+<span class="kw">from</span> rclpy.node <span class="kw">import</span> Node
+<span class="kw">from</span> sensor_msgs.msg <span class="kw">import</span> LaserScan
+<span class="kw">from</span> geometry_msgs.msg <span class="kw">import</span> Twist
+<span class="kw">from</span> std_msgs.msg <span class="kw">import</span> Float32MultiArray
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">class</span> <span class="tp3">SonarPublisher</span>(Node):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        <span class="fn">super</span>().__init__(<span class="st">'sonar_pub'</span>)
+        self.pub = self.<span class="fn">create_publisher</span>(
+            Float32MultiArray, <span class="st">'/sonar/distances'</span>, <span class="nm">10</span>)
+        self.<span class="fn">create_timer</span>(<span class="nm">0.05</span>, self.timer_cb)  <span class="cm"># 20Hz</span>
+        self.serial = <span class="fn">SerialReader</span>(<span class="st">'/dev/ttyUSB0'</span>)
+
+    <span class="kw">def</span> <span class="fn">timer_cb</span>(self):
+        dists = self.serial.<span class="fn">read_distances</span>()
+        msg = Float32MultiArray(data=dists)
+        self.pub.<span class="fn">publish</span>(msg)
+
+<span class="kw">class</span> <span class="tp3">CmdVelSubscriber</span>(Node):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        <span class="fn">super</span>().__init__(<span class="st">'cmd_executor'</span>)
+        self.sub = self.<span class="fn">create_subscription</span>(
+            Twist, <span class="st">'/cmd_vel'</span>, self.cmd_cb, <span class="nm">10</span>)
+        self.last_cmd = <span class="nm">None</span>
+        self.watchdog = self.<span class="fn">create_timer</span>(<span class="nm">0.5</span>, self.watchdog_cb)
+
+    <span class="kw">def</span> <span class="fn">cmd_cb</span>(self, msg):
+        self.last_cmd = msg
+        self.watchdog.<span class="fn">reset</span>()
+        self.<span class="fn">send_to_robot</span>(msg.linear.x, msg.angular.z)
+
+    <span class="kw">def</span> <span class="fn">watchdog_cb</span>(self):
+        <span class="cm"># Safety: stop if no cmd_vel for 0.5s</span>
+        self.<span class="fn">send_to_robot</span>(<span class="nm">0</span>, <span class="nm">0</span>)
+
+<span class="kw">def</span> <span class="fn">main</span>():
+    rclpy.<span class="fn">init</span>()
+    executor = rclpy.<span class="fn">executors</span>.<span class="fn">MultiThreadedExecutor</span>(num_threads=<span class="nm">4</span>)
+    sonar = <span class="fn">SonarPublisher</span>()
+    cmd = <span class="fn">CmdVelSubscriber</span>()
+    executor.<span class="fn">add_node</span>(sonar); executor.<span class="fn">add_node</span>(cmd)
+    <span class="kw">try</span>: executor.<span class="fn">spin</span>()
+    <span class="kw">finally</span>: executor.<span class="fn">shutdown</span>()</pre></section><section class="sec" id="s4"><div class="sech"><div class="sn">04</div><div><div class="sc">Core API</div><h2>SERVICES & ACTIONS</h2></div></div><h3>Custom Service</h3><pre><span class="cm"># srv/SetGoal.srv:</span>
+<span class="cm"># float32 x</span>
+<span class="cm"># float32 y</span>
+<span class="cm"># float32 theta</span>
+<span class="cm"># ---</span>
+<span class="cm"># bool success</span>
+<span class="cm"># string message</span>
+
+<span class="kw">from</span> rclpy.node <span class="kw">import</span> Node
+<span class="kw">from</span> robot_interfaces.srv <span class="kw">import</span> SetGoal
+
+<span class="kw">class</span> <span class="tp3">GoalServer</span>(Node):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        <span class="fn">super</span>().__init__(<span class="st">'goal_server'</span>)
+        self.srv = self.<span class="fn">create_service</span>(SetGoal, <span class="st">'set_goal'</span>, self.handle_goal)
+
+    <span class="kw">def</span> <span class="fn">handle_goal</span>(self, req, res):
+        self.<span class="fn">get_logger</span>().<span class="fn">info</span>(<span class="st">f"Goal: ({req.x:.2f}, {req.y:.2f}, {req.theta:.2f})"</span>)
+        <span class="cm"># Kirim goal ke Nav2...</span>
+        res.success = <span class="nm">True</span>
+        res.message = <span class="st">f"Goal accepted: ({req.x:.2f}, {req.y:.2f})"</span>
+        <span class="kw">return</span> res
+
+<span class="cm"># Client call:</span>
+<span class="kw">class</span> <span class="tp3">GoalClient</span>(Node):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        <span class="fn">super</span>().__init__(<span class="st">'goal_client'</span>)
+        self.cli = self.<span class="fn">create_client</span>(SetGoal, <span class="st">'set_goal'</span>)
+        self.cli.<span class="fn">wait_for_service</span>(timeout_sec=<span class="nm">5</span>)
+
+    <span class="kw">def</span> <span class="fn">send_goal</span>(self, x, y, theta):
+        req = SetGoal.Request(); req.x=x; req.y=y; req.theta=theta
+        future = self.cli.<span class="fn">call_async</span>(req)
+        rclpy.<span class="fn">spin_until_future_complete</span>(self, future)
+        <span class="kw">return</span> future.result()</pre><h3>Action Server (Long-running Task)</h3><pre><span class="kw">from</span> rclpy.action <span class="kw">import</span> ActionServer, ActionClient
+<span class="kw">from</span> robot_interfaces.action <span class="kw">import</span> Navigate
+
+<span class="kw">class</span> <span class="tp3">NavActionServer</span>(Node):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        <span class="fn">super</span>().__init__(<span class="st">'nav_action_server'</span>)
+        self._server = <span class="fn">ActionServer</span>(self, Navigate, <span class="st">'navigate'</span>, self.execute_cb)
+
+    <span class="kw">async def</span> <span class="fn">execute_cb</span>(self, goal_handle):
+        x, y = goal_handle.request.x, goal_handle.request.y
+        feedback = Navigate.Feedback()
+        <span class="kw">while not</span> self.<span class="fn">goal_reached</span>(x, y):
+            dist = self.<span class="fn">distance_to_goal</span>(x, y)
+            feedback.distance_remaining = dist
+            goal_handle.<span class="fn">publish_feedback</span>(feedback)
+            <span class="kw">if</span> goal_handle.<span class="fn">is_cancel_requested</span>():
+                goal_handle.<span class="fn">canceled</span>()
+                <span class="kw">return</span> Navigate.Result(success=<span class="nm">False</span>)
+            <span class="kw">await</span> rclpy.<span class="fn">task</span>.<span class="fn">sleep</span>(<span class="nm">0.1</span>)
+        goal_handle.<span class="fn">succeed</span>()
+        <span class="kw">return</span> Navigate.Result(success=<span class="nm">True</span>)</pre></section><section class="sec" id="s5"><div class="sech"><div class="sn">05</div><div><div class="sc">Configuration</div><h2>PARAMETERS & LAUNCH FILES</h2></div></div><pre><span class="cm"># Python Launch File: launch/robot_bringup.launch.py</span>
+<span class="kw">from</span> launch <span class="kw">import</span> LaunchDescription
+<span class="kw">from</span> launch_ros.actions <span class="kw">import</span> Node
+<span class="kw">from</span> launch.actions <span class="kw">import</span> IncludeLaunchDescription, DeclareLaunchArgument
+<span class="kw">from</span> launch.substitutions <span class="kw">import</span> LaunchConfiguration
+<span class="kw">from</span> ament_index_python <span class="kw">import</span> get_package_share_directory
+<span class="kw">import</span> os
+
+<span class="kw">def</span> <span class="fn">generate_launch_description</span>():
+    use_sim = <span class="fn">LaunchConfiguration</span>(<span class="st">'use_sim'</span>)
+    nav2_params = os.path.<span class="fn">join</span>(<span class="fn">get_package_share_directory</span>(<span class="st">'robot_nav'</span>),<span class="st">'config'</span>,<span class="st">'nav2_params.yaml'</span>)
+
+    <span class="kw">return</span> <span class="fn">LaunchDescription</span>([
+        <span class="fn">DeclareLaunchArgument</span>(<span class="st">'use_sim'</span>, default_value=<span class="st">'false'</span>),
+
+        <span class="cm"># Serial Bridge</span>
+        <span class="fn">Node</span>(package=<span class="st">'robot_hal'</span>, executable=<span class="st">'serial_bridge'</span>,
+             parameters=[{<span class="st">'port'</span>:<span class="st">'/dev/ttyUSB0'</span>,<span class="st">'baud'</span>:<span class="nm">115200</span>}]),
+
+        <span class="cm"># LiDAR</span>
+        <span class="fn">Node</span>(package=<span class="st">'rplidar_ros'</span>, executable=<span class="st">'rplidar_node'</span>,
+             parameters=[{<span class="st">'serial_port'</span>:<span class="st">'/dev/ttyUSB1'</span>}]),
+
+        <span class="cm"># EKF Localization</span>
+        <span class="fn">Node</span>(package=<span class="st">'robot_localization'</span>, executable=<span class="st">'ekf_node'</span>,
+             parameters=[nav2_params]),
+
+        <span class="cm"># Nav2 stack</span>
+        <span class="fn">IncludeLaunchDescription</span>(
+            <span class="fn">PythonLaunchDescriptionSource</span>(
+                os.path.<span class="fn">join</span>(<span class="fn">get_package_share_directory</span>(<span class="st">'nav2_bringup'</span>),
+                             <span class="st">'launch'</span>,<span class="st">'navigation_launch.py'</span>)),
+            launch_arguments={<span class="st">'params_file'</span>:nav2_params}.items()),
+    ])</pre><h3>Parameter YAML</h3><pre><span class="cm"># config/nav2_params.yaml</span>
+bt_navigator:
+  ros__parameters:
+    use_sim_time: false
+    default_nav_to_pose_bt_xml: "navigate_w_replanning_time.xml"
+
+controller_server:
+  ros__parameters:
+    controller_frequency: 20.0
+    FollowPath:
+      plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+      desired_linear_vel: 0.3
+      lookahead_dist: 0.6
+      max_angular_accel: 3.2</pre></section><section class="sec" id="s6"><div class="sech"><div class="sn">06</div><div><div class="sc">TF2</div><h2>TF2 TRANSFORM TREE</h2></div></div><div class="math">ROS2 Transform Tree (standard):
+  map → odom → base_link → base_laser
+                          → camera_link
+                          → imu_link
+
+map → odom: published by AMCL/SLAM (localization)
+odom → base_link: published by odometry node (wheel encoders)
+base_link → sensor frames: static, from robot URDF</div><pre><span class="kw">import</span> rclpy, tf2_ros
+<span class="kw">from</span> tf2_ros.static_transform_broadcaster <span class="kw">import</span> StaticTransformBroadcaster
+<span class="kw">from</span> geometry_msgs.msg <span class="kw">import</span> TransformStamped
+<span class="kw">import</span> tf_transformations
+
+<span class="kw">class</span> <span class="tp3">TFPublisher</span>(Node):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        <span class="fn">super</span>().__init__(<span class="st">'tf_publisher'</span>)
+        self.static_br = <span class="fn">StaticTransformBroadcaster</span>(self)
+        self.dyn_br    = tf2_ros.<span class="fn">TransformBroadcaster</span>(self)
+        self.<span class="fn">publish_static_transforms</span>()
+
+    <span class="kw">def</span> <span class="fn">publish_static_transforms</span>(self):
+        <span class="cm"># LiDAR mounted 15cm forward, 30cm up</span>
+        t = <span class="fn">TransformStamped</span>()
+        t.header.stamp = self.<span class="fn">get_clock</span>().<span class="fn">now</span>().<span class="fn">to_msg</span>()
+        t.header.frame_id = <span class="st">'base_link'</span>
+        t.child_frame_id  = <span class="st">'base_laser'</span>
+        t.transform.translation.x = <span class="nm">0.15</span>
+        t.transform.translation.z = <span class="nm">0.30</span>
+        q = tf_transformations.<span class="fn">quaternion_from_euler</span>(<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0</span>)
+        t.transform.rotation.x=q[<span class="nm">0</span>]; t.transform.rotation.y=q[<span class="nm">1</span>]
+        t.transform.rotation.z=q[<span class="nm">2</span>]; t.transform.rotation.w=q[<span class="nm">3</span>]
+        self.static_br.<span class="fn">sendTransform</span>(t)
+
+    <span class="kw">def</span> <span class="fn">publish_odom_tf</span>(self, x, y, th):
+        t = <span class="fn">TransformStamped</span>()
+        t.header.stamp = self.<span class="fn">get_clock</span>().<span class="fn">now</span>().<span class="fn">to_msg</span>()
+        t.header.frame_id = <span class="st">'odom'</span>; t.child_frame_id = <span class="st">'base_link'</span>
+        t.transform.translation.x = x; t.transform.translation.y = y
+        q = tf_transformations.<span class="fn">quaternion_from_euler</span>(<span class="nm">0</span>,<span class="nm">0</span>,th)
+        t.transform.rotation.z=q[<span class="nm">2</span>]; t.transform.rotation.w=q[<span class="nm">3</span>]
+        self.dyn_br.<span class="fn">sendTransform</span>(t)</pre></section><section class="sec" id="s7"><div class="sech"><div class="sn">07</div><div><div class="sc">Nav2</div><h2>NAV2 SLAM & MAPPING</h2></div></div><pre><span class="cm"># Step-by-step: Buat peta baru dengan SLAM Toolbox</span>
+
+<span class="cm"># Terminal 1: bringup robot base</span>
+ros2 launch robot_bringup bringup.launch.py
+
+<span class="cm"># Terminal 2: SLAM Toolbox (online sync mode)</span>
+ros2 launch slam_toolbox online_sync_launch.py
+
+<span class="cm"># Terminal 3: RViz2 untuk visualisasi</span>
+ros2 run rviz2 rviz2 -d $(ros2 pkg prefix nav2_bringup)/share/nav2_bringup/rviz/nav2_default_view.rviz
+
+<span class="cm"># Teleop untuk mapping</span>
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
+
+<span class="cm"># Setelah peta terbentuk, simpan:</span>
+ros2 service call /slam_toolbox/save_map slam_toolbox/srv/SaveMap "{name: {data: 'my_map'}}"</pre><h3>Nav2 dengan Peta yang Sudah Ada</h3><pre><span class="cm"># Launch navigation dengan peta:</span>
+ros2 launch nav2_bringup bringup_launch.py \
+  map:=/home/robot/maps/my_map.yaml \
+  use_sim_time:=false
+
+<span class="cm"># Set initial pose via command:</span>
+ros2 topic pub /initialpose geometry_msgs/msg/PoseWithCovarianceStamped \
+  "{ header: {frame_id: map}, pose: { pose: {position: {x: 0.0, y: 0.0}, orientation: {w: 1.0} } } }" --once</pre></section><section class="sec" id="s8"><div class="sech"><div class="sn">08</div><div><div class="sc">Manipulation</div><h2>MOVEIT2 ARM CONTROL</h2></div></div><pre><span class="kw">import</span> rclpy
+<span class="kw">from</span> moveit.planning <span class="kw">import</span> MoveItPy
+<span class="kw">from</span> moveit.core.robot_state <span class="kw">import</span> RobotState
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+rclpy.<span class="fn">init</span>()
+robot = <span class="fn">MoveItPy</span>(node_name=<span class="st">'arm_controller'</span>)
+arm   = robot.<span class="fn">get_planning_component</span>(<span class="st">'arm'</span>)
+gripper = robot.<span class="fn">get_planning_component</span>(<span class="st">'gripper'</span>)
+
+<span class="kw">def</span> <span class="fn">move_to_pose</span>(x, y, z, qx=<span class="nm">0</span>, qy=<span class="nm">0</span>, qz=<span class="nm">0</span>, qw=<span class="nm">1</span>):
+    <span class="kw">from</span> geometry_msgs.msg <span class="kw">import</span> Pose
+    arm.<span class="fn">set_start_state_to_current_state</span>()
+    target = Pose()
+    target.position.x=x; target.position.y=y; target.position.z=z
+    target.orientation.x=qx; target.orientation.y=qy
+    target.orientation.z=qz; target.orientation.w=qw
+    arm.<span class="fn">set_goal_state</span>(pose_stamped_msg=target, pose_link=<span class="st">'end_effector'</span>)
+    plan = arm.<span class="fn">plan</span>()
+    <span class="kw">if</span> plan:
+        robot.<span class="fn">execute</span>(plan.trajectory, controllers=[])
+        <span class="kw">return</span> <span class="nm">True</span>
+    <span class="kw">return</span> <span class="nm">False</span>
+
+<span class="kw">def</span> <span class="fn">pick_and_place</span>(pick_xyz, place_xyz):
+    <span class="fn">move_to_pose</span>(*pick_xyz)
+    gripper.<span class="fn">set_named_target</span>(<span class="st">'open'</span>); gripper.<span class="fn">plan</span>(); robot.<span class="fn">execute</span>()
+    <span class="cm"># lower to pick height</span>
+    <span class="fn">move_to_pose</span>(pick_xyz[<span class="nm">0</span>], pick_xyz[<span class="nm">1</span>], pick_xyz[<span class="nm">2</span>]-<span class="nm">0.05</span>)
+    gripper.<span class="fn">set_named_target</span>(<span class="st">'close'</span>); gripper.<span class="fn">plan</span>(); robot.<span class="fn">execute</span>()
+    <span class="fn">move_to_pose</span>(*place_xyz)</pre></section><section class="sec" id="s9"><div class="sech"><div class="sn">09</div><div><div class="sc">Hardware</div><h2>ROS2_CONTROL</h2></div></div><pre><span class="cm"># ros2_control hardware interface (C++):</span>
+<span class="cm">// robot_hardware.hpp</span>
+<span class="kw">#include</span> &lt;hardware_interface/system_interface.hpp&gt;
+
+<span class="kw">class</span> <span class="tp3">RobotHardware</span> : <span class="kw">public</span> hardware_interface::<span class="tp3">SystemInterface</span> {
+<span class="kw">public</span>:
+  <span class="fn">CallbackReturn</span> <span class="fn">on_init</span>(<span class="kw">const</span> HardwareInfo&amp; info) <span class="kw">override</span>;
+  <span class="fn">CallbackReturn</span> <span class="fn">on_activate</span>(<span class="kw">const</span> rclcpp_lifecycle::State&amp;) <span class="kw">override</span>;
+  std::vector&lt;StateInterface&gt; <span class="fn">export_state_interfaces</span>() <span class="kw">override</span>;
+  std::vector&lt;CommandInterface&gt; <span class="fn">export_command_interfaces</span>() <span class="kw">override</span>;
+  hardware_interface::<span class="fn">return_type</span> <span class="fn">write</span>(const rclcpp::Time&, const rclcpp::Duration&) <span class="kw">override</span>;
+  hardware_interface::<span class="fn">return_type</span> <span class="fn">read</span>(const rclcpp::Time&, const rclcpp::Duration&) <span class="kw">override</span>;
+
+<span class="kw">private</span>:
+  serial::Serial serial_;<span class="nm"></span>
+  std::vector&lt;double&gt; hw_commands_, hw_states_;
+};</pre><h3>URDF/xacro Robot Description</h3><pre><span class="cm">&lt;!-- robot_base.urdf.xacro --&gt;</span>
+&lt;robot name="my_robot" xmlns:xacro="http://www.ros.org/wiki/xacro"&gt;
+  &lt;xacro:include filename="materials.xacro"/&gt;
+
+  &lt;link name="base_link"&gt;
+    &lt;visual&gt;&lt;geometry&gt;&lt;cylinder radius="0.15" length="0.1"/&gt;&lt;/geometry&gt;&lt;/visual&gt;
+    &lt;collision&gt;&lt;geometry&gt;&lt;cylinder radius="0.15" length="0.1"/&gt;&lt;/geometry&gt;&lt;/collision&gt;
+    &lt;inertial&gt;&lt;mass value="5.0"/&gt;&lt;inertia ixx="0.1" iyy="0.1" izz="0.1" ixy="0" ixz="0" iyz="0"/&gt;&lt;/inertial&gt;
+  &lt;/link&gt;
+
+  &lt;joint name="base_laser_joint" type="fixed"&gt;
+    &lt;parent link="base_link"/&gt;&lt;child link="base_laser"/&gt;
+    &lt;origin xyz="0.15 0 0.3" rpy="0 0 0"/&gt;
+  &lt;/joint&gt;
+&lt;/robot&gt;</pre></section><section class="sec" id="s10"><div class="sech"><div class="sn">010</div><div><div class="sc">Debugging</div><h2>TOOLS & DEBUGGING</h2></div></div><pre><span class="cm"># ROS2 command line tools:</span>
+
+<span class="cm"># Lihat semua topics</span>
+ros2 topic list
+ros2 topic echo /cmd_vel
+ros2 topic hz /scan  <span class="cm"># check publish rate</span>
+
+<span class="cm"># Lihat nodes</span>
+ros2 node list
+ros2 node info /nav2_controller
+
+<span class="cm"># Services</span>
+ros2 service list
+ros2 service call /set_goal robot_interfaces/srv/SetGoal "{x: 1.0, y: 0.5, theta: 0.0}"
+
+<span class="cm"># Bag recording (all topics)</span>
+ros2 bag record -a -o /bags/test_run
+ros2 bag play /bags/test_run
+
+<span class="cm"># RViz2</span>
+ros2 run rviz2 rviz2
+
+<span class="cm"># rqt_graph - lihat node/topic graph</span>
+rqt_graph
+
+<span class="cm"># rqt_plot - plot numeric topics</span>
+rqt_plot /odom/pose/pose/position/x /odom/pose/pose/position/y
+
+<span class="cm"># TF tree visualize</span>
+ros2 run tf2_tools view_frames
+ros2 run rqt_tf_tree rqt_tf_tree</pre></section>
+<div style="text-align:center;padding:40px 0;color:var(--text3);font-family:var(--mono);font-size:11px;border-top:1px solid var(--border);margin-top:40px">ROS2 TUTORIAL ROBOTIKA — DOC 04 / 07<br><span style="color:rgb(var(--ac));margin-top:8px;display:block">Antonius - bluedragonsec.com</span></div>
+</div></div><script>function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open')}
+document.getElementById('overlay').addEventListener('click',toggleSidebar);
+const secs=document.querySelectorAll('.sec'),nls=document.querySelectorAll('.ni');
+secs.forEach(s=>new IntersectionObserver(e=>{if(e[0].isIntersecting){const id=s.id;nls.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+id))}},{threshold:0.15,rootMargin:'-60px 0px -60% 0px'}).observe(s));
+nls.forEach(l=>l.addEventListener('click',()=>{if(window.innerWidth<=900)toggleSidebar()}));</script></body></html>

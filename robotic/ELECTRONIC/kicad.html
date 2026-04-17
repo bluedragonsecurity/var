@@ -1,0 +1,2499 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KiCad 9.0 — Tutorial Komprehensif PCB & Skematik</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Noto+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:       #0a0d0f;
+  --bg-panel:      #0f1416;
+  --bg-card:       #141a1e;
+  --bg-card2:      #1a2228;
+  --border:        #1f2e35;
+  --border-bright: #2a4050;
+  --accent-green:  #00e5a0;
+  --accent-cyan:   #00c8e0;
+  --accent-yellow: #f0c040;
+  --accent-red:    #ff5555;
+  --accent-orange: #ff9040;
+  --accent-blue:   #4090ff;
+  --text-primary:  #d8e8ee;
+  --text-secondary:#7a9aaa;
+  --text-dim:      #3a5060;
+  --trace:         #00e5a0;
+  --via:           #00c8e0;
+  --copper:        #c8780a;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+/* ── PCB GRID BG ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,229,160,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,160,0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── SIDEBAR ── */
+#sidebar {
+  position: fixed; left: 0; top: 0; bottom: 0;
+  width: 280px;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  z-index: 100;
+  padding-bottom: 40px;
+}
+
+#sidebar::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+
+.sidebar-logo {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-logo .logo-text {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 18px;
+  color: var(--accent-green);
+  letter-spacing: 2px;
+}
+
+.sidebar-logo .logo-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
+.sidebar-section {
+  padding: 16px 24px 4px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--accent-green);
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: 7px 24px 7px 28px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: all 0.15s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-nav a:hover {
+  color: var(--text-primary);
+  border-left-color: var(--accent-green);
+  background: rgba(0,229,160,0.05);
+  padding-left: 32px;
+}
+
+.sidebar-nav a.sub {
+  padding-left: 40px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.sidebar-nav a.sub:hover { padding-left: 44px; }
+
+/* ── MAIN ── */
+main {
+  margin-left: 280px;
+  position: relative; z-index: 1;
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 64px 60px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, rgba(0,229,160,0.04) 0%, transparent 60%);
+  position: relative; overflow: hidden;
+}
+
+.hero::before {
+  content: 'KiCad';
+  position: absolute; right: 40px; top: 20px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 180px;
+  color: rgba(0,229,160,0.03);
+  letter-spacing: -8px;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(0,229,160,0.1);
+  border: 1px solid rgba(0,229,160,0.3);
+  color: var(--accent-green);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  padding: 4px 14px;
+  border-radius: 2px;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.hero h1 span { color: var(--accent-green); }
+
+.hero p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 620px;
+  line-height: 1.8;
+}
+
+.hero-meta {
+  display: flex; gap: 32px; margin-top: 32px;
+}
+
+.meta-item {
+  display: flex; align-items: center; gap: 10px;
+}
+
+.meta-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+
+.meta-item span {
+  font-size: 13px; color: var(--text-secondary);
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* ── CONTENT ── */
+.content { padding: 0 64px 80px; }
+
+/* ── SECTION ── */
+.section {
+  padding: 60px 0 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section:last-child { border-bottom: none; }
+
+.section-header {
+  display: flex; align-items: baseline; gap: 16px;
+  margin-bottom: 32px;
+}
+
+.section-number {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: var(--accent-green);
+  letter-spacing: 2px;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.section h2 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.section h2::after {
+  content: '';
+  display: block;
+  width: 40px; height: 2px;
+  background: var(--accent-green);
+  margin-top: 8px;
+}
+
+.section h3 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  margin: 32px 0 14px;
+}
+
+.section h4 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent-yellow);
+  margin: 22px 0 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.section h4::before {
+  content: '▶';
+  font-size: 10px;
+  color: var(--accent-green);
+}
+
+.section p { color: var(--text-secondary); margin-bottom: 14px; }
+
+.section p strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── STEPS ── */
+.steps { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+
+.step {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 0 20px;
+  position: relative;
+}
+
+.step::before {
+  content: '';
+  position: absolute;
+  left: 21px; top: 44px; bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+
+.step:last-child::before { display: none; }
+
+.step-num {
+  width: 44px; height: 44px;
+  border: 1px solid var(--border-bright);
+  background: var(--bg-card);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: var(--accent-green);
+  flex-shrink: 0;
+  position: relative; z-index: 1;
+}
+
+.step-body {
+  padding: 10px 0 28px;
+}
+
+.step-body h5 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  line-height: 1.44;
+}
+
+.step-body p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── CODE ── */
+code {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  background: rgba(0,229,160,0.08);
+  border: 1px solid rgba(0,229,160,0.2);
+  color: var(--accent-green);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+pre {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-green);
+  padding: 20px 24px;
+  border-radius: 4px;
+  margin: 16px 0;
+  overflow-x: auto;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: var(--accent-green);
+  line-height: 1.8;
+}
+
+pre .comment { color: var(--text-dim); }
+pre .key { color: var(--accent-cyan); }
+pre .val { color: var(--accent-yellow); }
+
+/* ── CARDS GRID ── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative; overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+
+.card.green::before  { background: var(--accent-green); }
+.card.cyan::before   { background: var(--accent-cyan); }
+.card.yellow::before { background: var(--accent-yellow); }
+.card.orange::before { background: var(--accent-orange); }
+.card.red::before    { background: var(--accent-red); }
+.card.blue::before   { background: var(--accent-blue); }
+
+.card:hover {
+  border-color: var(--border-bright);
+  background: var(--bg-card2);
+}
+
+.card-icon {
+  font-size: 26px; margin-bottom: 12px;
+}
+
+.card h4 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px; font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 8px !important;
+}
+
+.card h4::before { display: none; }
+
+.card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ── INFO BOX ── */
+.info-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 18px 22px;
+  margin: 20px 0;
+  display: flex; gap: 16px; align-items: flex-start;
+}
+
+.info-box.tip    { border-left: 3px solid var(--accent-green); }
+.info-box.warn   { border-left: 3px solid var(--accent-yellow); }
+.info-box.danger { border-left: 3px solid var(--accent-red); }
+.info-box.info   { border-left: 3px solid var(--accent-cyan); }
+
+.info-icon {
+  font-size: 18px; line-height: 1; flex-shrink: 0; margin-top: 2px;
+}
+
+.info-box p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.info-box strong { color: var(--text-primary); }
+
+/* ── SHORTCUT TABLE ── */
+.shortcut-table {
+  width: 100%; border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 13px;
+}
+
+.shortcut-table th {
+  background: var(--bg-card2);
+  color: var(--accent-cyan);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-bright);
+}
+
+.shortcut-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+
+.shortcut-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+.shortcut-table kbd {
+  display: inline-block;
+  background: var(--bg-card2);
+  border: 1px solid var(--border-bright);
+  color: var(--accent-yellow);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+/* ── LAYER TABLE ── */
+.layer-row { display: flex; align-items: center; gap: 12px; margin: 6px 0; }
+.layer-dot { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+.layer-name { font-family: 'Share Tech Mono', monospace; font-size: 13px; color: var(--text-primary); width: 180px; }
+.layer-desc { font-size: 13px; color: var(--text-secondary); }
+
+/* ── DIVIDER ── */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent-green), transparent);
+  margin: 28px 0;
+  opacity: 0.3;
+}
+
+/* ── HIGHLIGHT ROW ── */
+.hl {
+  background: rgba(0,229,160,0.04);
+  border: 1px solid rgba(0,229,160,0.1);
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin: 12px 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.hl strong { color: var(--accent-green); }
+
+/* ── CHECKLIST ── */
+.checklist { list-style: none; margin: 14px 0; }
+.checklist li {
+  padding: 6px 0 6px 28px;
+  position: relative;
+  font-size: 14px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+}
+.checklist li:last-child { border-bottom: none; }
+.checklist li::before {
+  content: '✓';
+  position: absolute; left: 6px;
+  color: var(--accent-green);
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* ── BREADCRUMB ── */
+.breadcrumb {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 4px;
+  margin: 10px 0;
+  display: inline-block;
+}
+.breadcrumb span { color: var(--accent-green); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  #sidebar { width: 220px; }
+  main { margin-left: 220px; }
+  .hero { padding: 50px 32px 40px; }
+  .content { padding: 0 32px 60px; }
+  .hero h1 { font-size: 36px; }
+}
+
+@media (max-width: 680px) {
+  #sidebar { display: none; }
+  main { margin-left: 0; }
+  .hero { padding: 40px 20px 30px; }
+  .content { padding: 0 20px 40px; }
+}
+
+/* ── SCROLL TOP ── */
+.scroll-top {
+  position: fixed; bottom: 30px; right: 30px;
+  width: 40px; height: 40px;
+  background: var(--bg-card2);
+  border: 1px solid var(--border-bright);
+  border-radius: 4px;
+  color: var(--accent-green);
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 200;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.scroll-top:hover { background: rgba(0,229,160,0.1); }
+
+/* ── FRITZING NOTE ── */
+.fritzing-note {
+  background: linear-gradient(135deg, rgba(255,144,64,0.06), rgba(255,85,85,0.06));
+  border: 1px solid rgba(255,144,64,0.25);
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin: 20px 0;
+}
+.fritzing-note h3 {
+  color: var(--accent-orange) !important;
+  margin-top: 0 !important;
+}
+.fritzing-note p { color: var(--text-secondary); font-size: 14px; }
+
+/* ── PCB DIAGRAM ── */
+.pcb-diagram {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 28px;
+  margin: 20px 0;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 2;
+}
+
+.flow-row {
+  display: flex; align-items: center;
+  gap: 0; flex-wrap: wrap;
+  margin: 14px 0;
+}
+
+.flow-box {
+  background: var(--bg-card2);
+  border: 1px solid var(--border-bright);
+  border-radius: 4px;
+  padding: 10px 18px;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.flow-box.green { border-color: var(--accent-green); color: var(--accent-green); }
+.flow-box.cyan  { border-color: var(--accent-cyan);  color: var(--accent-cyan); }
+.flow-box.yellow{ border-color: var(--accent-yellow);color: var(--accent-yellow); }
+
+.flow-arrow {
+  padding: 0 8px;
+  color: var(--text-dim);
+  font-size: 16px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">KiCad 9.0</div>
+    <div class="logo-sub">Tutorial Komprehensif</div>
+  </div>
+
+  <div class="sidebar-section">Pendahuluan</div>
+  <nav class="sidebar-nav">
+    <a href="#intro">Tentang KiCad 9</a>
+    <a href="#install">Instalasi di Kali Linux</a>
+    <a href="#workflow">Alur Kerja PCB Design</a>
+  </nav>
+
+  <div class="sidebar-section">Schematic Editor</div>
+  <nav class="sidebar-nav">
+    <a href="#sch-start">Memulai Proyek</a>
+    <a href="#sch-symbol">Menambah Simbol</a>
+    <a href="#sch-wire">Wiring & Net</a>
+    <a href="#sch-power">Power Symbols</a>
+    <a href="#sch-label">Net Labels & Bus</a>
+    <a href="#sch-annotate">Annotate & ERC</a>
+    <a href="#sch-bom">Netlist & BOM</a>
+  </nav>
+
+  <div class="sidebar-section">Symbol Editor</div>
+  <nav class="sidebar-nav">
+    <a href="#sym-create">Membuat Simbol Custom</a>
+    <a href="#sym-pins">Konfigurasi Pin</a>
+  </nav>
+
+  <div class="sidebar-section">PCB Editor</div>
+  <nav class="sidebar-nav">
+    <a href="#pcb-import">Import Netlist</a>
+    <a href="#pcb-layers">Layer Management</a>
+    <a href="#pcb-outline">Board Outline</a>
+    <a href="#pcb-place">Penempatan Komponen</a>
+    <a href="#pcb-route">Routing Manual</a>
+    <a href="#pcb-autoroute">Autorouter</a>
+    <a href="#pcb-fill">Copper Fill / Zone</a>
+    <a href="#pcb-via">Via & Through-Hole</a>
+    <a href="#pcb-drc">Design Rule Check</a>
+    <a href="#pcb-3d">3D Viewer</a>
+  </nav>
+
+  <div class="sidebar-section">Footprint Editor</div>
+  <nav class="sidebar-nav">
+    <a href="#fp-create">Membuat Footprint</a>
+    <a href="#fp-assign">Assign Footprint</a>
+  </nav>
+
+  <div class="sidebar-section">Output & Produksi</div>
+  <nav class="sidebar-nav">
+    <a href="#gerber">Generate Gerber</a>
+    <a href="#drill">Drill Files</a>
+    <a href="#fab">Kirim ke Fab</a>
+  </nav>
+
+  <div class="sidebar-section">Tools Lainnya</div>
+  <nav class="sidebar-nav">
+    <a href="#calc">Calculator Tools</a>
+    <a href="#imgconv">Image Converter</a>
+    <a href="#fritzing">Fritzing vs KiCad</a>
+    <a href="#tips">Tips & Best Practice</a>
+    <a href="#shortcuts">Shortcut Keys</a>
+  </nav>
+</nav>
+
+<!-- MAIN -->
+<main>
+
+<!-- HERO -->
+<div class="hero" id="top">
+  <div class="hero-badge">▲ KiCad 9.0 · Kali Linux · Open Source EDA</div>
+  <h1>Tutorial Komprehensif<br><span>KiCad 9.0</span></h1>
+  <p>Panduan lengkap dan sangat detail untuk mendesain skematik elektronik dan layout PCB profesional menggunakan KiCad 9.0 — alternatif open source terbaik untuk Eagle, Altium, dan OrCAD.</p>
+  <div class="hero-meta">
+    <div class="meta-item"><div class="meta-dot" style="background:var(--accent-green)"></div><span>Schematic Design</span></div>
+    <div class="meta-item"><div class="meta-dot" style="background:var(--accent-cyan)"></div><span>PCB Layout</span></div>
+    <div class="meta-item"><div class="meta-dot" style="background:var(--accent-yellow)"></div><span>Gerber Export</span></div>
+    <div class="meta-item"><div class="meta-dot" style="background:var(--accent-orange)"></div><span>3D Viewer</span></div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- =============================== SECTION 1 =============================== -->
+<div class="section" id="intro">
+  <div class="section-header">
+    <span class="section-number">01</span>
+    <h2>Tentang KiCad 9.0</h2>
+  </div>
+
+  <p>KiCad adalah suite EDA (Electronic Design Automation) open-source dan gratis sepenuhnya, disponsori oleh CERN dan dikelola oleh komunitas global. Versi 9.0 membawa peningkatan signifikan dari segi performa, UI, dan fitur-fitur canggih yang dulu hanya tersedia di software berbayar.</p>
+
+  <div class="card-grid">
+    <div class="card green">
+      <div class="card-icon">🔧</div>
+      <h4>Schematic Editor (eeschema)</h4>
+      <p>Editor skematik elektronik dengan dukungan hirarkis, bus, dan net labels. Terintegrasi penuh dengan PCB Editor.</p>
+    </div>
+    <div class="card cyan">
+      <div class="card-icon">🟢</div>
+      <h4>PCB Editor (pcbnew)</h4>
+      <p>Layout PCB multi-layer dengan interactive router, DRC real-time, copper pour, dan 3D viewer built-in.</p>
+    </div>
+    <div class="card yellow">
+      <div class="card-icon">🗂️</div>
+      <h4>Symbol & Footprint Library</h4>
+      <p>Ribuan simbol skematik dan footprint PCB siap pakai, termasuk komponen SMD, through-hole, konektor, IC, dll.</p>
+    </div>
+    <div class="card orange">
+      <div class="card-icon">📐</div>
+      <h4>Symbol & Footprint Editor</h4>
+      <p>Buat atau modifikasi simbol dan footprint custom untuk komponen non-standar atau komponen baru.</p>
+    </div>
+    <div class="card blue">
+      <div class="card-icon">🖼️</div>
+      <h4>Gerber Viewer & Image Converter</h4>
+      <p>Preview file Gerber sebelum produksi, dan konversi gambar bitmap menjadi simbol atau footprint PCB.</p>
+    </div>
+    <div class="card red">
+      <div class="card-icon">🧮</div>
+      <h4>Calculator Tools</h4>
+      <p>Kalkulator resistor, lebar trace, regulator, antenna, dan banyak lagi untuk menghitung parameter desain.</p>
+    </div>
+  </div>
+
+  <h3>Keunggulan KiCad vs Eagle (Autodesk)</h3>
+  <table class="shortcut-table" style="width:100%">
+    <tr><th>Fitur</th><th>KiCad 9.0</th><th>Eagle (Autodesk)</th></tr>
+    <tr><td>Harga</td><td style="color:var(--accent-green)">Gratis sepenuhnya</td><td style="color:var(--accent-red)">Berbayar ($$$)</td></tr>
+    <tr><td>Board size</td><td style="color:var(--accent-green)">Unlimited</td><td style="color:var(--accent-red)">Terbatas (free tier)</td></tr>
+    <tr><td>Jumlah layer</td><td style="color:var(--accent-green)">Hingga 32+ layer</td><td style="color:var(--accent-red)">2 layer (free)</td></tr>
+    <tr><td>Schematic sheets</td><td style="color:var(--accent-green)">Unlimited, hierarkis</td><td style="color:var(--accent-red)">Terbatas</td></tr>
+    <tr><td>3D Viewer</td><td style="color:var(--accent-green)">Built-in, STEP export</td><td>Tersedia</td></tr>
+    <tr><td>Format file</td><td style="color:var(--accent-green)">Open (S-expression)</td><td>Proprietary</td></tr>
+    <tr><td>Scripting</td><td style="color:var(--accent-green)">Python API lengkap</td><td>ULP scripts</td></tr>
+    <tr><td>Dukungan Linux</td><td style="color:var(--accent-green)">Native, excellent</td><td style="color:var(--accent-red)">Tidak didukung lagi</td></tr>
+  </table>
+</div>
+
+<!-- =============================== SECTION 2 =============================== -->
+<div class="section" id="install">
+  <div class="section-header">
+    <span class="section-number">02</span>
+    <h2>Instalasi di Kali Linux</h2>
+  </div>
+
+  <p>KiCad 9.0 tersedia melalui repository Debian/Kali. Berikut cara instalasinya:</p>
+
+  <h3>Metode 1: Apt (Direkomendasikan)</h3>
+  <pre>
+<span class="comment"># Update repository terlebih dahulu</span>
+sudo apt update && sudo apt upgrade -y
+
+<span class="comment"># Install KiCad dan library standar</span>
+sudo apt install kicad kicad-libraries kicad-doc -y
+
+<span class="comment"># Verifikasi instalasi</span>
+kicad --version
+  </pre>
+
+  <h3>Metode 2: PPA Ubuntu (Jika versi apt kurang baru)</h3>
+  <pre>
+<span class="comment"># Tambah PPA KiCad untuk versi terbaru</span>
+sudo add-apt-repository --yes ppa:kicad/kicad-9.0-releases
+sudo apt update
+sudo apt install --install-recommends kicad -y
+  </pre>
+
+  <h3>Metode 3: Flatpak (Versi terisolasi)</h3>
+  <pre>
+<span class="comment"># Install Flatpak jika belum ada</span>
+sudo apt install flatpak -y
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+<span class="comment"># Install KiCad via Flatpak</span>
+flatpak install flathub org.kicad.KiCad
+  </pre>
+
+  <div class="info-box tip">
+    <div class="info-icon">💡</div>
+    <p><strong>Tip:</strong> Untuk security researcher seperti setup Kali Linux, metode apt biasanya sudah cukup. Kalau butuh versi cutting-edge (misalnya untuk scripting Python API terbaru), gunakan PPA atau build dari source.</p>
+  </div>
+
+  <h3>Konfigurasi Awal Setelah Instalasi</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Buka KiCad, tunggu Library Configuration Wizard</h5>
+        <p>Pertama kali launch, KiCad akan meminta konfigurasi library path. Pilih <strong>"Copy default global symbol library table"</strong> dan <strong>"Copy default global footprint library table"</strong>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Set Global Library Path</h5>
+        <p>Buka <code>Preferences → Manage Symbol Libraries</code> dan pastikan path mengarah ke <code>/usr/share/kicad/symbols/</code> (atau path instalasi KiCad Anda).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Konfigurasi Footprint Libraries</h5>
+        <p>Buka <code>Preferences → Manage Footprint Libraries</code>. Pastikan path mengarah ke <code>/usr/share/kicad/footprints/</code>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Set Working Directory</h5>
+        <p>Buat folder proyek, contoh <code>~/kicad-projects/my_project/</code>. Ini penting agar semua file proyek (kicad_pro, kicad_sch, kicad_pcb) tersimpan rapi.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 3 =============================== -->
+<div class="section" id="workflow">
+  <div class="section-header">
+    <span class="section-number">03</span>
+    <h2>Alur Kerja PCB Design di KiCad</h2>
+  </div>
+
+  <p>KiCad mengikuti alur kerja standar EDA industry. Pahami alur ini sebelum memulai:</p>
+
+  <div class="pcb-diagram">
+    <div class="flow-row" style="justify-content:center; flex-wrap:wrap; gap:4px">
+      <div class="flow-box green">Schematic Design</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Assign Footprints</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">ERC Check</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box cyan">Export Netlist</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Import to PCB</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Board Outline</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Place Components</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box yellow">Route Traces</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Copper Fill</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">DRC Check</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box green">Generate Gerber</div>
+    </div>
+  </div>
+
+  <div class="info-box info">
+    <div class="info-icon">ℹ️</div>
+    <p><strong>Penting:</strong> Di KiCad 9.0, update antara Schematic dan PCB dilakukan secara langsung menggunakan tombol <strong>"Update PCB from Schematic"</strong> (tidak perlu export/import netlist manual seperti versi lama). Perubahan di skematik langsung bisa di-push ke PCB.</p>
+  </div>
+</div>
+
+<!-- =============================== SECTION 4 =============================== -->
+<div class="section" id="sch-start">
+  <div class="section-header">
+    <span class="section-number">04</span>
+    <h2>Schematic Editor — Memulai Proyek</h2>
+  </div>
+
+  <h3>Membuat Proyek Baru</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Buka KiCad Project Manager</h5>
+        <p>Launch KiCad. Anda akan melihat Project Manager dengan daftar tool (Schematic Editor, PCB Editor, dll).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Buat Proyek Baru</h5>
+        <p>Klik <code>File → New Project</code>, atau tekan <kbd>Ctrl+N</kbd>. Pilih lokasi folder dan beri nama proyek, misalnya <code>arduino_shield</code>. KiCad akan membuat file <code>.kicad_pro</code>, <code>.kicad_sch</code>, dan <code>.kicad_pcb</code> secara otomatis.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Buka Schematic Editor</h5>
+        <p>Double-click ikon <strong>Schematic Editor</strong> di Project Manager, atau klik file <code>.kicad_sch</code>. Ini membuka eeschema.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Konfigurasi Schematic Properties</h5>
+        <p>Pergi ke <code>File → Schematic Setup</code>. Di sini Anda bisa mengatur annotation, BOM fields, net classes, dan page settings (ukuran kertas A4/Letter, judul proyek, tanggal, revisi).</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Navigasi di Schematic Editor</h3>
+  <table class="shortcut-table">
+    <tr><th>Aksi</th><th>Mouse / Keyboard</th></tr>
+    <tr><td>Zoom in/out</td><td><kbd>Scroll wheel</kbd></td></tr>
+    <tr><td>Pan/geser canvas</td><td><kbd>Middle click drag</kbd> atau <kbd>Shift + drag</kbd></td></tr>
+    <tr><td>Fit to screen</td><td><kbd>Ctrl+Home</kbd> atau tekan <kbd>Home</kbd></td></tr>
+    <tr><td>Select item</td><td><kbd>Left click</kbd></td></tr>
+    <tr><td>Select multi</td><td><kbd>Left drag</kbd> (kotak seleksi)</td></tr>
+    <tr><td>Deselect</td><td><kbd>Esc</kbd></td></tr>
+    <tr><td>Cancel aksi</td><td><kbd>Esc</kbd></td></tr>
+  </table>
+</div>
+
+<!-- =============================== SECTION 5 =============================== -->
+<div class="section" id="sch-symbol">
+  <div class="section-header">
+    <span class="section-number">05</span>
+    <h2>Menambah Komponen / Simbol</h2>
+  </div>
+
+  <p>Cara utama menambah komponen ke skematik adalah melalui Symbol Chooser.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Buka Symbol Chooser</h5>
+        <p>Tekan <kbd>A</kbd> di canvas, atau klik <code>Place → Add Symbol</code>. Jendela <strong>Choose Symbol</strong> akan terbuka.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Cari Komponen</h5>
+        <p>Ketik nama komponen di kolom pencarian: misalnya <code>ATmega328P</code>, <code>LM555</code>, <code>NE555</code>, <code>ESP32</code>, <code>100nF</code>, <code>10k</code>. Preview simbol dan datasheet akan muncul di panel kanan.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Filter dan Pilih Library</h5>
+        <p>KiCad memiliki ratusan library: <code>Device</code> (resistor, kapasitor, induktor umum), <code>MCU_Microchip_AVR</code>, <code>MCU_Espressif</code>, <code>Connector_Generic</code>, dll. Klik library untuk mempersempit hasil pencarian.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Place Simbol</h5>
+        <p>Double-click simbol atau tekan <kbd>Enter</kbd>. Simbol akan "menempel" di cursor. Klik di canvas untuk menempatkan. Tekan <kbd>R</kbd> untuk rotate sebelum place. Tekan <kbd>Esc</kbd> untuk batal.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h5>Edit Properties Komponen</h5>
+        <p>Double-click komponen yang sudah diplace untuk membuka <strong>Symbol Properties</strong>. Di sini Anda bisa mengubah <code>Value</code> (misal: resistor dari R ke 10k), <code>Reference</code> (R1, C1, U1), <code>Footprint</code>, dan field custom lainnya.</p>
+      </div>
+    </div>
+  </div>
+
+  <h4>Komponen Sering Dipakai</h4>
+  <div class="hl"><strong>Resistor:</strong> Library <code>Device</code> → <code>R</code> (generic) atau <code>R_Small</code></div>
+  <div class="hl"><strong>Kapasitor:</strong> Library <code>Device</code> → <code>C</code>, <code>C_Polarized</code> (electrolytic), <code>C_Small</code></div>
+  <div class="hl"><strong>LED:</strong> Library <code>Device</code> → <code>LED</code>, <code>LED_RGB</code></div>
+  <div class="hl"><strong>Transistor:</strong> Library <code>Device</code> → <code>Q_NPN_BCE</code>, <code>Q_PNP_BCE</code>, <code>Q_NMOS_GSD</code></div>
+  <div class="hl"><strong>Op-Amp:</strong> Library <code>Amplifier_Operational</code> → <code>LM741</code>, <code>LM358</code>, <code>TL072</code></div>
+  <div class="hl"><strong>Voltage Regulator:</strong> Library <code>Regulator_Linear</code> → <code>LM7805</code>, <code>AMS1117-3.3</code></div>
+  <div class="hl"><strong>Microcontroller:</strong> Library <code>MCU_Microchip_AVR</code>, <code>MCU_Espressif</code>, <code>MCU_ST_STM32</code></div>
+  <div class="hl"><strong>Konektor:</strong> Library <code>Connector_Generic</code> → <code>Conn_01x02</code>, <code>Conn_02x20</code></div>
+
+  <div class="info-box tip">
+    <div class="info-icon">💡</div>
+    <p><strong>Tip Mirror:</strong> Saat menempatkan simbol, tekan <kbd>X</kbd> untuk mirror horizontal, <kbd>Y</kbd> untuk mirror vertikal. Sangat berguna untuk IC dengan pin yang berlawanan arah.</p>
+  </div>
+</div>
+
+<!-- =============================== SECTION 6 =============================== -->
+<div class="section" id="sch-wire">
+  <div class="section-header">
+    <span class="section-number">06</span>
+    <h2>Wiring, Net, dan Koneksi</h2>
+  </div>
+
+  <h3>Menggambar Wire</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Mode Wire</h5>
+        <p>Tekan <kbd>W</kbd> untuk memulai menggambar wire. Kursor akan berubah menjadi crosshair. Klik di titik awal (biasanya pin komponen), lalu klik di titik akhir. Tekan <kbd>Esc</kbd> untuk mengakhiri wire.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Wire Bend Mode</h5>
+        <p>Wire otomatis membuat sudut 90°. Tekan <kbd>/</kbd> saat menggambar untuk toggle antara mode 90° dan 45°. Tekan <kbd>G</kbd> untuk mode free-angle.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Junction</h5>
+        <p>Saat dua wire berpotongan dan Anda ingin mereka terhubung, tambahkan <strong>Junction</strong> dengan menekan <kbd>J</kbd> atau <code>Place → Junction</code>. Junction berupa lingkaran hijau kecil di persimpangan wire.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>No-Connect (X)</h5>
+        <p>Pin yang tidak digunakan harus diberi tanda <strong>No-Connect</strong> agar tidak menghasilkan error ERC. Tekan <kbd>Q</kbd> lalu klik pada pin yang tidak dipakai. Tanda silang (X) biru akan muncul.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Bus dan Bus Wire</h3>
+  <p>Bus digunakan untuk mengelompokkan sinyal yang berhubungan (misal: data bus D[0..7], address bus A[0..15]).</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Gambar Bus</h5>
+        <p>Tekan <kbd>B</kbd> untuk mode Bus. Gambar bus seperti wire, tapi tampilannya lebih tebal. Bus adalah representasi visual — koneksi aktual tetap melalui Bus Entry dan Net Labels.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Tambah Bus Entry</h5>
+        <p>Tekan <kbd>U</kbd> untuk Bus Wire Entry. Ini adalah garis diagonal kecil yang menghubungkan wire individual ke bus. Tekan <kbd>R</kbd> untuk rotate orientasi.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Label Bus</h5>
+        <p>Tambahkan Net Label pada wire yang masuk ke bus: <code>D0</code>, <code>D1</code>, dst. Label yang sama di bagian lain skematik otomatis terhubung secara elektrikal.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 7 =============================== -->
+<div class="section" id="sch-power">
+  <div class="section-header">
+    <span class="section-number">07</span>
+    <h2>Power Symbols dan Ground</h2>
+  </div>
+
+  <p>Power symbols adalah cara standar di KiCad untuk merepresentasikan rail daya (VCC, 3.3V, 5V, GND, dll) tanpa harus menggambar wire ke semua komponen.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Tambah Power Symbol</h5>
+        <p>Tekan <kbd>P</kbd> untuk membuka Power Symbol Chooser. Ini sama seperti Symbol Chooser tapi hanya menampilkan simbol dari library <code>power</code>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Power Symbols Umum</h5>
+        <p>Ketik untuk mencari: <code>GND</code> (ground umum), <code>PWR_FLAG</code> (wajib ada minimal 1 per net power), <code>VCC</code>, <code>VDD</code>, <code>+5V</code>, <code>+3.3V</code>, <code>+12V</code>, <code>-12V</code>, <code>VBAT</code>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>PWR_FLAG — Wajib!</h5>
+        <p>ERC akan memberikan error "Power pin not driven" jika tidak ada <code>PWR_FLAG</code> pada net power. Tambahkan <code>PWR_FLAG</code> pada setiap net power (GND, VCC, dll) yang disambungkan ke power port connector.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Custom Power Net</h5>
+        <p>Untuk tegangan custom (misal +1.8V), buat dengan <code>Place → Power Port</code>, atau gunakan <strong>Net Label</strong> biasa dan tambahkan PWR_FLAG. Alternatifnya, edit library power dan buat simbol sendiri.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box warn">
+    <div class="info-icon">⚠️</div>
+    <p><strong>Perhatian:</strong> Semua simbol power dengan nama yang sama (misalnya semua <code>GND</code>) otomatis terhubung secara elektrikal di seluruh skematik, bahkan di sheet yang berbeda. Pastikan nama power symbol konsisten.</p>
+  </div>
+</div>
+
+<!-- =============================== SECTION 8 =============================== -->
+<div class="section" id="sch-label">
+  <div class="section-header">
+    <span class="section-number">08</span>
+    <h2>Net Labels dan Global Labels</h2>
+  </div>
+
+  <p>Labels adalah cara efisien menghubungkan net tanpa menggambar wire panjang yang membingungkan.</p>
+
+  <h4>Jenis Label di KiCad</h4>
+
+  <table class="shortcut-table">
+    <tr><th>Tipe</th><th>Shortcut</th><th>Scope</th><th>Kegunaan</th></tr>
+    <tr>
+      <td>Net Label</td><td><kbd>L</kbd></td>
+      <td>Local (satu sheet)</td>
+      <td>Menghubungkan net dalam satu halaman skematik. Label dengan nama sama = terhubung.</td>
+    </tr>
+    <tr>
+      <td>Global Label</td><td><kbd>Ctrl+L</kbd></td>
+      <td>Global (semua sheet)</td>
+      <td>Menghubungkan net lintas sheet skematik hirarkis. Tampil sebagai kotak dengan panah.</td>
+    </tr>
+    <tr>
+      <td>Hierarchical Label</td><td><kbd>Ctrl+Shift+L</kbd></td>
+      <td>Antar-sheet hirarkis</td>
+      <td>Digunakan dengan Hierarchical Sheet. Muncul di Sheet Symbol sebagai pin.</td>
+    </tr>
+  </table>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Menempatkan Net Label</h5>
+        <p>Tekan <kbd>L</kbd>, ketik nama net (contoh: <code>TX</code>, <code>RX</code>, <code>SDA</code>, <code>SCL</code>, <code>MOSI</code>, <code>SS</code>). Klik di ujung pin atau wire. Label yang sama = net yang sama.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Skematik Hirarkis (Multi-Sheet)</h5>
+        <p>Untuk proyek besar, bagi skematik menjadi beberapa sheet. Klik <code>Place → Add Sheet</code>, buat file <code>.kicad_sch</code> baru. Gunakan <strong>Hierarchical Label</strong> + <strong>Hierarchical Sheet Pin</strong> untuk koneksi antar sheet.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 9 =============================== -->
+<div class="section" id="sch-annotate">
+  <div class="section-header">
+    <span class="section-number">09</span>
+    <h2>Annotate, ERC, dan Validasi</h2>
+  </div>
+
+  <h3>Annotate Schematic</h3>
+  <p>Annotate adalah proses memberi nomor unik ke setiap komponen (R1, R2, C1, U1, U2, dst). Komponen yang baru diplace sering punya reference seperti <code>R?</code> yang belum bernomor.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Buka Annotate Dialog</h5>
+        <p>Klik <code>Tools → Annotate Schematic</code>. Pilih scope: <strong>Annotate all</strong> untuk seluruh skematik, atau <strong>Annotate new symbols only</strong> untuk hanya komponen yang belum bernomor.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Pilih Sorting Method</h5>
+        <p>Biasanya cukup dengan <strong>"Sort components by X then by Y position"</strong> agar nomor annotation mengikuti posisi komponen dari kiri atas ke kanan bawah. Klik <strong>Annotate</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Electrical Rules Check (ERC)</h3>
+  <p>ERC memverifikasi koneksi elektrikal skematik — apakah ada pin yang tidak terhubung, net yang tidak didrive, dll.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Jalankan ERC</h5>
+        <p>Klik <code>Inspect → Electrical Rules Checker</code>. Klik tombol <strong>Run ERC</strong>. Hasil akan muncul di panel bawah.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Interpretasi Error ERC</h5>
+        <p><code>Pin not connected</code>: Pin komponen yang tidak terhubung ke apapun → tambahkan wire atau No-Connect marker. <code>Power pin not driven</code>: Net power tidak memiliki PWR_FLAG → tambahkan PWR_FLAG. <code>Conflicting net names</code>: Wire berbeda terhubung tanpa junction yang jelas.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Fix dan Re-run</h5>
+        <p>Double-click setiap error untuk navigate ke lokasi masalah. Fix satu per satu, lalu <strong>Run ERC</strong> lagi. Target: 0 errors (warnings boleh ada jika sudah dipahami).</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 10 =============================== -->
+<div class="section" id="sch-bom">
+  <div class="section-header">
+    <span class="section-number">10</span>
+    <h2>Assign Footprint, Netlist, dan BOM</h2>
+  </div>
+
+  <h3>Assign Footprint ke Komponen</h3>
+  <p>Setiap komponen skematik perlu di-assign footprint PCB yang sesuai sebelum bisa dipindah ke PCB Editor.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Buka Assign Footprints</h5>
+        <p>Klik <code>Tools → Assign Footprints</code>. Jendela dibagi 3 panel: kiri (library), tengah (komponen), kanan (footprint).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Filter Footprint</h5>
+        <p>Gunakan filter di panel kanan: <strong>Filter by Pin Count</strong> (cocokkan jumlah pin), <strong>Filter by Library</strong>, atau ketik manual di search box. Contoh: untuk resistor 0805, cari <code>Resistor_SMD:R_0805_2012Metric</code>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Assign Footprint</h5>
+        <p>Pilih komponen di panel tengah, lalu double-click footprint di panel kanan. Footprint akan di-assign. Alternatif: edit langsung di Symbol Properties field "Footprint".</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Footprint Umum yang Sering Dipakai</h5>
+        <p>Resistor/kapasitor SMD: <code>R_0402</code>, <code>R_0603</code>, <code>R_0805</code>, <code>C_0805</code>. Resistor through-hole: <code>R_Axial_DIN0207_L6.3mm_D2.5mm</code>. IC SOIC: <code>SOIC-8_3.9x4.9mm_P1.27mm</code>. DIP: <code>DIP-28_W7.62mm</code>.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Update PCB dari Schematic</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Simpan Schematic</h5>
+        <p>Tekan <kbd>Ctrl+S</kbd> untuk menyimpan skematik.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Update PCB</h5>
+        <p>Klik <code>Tools → Update PCB from Schematic</code> (atau tekan <kbd>F8</kbd>). Dialog akan muncul menampilkan perubahan yang akan diterapkan: komponen baru, koneksi baru/hilang, dll.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Apply Changes</h5>
+        <p>Review daftar perubahan, pastikan tidak ada error (tanda merah). Klik <strong>"Update PCB"</strong>. Semua footprint akan muncul di PCB Editor, bertumpuk di satu area. Anda perlu men-place-nya secara manual.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Generate BOM (Bill of Materials)</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Buka BOM Tool</h5>
+        <p>Klik <code>Tools → Generate Bill of Materials</code>. KiCad mendukung berbagai BOM plugin/format.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Pilih Script BOM</h5>
+        <p>KiCad menyertakan beberapa script Python untuk BOM: <code>bom_csv_grouped_by_value</code> (direkomendasikan), <code>bom_csv_grouped_by_value_with_fp</code>, <code>bom_html_grouped_by_value</code>. Klik <strong>Generate</strong>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 11 =============================== -->
+<div class="section" id="sym-create">
+  <div class="section-header">
+    <span class="section-number">11</span>
+    <h2>Symbol Editor — Membuat Simbol Custom</h2>
+  </div>
+
+  <p>Jika komponen yang Anda butuhkan tidak ada di library KiCad, buat sendiri menggunakan Symbol Editor.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Buka Symbol Editor</h5>
+        <p>Dari Project Manager, klik ikon <strong>Symbol Editor</strong>. Atau dari Schematic Editor: <code>Tools → Edit Symbol Libraries</code>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Buat Library Baru</h5>
+        <p>Klik <code>File → New Library</code>. Pilih <strong>Global</strong> (tersedia di semua proyek) atau <strong>Project</strong> (hanya proyek ini). Beri nama library, contoh: <code>MyCustomComponents</code>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Buat Simbol Baru</h5>
+        <p>Klik kanan pada library baru, pilih <strong>New Symbol</strong>. Isi nama simbol, reference prefix (U, R, Q, dst), dan jumlah unit. Jendela drawing editor akan terbuka.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Gambar Body Simbol</h5>
+        <p>Gunakan tools di toolbar: <strong>Rectangle</strong>, <strong>Circle</strong>, <strong>Line</strong>, <strong>Arc</strong>, <strong>Polygon</strong>. Untuk IC biasa, gambar rectangle dengan <kbd>R</kbd>. Body simbol biasanya menggunakan warna outline default (biru/hitam).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h5>Tambah Pin</h5>
+        <p>Klik <code>Place → Add Pin</code> atau tekan <kbd>P</kbd>. Setiap pin harus punya: <strong>Name</strong>, <strong>Number</strong> (nomor fisik kaki IC), <strong>Type</strong> (Input, Output, Bidirectional, Power, dll), dan <strong>Length</strong>. Pin length standar adalah 100 mil (2.54mm).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h5>Set Pin Type dengan Benar</h5>
+        <p><code>Input</code>: sinyal masuk ke IC. <code>Output</code>: sinyal keluar dari IC. <code>Bidirectional</code>: bisa keduanya (I2C, GPIO). <code>Power Input</code>: pin VCC/VDD. <code>Power Output</code>: untuk simbol power. <code>Open Collector/Emitter</code>: output tipe open-drain. <code>No Connect</code>: NC pin.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <h5>Simpan dan Test</h5>
+        <p>Tekan <kbd>Ctrl+S</kbd>. Kembali ke Schematic Editor, tekan <kbd>A</kbd>, cari nama simbol yang baru dibuat. Jika muncul, simbol sudah siap dipakai.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 12 =============================== -->
+<div class="section" id="sym-pins">
+  <div class="section-header">
+    <span class="section-number">12</span>
+    <h2>Konfigurasi Pin dan Multi-Unit</h2>
+  </div>
+
+  <h3>Pin Attributes</h3>
+  <table class="shortcut-table">
+    <tr><th>Attribute</th><th>Penjelasan</th></tr>
+    <tr><td>Inverted (bubble)</td><td>Pin aktif-low, ditandai lingkaran kecil di ujung pin. Contoh: ~{RESET}, ~{CS}</td></tr>
+    <tr><td>Clock</td><td>Menambahkan tanda segitiga (clock edge indicator)</td></tr>
+    <tr><td>Inverted Clock</td><td>Kombinasi inverted + clock</td></tr>
+    <tr><td>Input Low</td><td>Pin yang aktif saat level low</td></tr>
+    <tr><td>Output Low</td><td>Output open-drain/open-collector</td></tr>
+  </table>
+
+  <h3>Multi-Unit Symbol</h3>
+  <p>IC seperti LM358 (dual op-amp) atau 74HC00 (quad NAND) terdiri dari beberapa unit identik dalam satu package. Buat simbol multi-unit agar setiap gate/amplifier bisa diplace secara terpisah di skematik.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Set Jumlah Unit</h5>
+        <p>Saat membuat simbol baru, set <strong>"Number of units"</strong> sesuai jumlah gate (misal 4 untuk 74HC00). Setiap unit akan memiliki huruf akhir: U1A, U1B, U1C, U1D.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Pin Sharing (Power Pins)</h5>
+        <p>Pin VCC dan GND biasanya di-share antara semua unit. Centang <strong>"Common to all units"</strong> pada pin power, dan biasanya disembunyikan (<strong>Invisible</strong> checked). KiCad akan otomatis menangani koneksi power-nya.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 13 =============================== -->
+<div class="section" id="pcb-import">
+  <div class="section-header">
+    <span class="section-number">13</span>
+    <h2>PCB Editor — Memulai Layout</h2>
+  </div>
+
+  <h3>Buka PCB Editor</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Launch PCB Editor</h5>
+        <p>Dari Project Manager, double-click ikon <strong>PCB Editor</strong>. File <code>.kicad_pcb</code> akan terbuka. Jika sudah melakukan "Update PCB from Schematic", footprint akan ada di area kerja (tersusun/bertumpuk).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Tampilan Awal PCB</h5>
+        <p>Canvas PCB tampak gelap dengan elemen warna-warni sesuai layer. Footprint dengan ratsnest (garis putus-putus tipis) menunjukkan koneksi yang perlu di-route. Ratsnest adalah "ghostline" yang menunjukkan net connection tapi belum ada trace fisiknya.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 14 =============================== -->
+<div class="section" id="pcb-layers">
+  <div class="section-header">
+    <span class="section-number">14</span>
+    <h2>Layer Management PCB</h2>
+  </div>
+
+  <p>PCB KiCad mendukung banyak layer. Berikut layer-layer utama yang penting dipahami:</p>
+
+  <h4>Copper Layers (Layer Tembaga)</h4>
+  <div class="layer-row"><div class="layer-dot" style="background:#c83434"></div><div class="layer-name">F.Cu (Front Copper)</div><div class="layer-desc">Layer tembaga depan (atas). Trace dan pad di sisi komponen.</div></div>
+  <div class="layer-row"><div class="layer-dot" style="background:#4040c8"></div><div class="layer-name">B.Cu (Back Copper)</div><div class="layer-desc">Layer tembaga belakang. Trace sisi bawah PCB.</div></div>
+  <div class="layer-row"><div class="layer-dot" style="background:#c84040"></div><div class="layer-name">In1.Cu — In30.Cu</div><div class="layer-desc">Layer dalam (inner layers) untuk PCB multi-layer (4, 6, 8, dll layer).</div></div>
+
+  <h4>Technical Layers</h4>
+  <div class="layer-row"><div class="layer-dot" style="background:#e0c040"></div><div class="layer-name">F.SilkS</div><div class="layer-desc">Silkscreen depan. Teks reference, outline komponen (putih di PCB).</div></div>
+  <div class="layer-row"><div class="layer-dot" style="background:#4040e0"></div><div class="layer-name">B.SilkS</div><div class="layer-desc">Silkscreen belakang.</div></div>
+  <div class="layer-row"><div class="layer-dot" style="background:#808080"></div><div class="layer-name">F.Mask / B.Mask</div><div class="layer-desc">Soldermask. Area yang TIDAK ditutup soldermask (pad exposed). Umumnya warna hijau/biru PCB.</div></div>
+  <div class="layer-row"><div class="layer-dot" style="background:#c0c0c0"></div><div class="layer-name">F.Paste / B.Paste</div><div class="layer-desc">Solderpaste. Untuk stencil SMD soldering. Biasanya sama ukurannya dengan pad SMD.</div></div>
+  <div class="layer-row"><div class="layer-dot" style="background:#ffff40"></div><div class="layer-name">Edge.Cuts</div><div class="layer-desc">Board outline / kontur PCB. HARUS closed loop. Ini yang menjadi batas potongan PCB.</div></div>
+  <div class="layer-row"><div class="layer-dot" style="background:#40c040"></div><div class="layer-name">F.Fab / B.Fab</div><div class="layer-desc">Fabrication layer. Referensi untuk assembler, tidak dicetak di PCB produksi.</div></div>
+  <div class="layer-row"><div class="layer-dot" style="background:#a0a000"></div><div class="layer-name">F.Courtyard / B.Courtyard</div><div class="layer-desc">Batas fisik komponen (clearance zone). Dipakai untuk DRC pengecekan overlap komponen.</div></div>
+  <div class="layer-row"><div class="layer-dot" style="background:#8080ff"></div><div class="layer-name">Margin</div><div class="layer-desc">Batas mechanical/routing margin. Tidak semua fab perlu ini.</div></div>
+  <div class="layer-row"><div class="layer-dot" style="background:#ff8080"></div><div class="layer-name">User.1 — User.9</div><div class="layer-desc">Layer user-defined untuk catatan, dimensi, mechanical reference.</div></div>
+
+  <h3>Mengatur Layer Aktif</h3>
+  <p>Klik nama layer di panel kanan, atau tekan tombol angka numerik untuk switch layer cepat. Layer aktif ditampilkan dengan warna solid; layer non-aktif lebih transparan.</p>
+
+  <div class="info-box tip">
+    <div class="info-icon">💡</div>
+    <p><strong>PCB 2-Layer (paling umum):</strong> Untuk desain biasa, cukup gunakan F.Cu dan B.Cu. PCB 4-layer biasanya F.Cu (signal), In1.Cu (GND plane), In2.Cu (Power plane), B.Cu (signal).</p>
+  </div>
+</div>
+
+<!-- =============================== SECTION 15 =============================== -->
+<div class="section" id="pcb-outline">
+  <div class="section-header">
+    <span class="section-number">15</span>
+    <h2>Board Outline dan Setup PCB</h2>
+  </div>
+
+  <h3>Membuat Board Outline</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Aktifkan Layer Edge.Cuts</h5>
+        <p>Klik layer <strong>Edge.Cuts</strong> di panel layer kanan untuk membuatnya aktif. Layer ini berwarna kuning di canvas.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Gambar Rectangle Outline</h5>
+        <p>Klik <code>Place → Draw Rectangle</code> (atau tekan <kbd>Ctrl+Shift+R</kbd>). Klik titik awal, geser, klik titik akhir. Ini membentuk persegi/persegi panjang yang merupakan batas PCB.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Set Ukuran Tepat</h5>
+        <p>Double-click garis outline untuk membuka properties. Set koordinat/dimensi tepat. Atau gunakan <code>Edit → Set User Grid Origin</code> lalu Inspect → Board Statistics untuk lihat dimensi. Cara presisi: <code>Edit → Edit Text & Graphics Properties</code>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Board Setup</h5>
+        <p>Klik <code>File → Board Setup</code>. Di sini Anda bisa mengatur: jumlah copper layer, design rules (clearance minimal, via size, trace width), Physical Stackup (tebal PCB, material), dan net classes.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Design Rules Dasar</h3>
+  <p>Buka <code>File → Board Setup → Design Rules → Constraints</code>:</p>
+  <table class="shortcut-table">
+    <tr><th>Parameter</th><th>Nilai Aman (PCB rumahan)</th><th>Nilai Fab Profesional</th></tr>
+    <tr><td>Min Clearance</td><td>0.2 mm</td><td>0.1 mm</td></tr>
+    <tr><td>Min Track Width</td><td>0.25 mm</td><td>0.1 mm</td></tr>
+    <tr><td>Min Via Diameter</td><td>0.8 mm</td><td>0.4 mm</td></tr>
+    <tr><td>Min Via Drill</td><td>0.4 mm</td><td>0.2 mm</td></tr>
+    <tr><td>Courtyard Clearance</td><td>0.25 mm</td><td>0.1 mm</td></tr>
+  </table>
+</div>
+
+<!-- =============================== SECTION 16 =============================== -->
+<div class="section" id="pcb-place">
+  <div class="section-header">
+    <span class="section-number">16</span>
+    <h2>Penempatan Komponen</h2>
+  </div>
+
+  <p>Component placement adalah salah satu aspek paling kritis dalam PCB design. Placement yang baik membuat routing lebih mudah dan performa elektrikal lebih baik.</p>
+
+  <h3>Prinsip Penempatan</h3>
+  <ul class="checklist">
+    <li>Decoupling capacitor (100nF) harus diletakkan SANGAT dekat dengan pin VCC setiap IC</li>
+    <li>Komponen yang terhubung erat di skematik harus berdekatan di PCB</li>
+    <li>Kelompokkan komponen berdasarkan fungsi (power section, signal section, I/O)</li>
+    <li>Perhatikan orientasi konektor — umumnya di tepi PCB</li>
+    <li>Pertimbangkan assembly: komponen SMD idealnya satu sisi; campuran perlu soldering dua sisi</li>
+    <li>High-speed signals: trace pendek, jauh dari noise source</li>
+    <li>Komponen panas (regulator, MOSFET): berikan ruang untuk dissipasi panas</li>
+  </ul>
+
+  <h3>Operasi Penempatan</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Move Komponen</h5>
+        <p>Klik komponen untuk select, tekan <kbd>G</kbd> untuk <strong>Grab</strong> (move sambil mempertahankan koneksi ratsnest) atau <kbd>M</kbd> untuk <strong>Move</strong> (lebih bebas). Klik untuk drop.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Rotate</h5>
+        <p>Tekan <kbd>R</kbd> saat komponen dipilih/digrab. Default rotate 90° CCW. Untuk rotasi custom, double-click dan edit field Orientation di properties.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Flip ke Back Layer</h5>
+        <p>Tekan <kbd>F</kbd> untuk flip komponen dari F.Cu ke B.Cu (atau sebaliknya). Komponen SMD bisa diplace di kedua sisi PCB.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Align dan Distribute</h5>
+        <p>Pilih beberapa komponen (drag select), lalu klik kanan → <strong>Align/Distribute</strong> untuk meratakan komponen secara horizontal/vertikal atau memberi jarak sama rata. Ini berguna untuk deretan konektor atau resistor array.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h5>Ratsnest sebagai Panduan</h5>
+        <p>Perhatikan pola ratsnest. Placement ideal adalah yang meminimalkan persilangan ratsnest. Coba putar/geser komponen hingga ratsnest tampak lebih "rapi" dan tidak banyak cross.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h5>Lock Komponen yang Sudah Fix</h5>
+        <p>Klik kanan komponen → <strong>Lock</strong> (atau tekan <kbd>L</kbd>). Komponen terkunci tidak bisa dipindah secara tidak sengaja. Tampil dengan ikon gembok kecil.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 17 =============================== -->
+<div class="section" id="pcb-route">
+  <div class="section-header">
+    <span class="section-number">17</span>
+    <h2>Routing Trace Manual</h2>
+  </div>
+
+  <p>Routing adalah proses menggambar trace tembaga yang menghubungkan pad komponen sesuai netlist. Routing manual memberikan kontrol penuh atas kualitas desain.</p>
+
+  <h3>Interactive Router KiCad 9</h3>
+  <p>KiCad 9.0 menggunakan <strong>Interactive Router</strong> (push-and-shove) yang secara otomatis mendorong trace yang ada ketika Anda menggambar trace baru. Ini sangat memudahkan routing dibandingkan mode legacy.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Mulai Route</h5>
+        <p>Tekan <kbd>X</kbd> untuk mode Route Track. Klik pada pad atau ujung ratsnest. Trace akan mengikuti kursor. Klik untuk mengubah arah, klik di pad tujuan untuk menyelesaikan.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Ganti Layer saat Routing</h5>
+        <p>Tekan <kbd>/</kbd> untuk switch layer saat routing (otomatis membuat via). Atau tekan <kbd>V</kbd> untuk menempatkan via dan switch layer secara manual.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Adjust Width Trace</h5>
+        <p>Sebelum routing: gunakan dropdown Width di toolbar atas untuk memilih lebar trace. Atau tekan <kbd>W</kbd> saat routing untuk membuka interactive width selector. Trace power minimal 0.5mm, sinyal biasa 0.25mm sudah cukup.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Route Mode Settings</h5>
+        <p>Tekan <kbd>Ctrl+/</kbd> untuk toggle mode routing: <strong>Highlight collision</strong> (default), <strong>Push and shove</strong>, <strong>Walk around</strong>. Push-and-shove paling powerful tapi lebih lambat untuk board besar.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h5>Route Differential Pair</h5>
+        <p>Untuk sinyal differential (USB D+/D-, Ethernet TX+/TX-), tekan <kbd>Ctrl+X</kbd> untuk mode <strong>Route Differential Pair</strong>. KiCad otomatis menjaga jarak dan panjang kedua trace sama.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h5>Tune Length</h5>
+        <p>Untuk high-speed design, tekan <kbd>Ctrl+Shift+X</kbd> untuk mode <strong>Tune Length</strong>. KiCad akan menambahkan serpentine/meander pada trace untuk menyamakan panjang antar net dalam satu bus.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Tips Routing Profesional</h3>
+  <ul class="checklist">
+    <li>Hindari sudut 90° — gunakan 45° atau kurva. Sudut tajam bisa menyebabkan masalah acid trap saat etching</li>
+    <li>Jaga trace power (VCC, GND) lebih lebar dari trace sinyal</li>
+    <li>Return path harus selalu ada — setiap sinyal butuh jalur balik (biasanya GND)</li>
+    <li>Hindari loop besar di trace GND — gunakan ground plane jika memungkinkan</li>
+    <li>Untuk analog, pisahkan ground digital dan analog, hubungkan di satu titik (star ground)</li>
+    <li>Via ke GND plane dekat setiap decoupling cap</li>
+    <li>Trace dari crystal oscillator harus pendek, pisahkan dari sinyal digital</li>
+  </ul>
+</div>
+
+<!-- =============================== SECTION 18 =============================== -->
+<div class="section" id="pcb-autoroute">
+  <div class="section-header">
+    <span class="section-number">18</span>
+    <h2>Autorouter (FreeRouting)</h2>
+  </div>
+
+  <p>KiCad 9.0 memiliki integrasi dengan <strong>FreeRouting</strong>, autorouter open-source yang bisa menyelesaikan routing secara otomatis. Berguna untuk prototype cepat tapi hasilnya tidak sebaik routing manual untuk produk production-grade.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Aktifkan FreeRouting</h5>
+        <p>Di PCB Editor, klik <code>Route → Interactive Router Settings</code>. Atau install plugin FreeRouting dari <strong>Plugin and Content Manager</strong> di KiCad Project Manager.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Export Design ke Specctra DSN</h5>
+        <p>Klik <code>File → Export → Specctra DSN</code>. File <code>.dsn</code> akan dibuat — ini adalah format yang dimengerti FreeRouting.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Jalankan FreeRouting</h5>
+        <p>Buka FreeRouting (download dari freerouting.app atau via plugin KiCad). Load file <code>.dsn</code>. Set parameter: jumlah layer, via cost, trace cost. Klik <strong>Autoroute → Run</strong>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Import Hasil Routing</h5>
+        <p>Setelah FreeRouting selesai (bisa beberapa menit), export ke file <code>.ses</code>. Kembali ke KiCad PCB Editor, klik <code>File → Import → Specctra Session</code>. Routing akan diimport ke PCB.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h5>Review dan Perbaiki Manual</h5>
+        <p>Hasil autorouting selalu perlu review manual. Cari trace yang terlalu panjang, unnecessary vias, atau trace yang bisa diperpendek. Jalankan DRC untuk memastikan tidak ada violation.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box warn">
+    <div class="info-icon">⚠️</div>
+    <p><strong>Catatan:</strong> Jangan gunakan autorouter untuk power traces, high-frequency signals, atau bagian kritis desain. Routing manual selalu memberikan hasil lebih baik untuk area sensitif.</p>
+  </div>
+</div>
+
+<!-- =============================== SECTION 19 =============================== -->
+<div class="section" id="pcb-fill">
+  <div class="section-header">
+    <span class="section-number">19</span>
+    <h2>Copper Fill / Zone (Ground Plane)</h2>
+  </div>
+
+  <p>Copper fill (zone) mengisi area kosong di layer copper dengan tembaga yang terhubung ke net tertentu (biasanya GND). Ini membentuk ground plane yang sangat meningkatkan integritas sinyal dan EMC.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Aktifkan Layer Target</h5>
+        <p>Pilih layer untuk zone, contoh <strong>B.Cu</strong> untuk full ground plane di layer belakang.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Mulai Gambar Zone</h5>
+        <p>Tekan <kbd>Ctrl+Shift+Z</kbd> atau klik <code>Place → Add Rule Area</code>. Dialog <strong>Copper Zone Properties</strong> akan muncul sebelum Anda menggambar.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Konfigurasi Zone Properties</h5>
+        <p><strong>Net:</strong> pilih <code>GND</code>. <strong>Layer:</strong> pastikan layer yang tepat. <strong>Pad connection:</strong> <code>Thermal relief</code> (default, untuk soldering lebih mudah) atau <code>Solid</code> (lebih baik secara elektrikal, lebih susah disolder). <strong>Clearance:</strong> 0.2mm. <strong>Min width:</strong> 0.2mm.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Gambar Area Zone</h5>
+        <p>Klik OK, lalu klik untuk menggambar polygon outline zone. Biasanya cukup menggambar persegi yang menutupi seluruh area PCB (sedikit di dalam Edge.Cuts). Klik dua kali di titik terakhir atau tekan <kbd>Enter</kbd> untuk tutup polygon.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h5>Fill Zone</h5>
+        <p>Tekan <kbd>B</kbd> untuk <strong>Fill All Zones</strong>. KiCad akan mengisi area dengan copper, otomatis menghindari trace/pad yang bukan GND dengan clearance yang ditentukan. Tekan <kbd>Ctrl+B</kbd> untuk <strong>Unfill All</strong> jika perlu edit.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box tip">
+    <div class="info-icon">💡</div>
+    <p><strong>Best practice:</strong> Untuk PCB 2-layer sederhana, buat GND plane di B.Cu dan route semua signal di F.Cu. Saat ada net yang tidak bisa diconnect di F.Cu saja, buat via ke B.Cu dan pakai trace pendek di B.Cu lalu via kembali. Ini menjaga ground plane tetap utuh.</p>
+  </div>
+</div>
+
+<!-- =============================== SECTION 20 =============================== -->
+<div class="section" id="pcb-via">
+  <div class="section-header">
+    <span class="section-number">20</span>
+    <h2>Via, Through-Hole, dan Drill</h2>
+  </div>
+
+  <h3>Jenis Via</h3>
+  <table class="shortcut-table">
+    <tr><th>Jenis</th><th>Penjelasan</th><th>Kegunaan</th></tr>
+    <tr><td>Through-hole Via</td><td>Menembus seluruh PCB dari F.Cu ke B.Cu</td><td>Paling umum, bisa dibuat oleh semua fab</td></tr>
+    <tr><td>Blind Via</td><td>Dari surface layer ke inner layer saja</td><td>PCB multi-layer high-density (HDI)</td></tr>
+    <tr><td>Buried Via</td><td>Antara inner layers, tidak mencapai surface</td><td>PCB HDI premium, mahal</td></tr>
+    <tr><td>Micro Via</td><td>Sangat kecil, diameter &lt; 0.15mm, laser drilled</td><td>BGA routing, HDI</td></tr>
+  </table>
+
+  <h3>Menempatkan Via Manual</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Saat Routing, Tekan V</h5>
+        <p>Saat dalam mode route trace, tekan <kbd>V</kbd> untuk menempatkan via dan switch ke layer lain. Via akan terhubung ke net yang sedang diroute.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Via Properties</h5>
+        <p>Double-click via untuk edit: <strong>Via Drill</strong> (diameter lubang), <strong>Via Size</strong> (diameter tembaga annular ring). Rasio minimum annular ring biasanya 0.15mm di setiap sisi drill.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Via Stitching (GND Stitching)</h5>
+        <p>Tempatkan via GND secara merata di seluruh board untuk menghubungkan GND plane F.Cu dan B.Cu. Klik <code>Edit → Via Stitching</code> untuk otomatis menambahkan via stitching dalam area yang dipilih.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 21 =============================== -->
+<div class="section" id="pcb-drc">
+  <div class="section-header">
+    <span class="section-number">21</span>
+    <h2>Design Rule Check (DRC)</h2>
+  </div>
+
+  <p>DRC adalah step wajib sebelum generate Gerber. DRC memeriksa apakah desain PCB memenuhi semua aturan fabrikasi dan tidak ada error.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Jalankan DRC</h5>
+        <p>Klik <code>Inspect → Design Rules Checker</code>. Pastikan centang: <strong>Test for DRC violations</strong>, <strong>Test for pads shorting copper</strong>, <strong>Test copper to zone clearances</strong>, <strong>Test unconnected nets</strong>. Klik <strong>Run DRC</strong>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Interpretasi Error</h5>
+        <p><code>Clearance violation</code>: dua objek terlalu dekat → geser trace/pad. <code>Unconnected items</code>: ada net yang belum diroute → selesaikan routing. <code>Copper pour issues</code>: zone copper overlapping → fill ulang. <code>Silk over pad</code>: teks silkscreen menutupi pad → geser teks reference.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Fix Errors</h5>
+        <p>Double-click setiap error di panel DRC untuk zoom ke lokasi masalah. Fix satu per satu. Re-run DRC sampai <strong>0 Errors, 0 Unconnected</strong>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Refill Zone dan Final Check</h5>
+        <p>Setelah semua fix, tekan <kbd>B</kbd> untuk refill zones, lalu Run DRC sekali lagi untuk final verification.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 22 =============================== -->
+<div class="section" id="pcb-3d">
+  <div class="section-header">
+    <span class="section-number">22</span>
+    <h2>3D Viewer</h2>
+  </div>
+
+  <p>KiCad 9.0 memiliki 3D Viewer built-in yang menampilkan render realistik dari PCB Anda lengkap dengan model 3D komponen.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Buka 3D Viewer</h5>
+        <p>Dari PCB Editor, tekan <kbd>Ctrl+3</kbd> atau klik <code>View → 3D Viewer</code>. Render 3D akan terbuka di jendela terpisah.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Navigasi 3D</h5>
+        <p><kbd>Left drag</kbd>: Rotate view. <kbd>Middle drag</kbd>: Pan. <kbd>Scroll</kbd>: Zoom. <kbd>R</kbd>: Reset view. Toolbar atas memiliki tombol untuk view dari atas (F), bawah (B), dan berbagai preset angle.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Render Settings</h5>
+        <p>Panel kanan memiliki opsi: tampilkan/sembunyikan soldermask, silkscreen, copper, komponen, dll. Bisa juga mengubah warna soldermask (hijau, biru, merah, hitam, putih).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Export STEP File</h5>
+        <p>Klik <code>File → Export → STEP</code> untuk mengekspor model 3D PCB dalam format STEP (.step). File ini bisa dibuka di FreeCAD, SolidWorks, Fusion 360, dll untuk enclosure design.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box tip">
+    <div class="info-icon">💡</div>
+    <p><strong>3D Model untuk Komponen:</strong> KiCad menyertakan ribuan model 3D (WRL dan STEP). Pastikan Footprint yang Anda gunakan memiliki field "3D Model" yang terisi. Untuk komponen custom, download model dari SnapEDA, UltraLibrarian, atau Component Search Engine dan set path-nya di Footprint Properties.</p>
+  </div>
+</div>
+
+<!-- =============================== SECTION 23 =============================== -->
+<div class="section" id="fp-create">
+  <div class="section-header">
+    <span class="section-number">23</span>
+    <h2>Footprint Editor — Membuat Footprint Custom</h2>
+  </div>
+
+  <p>Footprint adalah representasi fisik komponen di PCB: pad tempat soldering, courtyard, silkscreen, dan fab layer.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Buka Footprint Editor</h5>
+        <p>Dari Project Manager, klik ikon <strong>Footprint Editor</strong>. Atau dari PCB Editor: <code>Tools → Edit Footprint Libraries</code>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Buat Library dan Footprint Baru</h5>
+        <p><code>File → New Library</code> → beri nama. Lalu <code>File → New Footprint</code> → beri nama sesuai komponen (contoh: <code>MyIC_SOIC8</code>). Pilih tipe: <strong>SMD</strong> atau <strong>Through-hole</strong>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Baca Datasheet Komponen</h5>
+        <p>Buka datasheet komponen dan cari halaman "Package Dimensions" atau "PCB Land Pattern". Catat: pitch (jarak antar pad), pad size, footprint overall dimension. Ini data kritis untuk akurasi footprint.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Tambah Pad</h5>
+        <p>Tekan <kbd>P</kbd> atau <code>Place → Add Pad</code>. Konfigurasi pad: <strong>Pad Number</strong> (1, 2, 3...), <strong>Type</strong> (SMD/Through-hole/NPTH), <strong>Shape</strong> (Rect, RoundRect, Circle, Oval), <strong>Size X/Y</strong>, <strong>Drill</strong> (untuk TH).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h5>Array Pad Tool</h5>
+        <p>Untuk IC dengan banyak pin, gunakan <code>Edit → Create Array</code> setelah menempatkan pad pertama. Set: jumlah pad, pitch (jarak), arah. Ini buat baris pad secara cepat.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h5>Gambar Courtyard</h5>
+        <p>Aktifkan layer <strong>F.Courtyard</strong>. Gambar rectangle yang menutupi seluruh fisik komponen + margin 0.25mm. Courtyard harus tepat karena dipakai DRC untuk deteksi overlap komponen.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <h5>Gambar Silkscreen</h5>
+        <p>Aktifkan <strong>F.SilkS</strong>. Gambar outline komponen (biasanya sesuai body fisik). Tambahkan marker pin 1 (biasanya segitiga atau notch kecil di pad 1). Jangan sampai silkscreen overlap dengan pad — ini akan error DRC.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">8</div>
+      <div class="step-body">
+        <h5>Gambar Fab Layer</h5>
+        <p>Aktifkan <strong>F.Fab</strong>. Gambar outline yang lebih akurat (boleh overlap pad di Fab layer). Fab layer hanya untuk referensi assembler, tidak diprint di PCB jadi.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">9</div>
+      <div class="step-body">
+        <h5>Set Reference dan Value</h5>
+        <p>Pastikan text <code>REF**</code> ada di F.SilkS (akan diganti oleh reference komponen saat assign). <code>Value</code> bisa di F.Fab. Edit posisi agar tidak overlap dengan pad.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">10</div>
+      <div class="step-body">
+        <h5>Simpan dan Verifikasi</h5>
+        <p>Tekan <kbd>Ctrl+S</kbd>. Zoom out dan verifikasi secara visual: pad alignment, courtyard, silkscreen. Untuk verifikasi presisi, gunakan <code>Inspect → Measure</code> untuk cek dimensi.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 24 =============================== -->
+<div class="section" id="fp-assign">
+  <div class="section-header">
+    <span class="section-number">24</span>
+    <h2>Assign Footprint via Footprint Browser</h2>
+  </div>
+
+  <p>KiCad 9.0 memiliki Footprint Browser terintegrasi yang bisa preview footprint sebelum di-assign.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Edit Footprint dari PCB</h5>
+        <p>Di PCB Editor, double-click footprint → buka Properties. Di field <strong>Footprint</strong>, klik tombol browse untuk membuka Footprint Browser.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Footprint Browser</h5>
+        <p>Panel kiri: daftar library. Panel tengah: footprint dalam library. Panel kanan: preview 2D footprint. Klik footprint untuk preview, double-click untuk pilih.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Filter Footprint</h5>
+        <p>Gunakan search bar di atas untuk filter: <code>SOT-23</code>, <code>SOIC-8</code>, <code>0805</code>, <code>DIP-28</code>, <code>QFP-48</code>, dll. Filter berdasarkan library juga tersedia.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 25 =============================== -->
+<div class="section" id="gerber">
+  <div class="section-header">
+    <span class="section-number">25</span>
+    <h2>Generate File Gerber</h2>
+  </div>
+
+  <p>File Gerber adalah format standar industri PCB yang dikirim ke fabricator. Setiap layer PCB menghasilkan satu file Gerber terpisah.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Buka Plot Dialog</h5>
+        <p>Dari PCB Editor, klik <code>File → Fabrication Outputs → Gerbers (.gbr)</code> atau <code>File → Plot</code>. Dialog Gerber export akan terbuka.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Pilih Layer yang Akan Diexport</h5>
+        <p>Centang layer yang diperlukan: <code>F.Cu</code>, <code>B.Cu</code>, <code>F.SilkS</code>, <code>B.SilkS</code>, <code>F.Mask</code>, <code>B.Mask</code>, <code>F.Paste</code>, <code>B.Paste</code>, <code>Edge.Cuts</code>. Untuk PCB 2-layer umum ini sudah cukup.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Pengaturan Gerber</h5>
+        <p>Centang: <strong>Use Protel filename extensions</strong> (agar file punya ekstensi .GTL, .GBL, .GTS, dll yang mudah diidentifikasi fab). <strong>Generate Gerber job file</strong> (optional tapi bagus). <strong>Subtract soldermask from silkscreen</strong> (recommended). Format: Gerber X2 (modern, default).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Set Output Directory</h5>
+        <p>Buat folder baru <code>gerbers/</code> di dalam folder proyek. Set sebagai output directory.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h5>Plot / Generate</h5>
+        <p>Klik <strong>Plot</strong>. KiCad akan menghasilkan file Gerber untuk setiap layer yang dipilih.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 26 =============================== -->
+<div class="section" id="drill">
+  <div class="section-header">
+    <span class="section-number">26</span>
+    <h2>Generate Drill Files</h2>
+  </div>
+
+  <p>Drill file (Excellon format) menentukan posisi dan ukuran semua lubang di PCB — untuk via, pad through-hole, dan mounting holes.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Buka Drill Dialog</h5>
+        <p>Di jendela Plot (yang sama untuk Gerber), klik tombol <strong>"Generate Drill Files"</strong> di bagian bawah dialog.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Konfigurasi Drill</h5>
+        <p><strong>Drill File Format:</strong> Excellon (standar universal). <strong>Drill Units:</strong> Millimeters. <strong>Zeros Format:</strong> Suppress leading zeros. <strong>Oval Holes Drill Mode:</strong> Use route command. Centang <strong>Generate map file</strong> untuk visual reference.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Generate</h5>
+        <p>Klik <strong>Generate Drill File</strong>. File <code>.drl</code> (atau <code>.xln</code>) akan dibuat di output directory yang sama dengan Gerber.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Nama File Gerber Standard (Protel Extensions)</h3>
+  <table class="shortcut-table">
+    <tr><th>File</th><th>Layer</th></tr>
+    <tr><td><code>.GTL</code></td><td>F.Cu — Top copper layer</td></tr>
+    <tr><td><code>.GBL</code></td><td>B.Cu — Bottom copper layer</td></tr>
+    <tr><td><code>.GTS</code></td><td>F.Mask — Top soldermask</td></tr>
+    <tr><td><code>.GBS</code></td><td>B.Mask — Bottom soldermask</td></tr>
+    <tr><td><code>.GTO</code></td><td>F.SilkS — Top silkscreen</td></tr>
+    <tr><td><code>.GBO</code></td><td>B.SilkS — Bottom silkscreen</td></tr>
+    <tr><td><code>.GTP</code></td><td>F.Paste — Top paste (stencil)</td></tr>
+    <tr><td><code>.GBP</code></td><td>B.Paste — Bottom paste</td></tr>
+    <tr><td><code>.GKO</code> / <code>.GM1</code></td><td>Edge.Cuts — Board outline</td></tr>
+    <tr><td><code>.DRL</code> / <code>.XLN</code></td><td>Excellon Drill file</td></tr>
+  </table>
+</div>
+
+<!-- =============================== SECTION 27 =============================== -->
+<div class="section" id="fab">
+  <div class="section-header">
+    <span class="section-number">27</span>
+    <h2>Verifikasi Gerber dan Kirim ke Fabricator</h2>
+  </div>
+
+  <h3>Verifikasi dengan Gerber Viewer</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Buka Gerber Viewer KiCad</h5>
+        <p>Dari Project Manager, klik ikon <strong>Gerber Viewer</strong>. Load semua file Gerber yang baru dibuat. Aktifkan layer satu per satu untuk verifikasi visual.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Verifikasi Visual</h5>
+        <p>Cek: copper traces intact, pad soldermask terbuka (pad terlihat di mask layer), silkscreen tidak overlap pad, outline board tertutup. Jika ada yang aneh, kembali ke PCB Editor dan perbaiki.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Online Gerber Viewer</h5>
+        <p>Untuk verifikasi lebih komprehensif, upload ke gerber viewer online seperti <strong>PCBWay's Gerber Viewer</strong> (pcbway.com), <strong>JLCPCB Gerber Viewer</strong>, atau <strong>Tracespace View</strong> (view.tracespace.io).</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Fab Houses yang Direkomendasikan</h3>
+  <div class="card-grid">
+    <div class="card cyan">
+      <div class="card-icon">🏭</div>
+      <h4>JLCPCB (jlcpcb.com)</h4>
+      <p>Paling murah dan populer. 2-layer, 100×100mm, 5 pcs mulai $2. Pengiriman ke Indonesia ~7-14 hari. Juga ada layanan assembly SMD.</p>
+    </div>
+    <div class="card green">
+      <div class="card-icon">🏭</div>
+      <h4>PCBWay (pcbway.com)</h4>
+      <p>Sedikit lebih mahal dari JLCPCB tapi layanan lebih komprehensif, termasuk flex PCB, metal core PCB, dan assembly service.</p>
+    </div>
+    <div class="card yellow">
+      <div class="card-icon">🏭</div>
+      <h4>Elecrow (elecrow.com)</h4>
+      <p>Alternatif dengan harga kompetitif, cocok untuk prototipe. Support banyak board options termasuk multi-layer.</p>
+    </div>
+    <div class="card orange">
+      <div class="card-icon">🏭</div>
+      <h4>OSH Park (oshpark.com)</h4>
+      <p>Fab Amerika, kualitas sangat tinggi, bare PCB ungu khas. Lebih mahal tapi untuk proyek presisi tinggi.</p>
+    </div>
+  </div>
+
+  <div class="info-box tip">
+    <div class="info-icon">💡</div>
+    <p><strong>Tip untuk JLCPCB:</strong> Upload file dalam format ZIP yang berisi semua Gerber + Drill files. JLCPCB menerima Gerber X2 dari KiCad langsung. Untuk Assembly Service, tambahkan BOM (CSV) dan Component Placement List (CPL) yang bisa diexport dari KiCad via <code>File → Fabrication Outputs → Component Placement (.pos)</code>.</p>
+  </div>
+</div>
+
+<!-- =============================== SECTION 28 =============================== -->
+<div class="section" id="calc">
+  <div class="section-header">
+    <span class="section-number">28</span>
+    <h2>Calculator Tools</h2>
+  </div>
+
+  <p>KiCad menyertakan kalkulator berguna untuk menghitung parameter desain elektronik dan PCB.</p>
+
+  <h3>Mengakses Calculator Tools</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Buka dari Project Manager</h5>
+        <p>Klik ikon <strong>Calculator Tools</strong> di Project Manager. Atau via menu: <code>Tools → Calculator Tools</code> dari dalam KiCad.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Tab-tab Calculator Tools</h3>
+
+  <h4>Electrical</h4>
+  <p>Kalkulator hukum Ohm, power dissipation, voltage divider, capacitor charge/discharge, dan decibel converter. Berguna untuk cepat menghitung nilai resistor divider atau memilih kapasitor bypass.</p>
+
+  <h4>PCB Track Width</h4>
+  <p>Menghitung lebar minimum trace berdasarkan arus yang mengalir, tebal copper (oz/m²), dan kenaikan suhu yang diijinkan. Berdasarkan standard IPC-2221. Masukkan: <strong>Current (A)</strong>, <strong>Temperature Rise (°C)</strong>, <strong>Copper Thickness</strong> → calculator menampilkan minimum trace width.</p>
+
+  <h4>Via</h4>
+  <p>Menghitung kapasitas arus via, resistance via, dan thermal resistance via berdasarkan diameter dan tebal PCB.</p>
+
+  <h4>Regulators</h4>
+  <p>Kalkulator untuk voltage regulator linear (LM78xx, LM317) dan adjustable regulator. Masukkan Vout yang diinginkan dan nilai R1 → calculator menampilkan nilai R2 yang diperlukan.</p>
+
+  <h4>RF/Antenna</h4>
+  <p>Kalkulator untuk antenna dipole, loop antenna, dan saluran transmisi. Penting untuk desain PCB RF, Bluetooth, WiFi, atau LoRa.</p>
+
+  <h4>Attenuators</h4>
+  <p>Kalkulator Pi-attenuator dan T-attenuator untuk matching impedansi RF.</p>
+
+  <h4>Color Code</h4>
+  <p>Konverter kode warna resistor (4, 5, 6 band) ke nilai dan toleransi. Juga ada E-series calculator untuk memilih nilai standar terdekat.</p>
+
+  <h4>Board Classes</h4>
+  <p>Referensi IPC-2221 design classes untuk clearance, trace width, pad size berdasarkan kelas board (Class A, B, C).</p>
+</div>
+
+<!-- =============================== SECTION 29 =============================== -->
+<div class="section" id="imgconv">
+  <div class="section-header">
+    <span class="section-number">29</span>
+    <h2>Image Converter</h2>
+  </div>
+
+  <p>Image Converter KiCad bisa mengkonversi gambar bitmap (PNG, BMP, JPG) menjadi:</p>
+  <ul class="checklist">
+    <li>Footprint PCB (untuk logo, artwork, QR code di PCB)</li>
+    <li>Simbol skematik (untuk simbol custom berbasis gambar)</li>
+    <li>PostScript (untuk artwork)</li>
+    <li>Drawing Sheet (untuk custom drawing frame)</li>
+  </ul>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Buka Image Converter</h5>
+        <p>Dari Project Manager, klik <strong>Image Converter</strong>. Dialog sederhana akan terbuka.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Load Gambar</h5>
+        <p>Klik <strong>Load Source Image</strong>. Pilih file PNG/BMP (gunakan gambar hitam-putih atau kontras tinggi untuk hasil terbaik). Preview akan muncul di panel.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h5>Atur Threshold dan Resolusi</h5>
+        <p>Geser slider <strong>Black/White Threshold</strong> untuk mengatur sensitivitas konversi. <strong>Board Layer for Converted Image</strong>: pilih F.Cu, F.SilkS, dll. <strong>Size</strong>: atur ukuran fisik output di PCB (mm).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h5>Export ke Footprint</h5>
+        <p>Pilih output <strong>Footprint (.kicad_mod)</strong>. Klik <strong>Export</strong>. Simpan file footprint. Buka Footprint Editor, import footprint ini. Assign ke komponen "artwork" di schematic (atau langsung place di PCB Editor).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h5>QR Code di PCB</h5>
+        <p>Buat QR code sebagai PNG (hitam-putih) menggunakan tool online. Import ke Image Converter, export sebagai footprint di layer F.SilkS atau F.Cu. Place di PCB untuk link ke datasheet, website, atau serial number.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 30 =============================== -->
+<div class="section" id="fritzing">
+  <div class="section-header">
+    <span class="section-number">30</span>
+    <h2>Fritzing vs KiCad — Penjelasan Lengkap</h2>
+  </div>
+
+  <div class="fritzing-note">
+    <h3>⚠️ KiCad TIDAK punya fitur Fritzing</h3>
+    <p>Fritzing dan KiCad adalah dua software yang berbeda dengan filosofi berbeda. KiCad <strong>tidak memiliki dan tidak akan pernah memiliki</strong> view "breadboard" ala Fritzing. Keduanya punya use case masing-masing. Berikut perbandingan komprehensif.</p>
+  </div>
+
+  <table class="shortcut-table">
+    <tr><th>Aspek</th><th>Fritzing</th><th>KiCad</th></tr>
+    <tr><td>Target user</td><td>Pemula, hobbyist, maker, edukasi</td><td>Engineer, profesional, advanced hobbyist</td></tr>
+    <tr><td>Breadboard view</td><td style="color:var(--accent-green)">✓ Fitur utama</td><td style="color:var(--accent-red)">✗ Tidak ada</td></tr>
+    <tr><td>Schematic view</td><td>Basic, terbatas</td><td style="color:var(--accent-green)">✓ Sangat lengkap</td></tr>
+    <tr><td>PCB layout</td><td>Basic</td><td style="color:var(--accent-green)">✓ Sangat lengkap</td></tr>
+    <tr><td>Library</td><td>Terbatas, sering outdated</td><td style="color:var(--accent-green)">Ribuan komponen, update rutin</td></tr>
+    <tr><td>Harga</td><td>~8 EUR (donation-ware)</td><td style="color:var(--accent-green)">Gratis 100%</td></tr>
+    <tr><td>DRC</td><td>Basic</td><td style="color:var(--accent-green)">Komprehensif</td></tr>
+    <tr><td>Multi-layer</td><td>Terbatas</td><td style="color:var(--accent-green)">Hingga 32+ layer</td></tr>
+    <tr><td>Gerber quality</td><td>Acceptable</td><td style="color:var(--accent-green)">Professional grade</td></tr>
+    <tr><td>Kurva belajar</td><td>Mudah sekali</td><td>Sedang-sulit tapi worth it</td></tr>
+    <tr><td>Community</td><td>Kecil</td><td style="color:var(--accent-green)">Besar, aktif, CERN-backed</td></tr>
+    <tr><td>Python scripting</td><td>Tidak</td><td style="color:var(--accent-green)">API Python lengkap</td></tr>
+  </table>
+
+  <h3>Kapan Pakai Fritzing?</h3>
+  <p>Fritzing masih berguna untuk: membuat diagram tutorial breadboard (untuk dokumentasi Arduino, Raspberry Pi), rapid prototype sangat sederhana (1-2 komponen), atau pengajaran dasar elektronik ke pemula yang belum siap belajar EDA proper.</p>
+
+  <h3>Kapan Pakai KiCad?</h3>
+  <p>KiCad adalah pilihan tepat untuk: semua desain PCB yang serius, proyek yang akan diproduksi, desain multi-layer, desain dengan DRC ketat, proyek open hardware yang perlu file sumber terbuka, dan semua yang pernah dilakukan di Eagle. Untuk engineer seperti Anda, KiCad adalah tool yang jauh lebih sesuai.</p>
+
+  <h3>Alternatif Fritzing untuk Diagram Breadboard</h3>
+  <div class="card-grid">
+    <div class="card green">
+      <div class="card-icon">🖥️</div>
+      <h4>Wokwi (wokwi.com)</h4>
+      <p>Simulator Arduino/ESP32 berbasis browser dengan tampilan breadboard. Gratis, powerful, dan bisa simulate code secara real-time.</p>
+    </div>
+    <div class="card cyan">
+      <div class="card-icon">📐</div>
+      <h4>Tinkercad Circuits</h4>
+      <p>Simulator dari Autodesk, gratis untuk edukasi. Breadboard view + code simulation untuk Arduino.</p>
+    </div>
+    <div class="card yellow">
+      <div class="card-icon">✏️</div>
+      <h4>Drawio + Custom Shapes</h4>
+      <p>Untuk diagram dokumentasi saja (bukan simulasi), draw.io dengan shape library elektronik bisa digunakan.</p>
+    </div>
+  </div>
+</div>
+
+<!-- =============================== SECTION 31 =============================== -->
+<div class="section" id="tips">
+  <div class="section-header">
+    <span class="section-number">31</span>
+    <h2>Tips Lanjutan & Best Practices</h2>
+  </div>
+
+  <h3>Organisasi Proyek</h3>
+  <ul class="checklist">
+    <li>Selalu buat satu folder per proyek, simpan semua file proyek di dalamnya</li>
+    <li>Gunakan version control (Git) untuk proyek PCB — file KiCad adalah teks, Git-friendly</li>
+    <li>Simpan library custom (simbol dan footprint) di folder <code>lib/</code> dalam folder proyek</li>
+    <li>Dokumentasikan proyek dengan README yang menyebutkan revisi PCB dan perubahan tiap revisi</li>
+    <li>Gunakan field "Revision" di schematic title block dan update setiap perubahan signifikan</li>
+  </ul>
+
+  <h3>Scripting Python di KiCad</h3>
+  <p>KiCad 9.0 menyertakan Python scripting console yang bisa diakses dari PCB Editor via <code>Tools → Scripting Console</code>. Anda bisa mengotomasi banyak hal:</p>
+  <pre>
+<span class="comment"># Contoh: list semua footprint di board</span>
+<span class="key">import</span> <span class="val">pcbnew</span>
+board = pcbnew.GetBoard()
+<span class="key">for</span> fp <span class="key">in</span> board.GetFootprints():
+    print(fp.GetReference(), fp.GetValue(), fp.GetPosition())
+
+<span class="comment"># Contoh: move semua komponen pada net tertentu</span>
+<span class="key">for</span> pad <span class="key">in</span> board.GetPads():
+    <span class="key">if</span> pad.GetNetname() == <span class="val">"GND"</span>:
+        print(pad.GetParent().GetReference())
+  </pre>
+
+  <h3>Net Classes untuk Trace Width Otomatis</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h5>Buat Net Class di Board Setup</h5>
+        <p>Klik <code>File → Board Setup → Design Rules → Net Classes</code>. Tambahkan class baru, contoh <code>Power</code> dengan trace width 0.5mm, atau <code>USB</code> dengan differential pair settings.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h5>Assign Net ke Class</h5>
+        <p>Di tab "Net Classes", assign net (VCC, GND, dll) ke class yang sesuai. Saat routing, KiCad akan otomatis menggunakan lebar trace sesuai class net.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Tips Performa di Kali Linux</h3>
+  <ul class="checklist">
+    <li>Jika rendering lambat, coba matikan OpenGL acceleration: <code>Preferences → Preferences → PCB Editor → Display Options → Rendering Engine: Cairo</code></li>
+    <li>Untuk board besar, matikan ratsnest sementara (<kbd>~</kbd> key) saat placing untuk meningkatkan performa</li>
+    <li>Gunakan <code>Inspect → Net Inspector</code> untuk overview cepat semua net dan status routing</li>
+    <li>Backup auto-save: <code>Preferences → Preferences → Common → Auto-save interval</code> → set 5-10 menit</li>
+  </ul>
+</div>
+
+<!-- =============================== SECTION 32 =============================== -->
+<div class="section" id="shortcuts">
+  <div class="section-header">
+    <span class="section-number">32</span>
+    <h2>Daftar Shortcut Keys Lengkap</h2>
+  </div>
+
+  <h3>Schematic Editor Shortcuts</h3>
+  <table class="shortcut-table">
+    <tr><th>Shortcut</th><th>Fungsi</th></tr>
+    <tr><td><kbd>A</kbd></td><td>Add Symbol (tambah komponen)</td></tr>
+    <tr><td><kbd>P</kbd></td><td>Add Power Symbol</td></tr>
+    <tr><td><kbd>W</kbd></td><td>Wire mode</td></tr>
+    <tr><td><kbd>B</kbd></td><td>Bus mode</td></tr>
+    <tr><td><kbd>U</kbd></td><td>Bus wire entry</td></tr>
+    <tr><td><kbd>L</kbd></td><td>Net Label</td></tr>
+    <tr><td><kbd>Ctrl+L</kbd></td><td>Global Label</td></tr>
+    <tr><td><kbd>J</kbd></td><td>Junction</td></tr>
+    <tr><td><kbd>Q</kbd></td><td>No Connect marker</td></tr>
+    <tr><td><kbd>R</kbd></td><td>Rotate 90°</td></tr>
+    <tr><td><kbd>X</kbd></td><td>Mirror horizontal</td></tr>
+    <tr><td><kbd>Y</kbd></td><td>Mirror vertikal</td></tr>
+    <tr><td><kbd>E</kbd></td><td>Edit properties</td></tr>
+    <tr><td><kbd>G</kbd></td><td>Grab/drag (geser dengan koneksi)</td></tr>
+    <tr><td><kbd>Del</kbd></td><td>Delete selected</td></tr>
+    <tr><td><kbd>Esc</kbd></td><td>Cancel / deselect</td></tr>
+    <tr><td><kbd>Ctrl+Z</kbd></td><td>Undo</td></tr>
+    <tr><td><kbd>Ctrl+Y</kbd></td><td>Redo</td></tr>
+    <tr><td><kbd>Ctrl+D</kbd></td><td>Duplicate</td></tr>
+    <tr><td><kbd>Ctrl+S</kbd></td><td>Save</td></tr>
+    <tr><td><kbd>Ctrl+Home</kbd></td><td>Fit schematic di layar</td></tr>
+    <tr><td><kbd>F8</kbd></td><td>Update PCB from Schematic</td></tr>
+    <tr><td><kbd>T</kbd></td><td>Place teks</td></tr>
+  </table>
+
+  <h3>PCB Editor Shortcuts</h3>
+  <table class="shortcut-table">
+    <tr><th>Shortcut</th><th>Fungsi</th></tr>
+    <tr><td><kbd>X</kbd></td><td>Route Track (mulai routing)</td></tr>
+    <tr><td><kbd>Ctrl+X</kbd></td><td>Route Differential Pair</td></tr>
+    <tr><td><kbd>Ctrl+Shift+X</kbd></td><td>Tune Trace Length</td></tr>
+    <tr><td><kbd>V</kbd></td><td>Tambah via saat routing</td></tr>
+    <tr><td><kbd>/</kbd></td><td>Ganti layer saat routing (insert via)</td></tr>
+    <tr><td><kbd>W</kbd></td><td>Ganti trace width saat routing</td></tr>
+    <tr><td><kbd>R</kbd></td><td>Rotate 90°</td></tr>
+    <tr><td><kbd>F</kbd></td><td>Flip komponen ke layer lain</td></tr>
+    <tr><td><kbd>G</kbd></td><td>Grab/drag komponen</td></tr>
+    <tr><td><kbd>M</kbd></td><td>Move</td></tr>
+    <tr><td><kbd>E</kbd></td><td>Edit properties</td></tr>
+    <tr><td><kbd>U</kbd></td><td>Select seluruh net/track yang terhubung</td></tr>
+    <tr><td><kbd>I</kbd></td><td>Select connected track</td></tr>
+    <tr><td><kbd>B</kbd></td><td>Fill All Copper Zones</td></tr>
+    <tr><td><kbd>Ctrl+B</kbd></td><td>Unfill All Copper Zones</td></tr>
+    <tr><td><kbd>L</kbd></td><td>Lock / Unlock komponen</td></tr>
+    <tr><td><kbd>Ctrl+3</kbd></td><td>Toggle 3D Viewer</td></tr>
+    <tr><td><kbd>D</kbd></td><td>Draw track (legacy mode)</td></tr>
+    <tr><td><kbd>T</kbd></td><td>Place teks</td></tr>
+    <tr><td><kbd>Ctrl+Shift+P</kbd></td><td>Print PCB</td></tr>
+    <tr><td><kbd>~</kbd></td><td>Toggle ratsnest visibility</td></tr>
+    <tr><td><kbd>Ctrl+`</kbd></td><td>Toggle layer visibility semua</td></tr>
+    <tr><td><kbd>Ctrl+H</kbd></td><td>Interactive Router Settings</td></tr>
+    <tr><td><kbd>Space</kbd></td><td>Set reference point (untuk koordinat relatif)</td></tr>
+    <tr><td><kbd>Shift+U</kbd></td><td>Expand selection ke connected copper</td></tr>
+  </table>
+
+  <h3>Footprint Editor Shortcuts</h3>
+  <table class="shortcut-table">
+    <tr><th>Shortcut</th><th>Fungsi</th></tr>
+    <tr><td><kbd>P</kbd></td><td>Place Pad</td></tr>
+    <tr><td><kbd>E</kbd></td><td>Edit Pad Properties</td></tr>
+    <tr><td><kbd>Ctrl+Shift+A</kbd></td><td>Create Array (replikasi pad)</td></tr>
+    <tr><td><kbd>T</kbd></td><td>Place Text</td></tr>
+    <tr><td><kbd>F</kbd></td><td>Flip pad ke layer lain</td></tr>
+    <tr><td><kbd>Ctrl+M</kbd></td><td>Measure distance</td></tr>
+  </table>
+
+  <div class="info-box tip">
+    <div class="info-icon">💡</div>
+    <p><strong>Kustomisasi Shortcuts:</strong> Semua shortcut dapat dikustomisasi via <code>Preferences → Preferences → Hotkeys</code>. KiCad juga mendukung mouse gestures dan scroll behavior yang bisa dikonfigurasi. Untuk yang terbiasa dengan Eagle, ada preset konversi shortcut tersedia.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="pcb-diagram" style="padding:32px; text-align:left">
+    <p style="font-family:'Rajdhani',sans-serif; font-size:18px; color:var(--text-primary); margin-bottom:12px;">📌 Referensi Cepat — Workflow KiCad 9.0</p>
+    <p style="color:var(--accent-green)">1. Buat proyek baru → 2. Desain skematik (eeschema) → 3. Assign footprint → 4. ERC check (0 errors) → 5. Update PCB from Schematic → 6. Set board outline (Edge.Cuts) → 7. Place komponen → 8. Route traces → 9. Fill copper zones → 10. DRC check (0 errors, 0 unconnected) → 11. Generate Gerber + Drill → 12. Verify Gerber → 13. Kirim ke fab!</p>
+  </div>
+
+  <p style="text-align:center; color: var(--text-dim); font-family: 'Share Tech Mono', monospace; font-size:12px; margin-top:40px; letter-spacing:2px;">
+    KICAD 9.0 TUTORIAL · BLUE DRAGON SECURITY RESEARCH LAB · TANGERANG, INDONESIA<br>
+    Dibuat dengan KiCad 9.0 pada Kali Linux — Open Hardware untuk Semua
+  </p>
+
+</div>
+
+</div>
+</main>
+
+<a href="#top" class="scroll-top" title="Kembali ke atas">↑</a>
+
+<script>
+// Active sidebar link on scroll
+const sections = document.querySelectorAll('.section[id]');
+const links = document.querySelectorAll('#sidebar .sidebar-nav a');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const id = entry.target.getAttribute('id');
+      const link = document.querySelector(`#sidebar a[href="#${id}"]`);
+      if (link) {
+        link.style.color = 'var(--accent-green)';
+        link.style.borderLeftColor = 'var(--accent-green)';
+      }
+    }
+  });
+}, { threshold: 0.3 });
+
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

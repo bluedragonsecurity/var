@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aljabar Linear untuk Robotika — BlueDragonSec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left:'$$',right:'$$',display:true},
+      {left:'\\(',right:'\\)',display:false}
+    ],
+    throwOnError: false
+  });"></script>
+<style>
+  :root {
+    --bg:        #0a0c10;
+    --bg2:       #0f1218;
+    --bg3:       #151a24;
+    --bg4:       #1c2333;
+    --border:    #1e2d45;
+    --border2:   #253450;
+    --accent:    #1e90ff;
+    --accent2:   #00c8ff;
+    --gold:      #f0a500;
+    --red:       #ff4d6d;
+    --green:     #00e5a0;
+    --purple:    #9d6fff;
+    --text:      #c9d5e8;
+    --text2:     #8a9bb8;
+    --text3:     #5a6880;
+    --white:     #eef2ff;
+    --mono:      'JetBrains Mono', monospace;
+    --serif:     'Crimson Pro', Georgia, serif;
+    --sans:      'Space Grotesk', sans-serif;
+    --radius:    8px;
+    --shadow:    0 4px 32px rgba(0,0,0,0.6);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* ── HEADER ── */
+  .site-header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,12,16,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-dragon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .logo-text { font-family: var(--mono); font-size: 13px; color: var(--accent2); font-weight: 600; letter-spacing: 0.5px; }
+  .logo-sub { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+  .header-badge {
+    font-family: var(--mono); font-size: 10px;
+    background: rgba(30,144,255,0.1); border: 1px solid var(--accent);
+    color: var(--accent2); padding: 3px 10px; border-radius: 20px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(180deg, #0d1521 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 64px 24px 56px;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(30,144,255,0.06) 0%, transparent 60%),
+      radial-gradient(circle at 80% 20%, rgba(0,200,255,0.05) 0%, transparent 50%);
+  }
+  .hero-eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: var(--serif); font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 300; color: var(--white); line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent2); }
+  .hero-desc {
+    font-size: 1rem; color: var(--text2); max-width: 560px; margin: 0 auto 32px;
+  }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .tag {
+    font-family: var(--mono); font-size: 11px;
+    background: var(--bg4); border: 1px solid var(--border2);
+    color: var(--text2); padding: 4px 12px; border-radius: 20px;
+  }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 0;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: start;
+  }
+
+  /* ── TOC / SIDEBAR ── */
+  .toc-wrap {
+    position: sticky; top: 56px;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    background: var(--bg2);
+  }
+  .toc-title {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+    color: var(--text3); text-transform: uppercase; padding: 0 20px 12px;
+  }
+  .toc-list { list-style: none; }
+  .toc-list li a {
+    display: block; padding: 6px 20px;
+    font-size: 12.5px; color: var(--text2); text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .toc-list li a:hover { color: var(--accent2); border-left-color: var(--accent2); background: rgba(30,144,255,0.04); }
+  .toc-list li.active a { color: var(--accent2); border-left-color: var(--accent); background: rgba(30,144,255,0.07); font-weight: 600; }
+  .toc-list .toc-section { padding: 14px 20px 4px; font-size: 10px; font-family: var(--mono); color: var(--text3); letter-spacing: 2px; text-transform: uppercase; }
+  .toc-sub a { padding-left: 32px; font-size: 11.5px; }
+
+  /* ── MAIN CONTENT ── */
+  .content { padding: 40px 48px; min-width: 0; }
+
+  /* ── SECTIONS ── */
+  .section { margin-bottom: 64px; }
+  .section-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 32px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: var(--mono); font-size: 11px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff; padding: 4px 10px; border-radius: 4px; flex-shrink: 0;
+  }
+  h2 { font-family: var(--serif); font-size: 1.9rem; font-weight: 400; color: var(--white); }
+  h3 {
+    font-family: var(--sans); font-size: 1.05rem; font-weight: 600;
+    color: var(--accent2); margin: 28px 0 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  h3::before { content: '▸'; color: var(--accent); font-size: 0.8em; }
+  h4 { font-family: var(--mono); font-size: 0.85rem; color: var(--gold); margin: 20px 0 8px; }
+
+  p { font-size: 0.95rem; color: var(--text); margin-bottom: 14px; }
+  strong { color: var(--white); font-weight: 600; }
+  em { color: var(--accent2); font-style: italic; }
+
+  /* ── MATH BLOCKS ── */
+  .math-block {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin: 18px 0;
+    overflow-x: auto;
+    position: relative;
+  }
+  .math-block .math-label {
+    position: absolute; top: 8px; right: 12px;
+    font-family: var(--mono); font-size: 10px; color: var(--text3);
+  }
+  .katex-display { margin: 0 !important; }
+
+  /* ── CODE BLOCKS ── */
+  pre {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    overflow-x: auto;
+    margin: 16px 0;
+    position: relative;
+  }
+  pre .lang-badge {
+    position: absolute; top: 8px; right: 12px;
+    font-family: var(--mono); font-size: 10px;
+    background: rgba(30,144,255,0.15); color: var(--accent2);
+    padding: 2px 8px; border-radius: 3px;
+  }
+  code {
+    font-family: var(--mono); font-size: 0.82rem; color: #79c0ff;
+  }
+  p code, li code {
+    background: rgba(30,144,255,0.1); color: var(--accent2);
+    padding: 1px 6px; border-radius: 3px; font-size: 0.82em;
+  }
+  .kw { color: #ff7b72; }
+  .fn { color: #d2a8ff; }
+  .str { color: #a5d6ff; }
+  .cm { color: #4a5568; }
+  .num { color: #79c0ff; }
+  .op { color: #e3b341; }
+
+  /* ── CALLOUTS ── */
+  .callout {
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 18px 0;
+    display: flex; gap: 14px;
+  }
+  .callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+  .callout-body { font-size: 0.9rem; }
+  .callout-body strong { display: block; margin-bottom: 4px; font-size: 0.85rem; font-family: var(--mono); }
+  .callout.info { background: rgba(30,144,255,0.08); border: 1px solid rgba(30,144,255,0.25); }
+  .callout.info .callout-body strong { color: var(--accent2); }
+  .callout.warn { background: rgba(240,165,0,0.07); border: 1px solid rgba(240,165,0,0.3); }
+  .callout.warn .callout-body strong { color: var(--gold); }
+  .callout.tip { background: rgba(0,229,160,0.07); border: 1px solid rgba(0,229,160,0.25); }
+  .callout.tip .callout-body strong { color: var(--green); }
+  .callout.robot { background: rgba(157,111,255,0.07); border: 1px solid rgba(157,111,255,0.3); }
+  .callout.robot .callout-body strong { color: var(--purple); }
+
+  /* ── TABLES ── */
+  .table-wrap { overflow-x: auto; margin: 18px 0; border-radius: var(--radius); border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead tr { background: var(--bg4); }
+  th { padding: 12px 16px; text-align: left; font-family: var(--mono); font-size: 11px; color: var(--accent2); font-weight: 600; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+  td { padding: 10px 16px; color: var(--text); border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(30,144,255,0.03); }
+
+  /* ── GRID CARDS ── */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin: 18px 0; }
+  .card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card-icon { font-size: 1.6rem; margin-bottom: 10px; }
+  .card-title { font-family: var(--mono); font-size: 12px; color: var(--accent2); font-weight: 600; margin-bottom: 6px; }
+  .card-desc { font-size: 0.83rem; color: var(--text2); line-height: 1.5; }
+
+  /* ── MATRIX DISPLAY ── */
+  .matrix-visual {
+    font-family: var(--mono); font-size: 0.82rem;
+    background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: var(--radius); padding: 16px 20px;
+    overflow-x: auto; margin: 14px 0; color: var(--text);
+  }
+  .matrix-visual .bracket { color: var(--accent); font-size: 1.4em; line-height: 1; vertical-align: middle; }
+  .m-row { display: flex; gap: 18px; justify-content: center; padding: 3px 0; }
+  .m-cell { min-width: 48px; text-align: right; color: var(--text2); }
+  .m-cell.hl { color: var(--accent2); font-weight: 700; }
+  .m-cell.diag { color: var(--green); font-weight: 700; }
+
+  /* ── FINGERPRINT FOOTER ── */
+  .fingerprint {
+    margin-top: 80px; padding: 32px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); font-family: var(--mono);
+    position: relative; overflow: hidden;
+  }
+  .fingerprint::before {
+    content: '🐉';
+    position: absolute; right: 24px; top: 24px; font-size: 2.5rem; opacity: 0.15;
+  }
+  .fp-header { font-size: 11px; letter-spacing: 2px; color: var(--text3); text-transform: uppercase; margin-bottom: 16px; }
+  .fp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .fp-item { }
+  .fp-key { font-size: 10px; color: var(--text3); margin-bottom: 3px; }
+  .fp-val { font-size: 12px; color: var(--accent2); word-break: break-all; }
+  .fp-hash {
+    margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--text3); word-break: break-all;
+  }
+  .fp-hash span { color: var(--text2); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar {
+    position: fixed; top: 56px; left: 0; width: 0%; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    z-index: 200; transition: width 0.1s;
+  }
+
+  /* ── MOBILE TOC TOGGLE ── */
+  .toc-toggle {
+    display: none;
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 50%;
+    width: 48px; height: 48px; font-size: 1.2rem;
+    cursor: pointer; z-index: 300; box-shadow: var(--shadow);
+  }
+  .toc-mobile-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 250;
+    background: rgba(0,0,0,0.7);
+  }
+  .toc-mobile-panel {
+    position: fixed; left: 0; top: 0; bottom: 0;
+    width: 280px; background: var(--bg2);
+    border-right: 1px solid var(--border);
+    overflow-y: auto; padding: 20px 0;
+    z-index: 260; transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+  .toc-mobile-panel.open { transform: translateX(0); }
+  .toc-mobile-close {
+    position: absolute; top: 12px; right: 12px;
+    background: none; border: none; color: var(--text2); font-size: 1.3rem; cursor: pointer;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .toc-wrap { display: none; }
+    .toc-toggle { display: flex; align-items: center; justify-content: center; }
+    .toc-mobile-overlay { display: block; }
+    .content { padding: 24px 18px; }
+    .hero { padding: 40px 18px 36px; }
+  }
+  @media (max-width: 480px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .fp-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── LIST STYLES ── */
+  ul, ol { padding-left: 20px; margin-bottom: 14px; }
+  li { font-size: 0.93rem; color: var(--text); margin-bottom: 6px; }
+  li::marker { color: var(--accent); }
+
+  /* ── DIVIDER ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* ── INLINE HIGHLIGHT ── */
+  .hl-blue { color: var(--accent2); }
+  .hl-gold { color: var(--gold); }
+  .hl-green { color: var(--green); }
+  .hl-purple { color: var(--purple); }
+  .hl-red { color: var(--red); }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <a href="#" class="logo">
+    <div class="logo-dragon">🐉</div>
+    <div>
+      <div class="logo-text">BlueDragonSec</div>
+      <div class="logo-sub">bluedragonsec.com</div>
+    </div>
+  </a>
+  <div class="header-badge">RESEARCH DOCUMENT</div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Matematika Fondasi Robotika</div>
+  <h1>Aljabar Linear untuk <em>Robotika</em></h1>
+  <p class="hero-desc">
+    Dokumentasi tutorial lengkap dan mendalam — dari vektor dasar hingga quaternion, Jacobian, dan kinematika robot. Referensi kurikulum Security Researcher Master Class.
+  </p>
+  <div class="hero-tags">
+    <span class="tag">Vektor &amp; Matriks</span>
+    <span class="tag">Transformasi Homogen</span>
+    <span class="tag">Quaternion</span>
+    <span class="tag">Jacobian</span>
+    <span class="tag">SVD</span>
+    <span class="tag">Kinematika Robot</span>
+    <span class="tag">Kontrol Optimal</span>
+    <span class="tag">Deep Learning</span>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR TOC -->
+  <nav class="toc-wrap" id="toc">
+    <div class="toc-title">Daftar Isi</div>
+    <ul class="toc-list" id="toc-list">
+      <li class="toc-section">Fondasi</li>
+      <li id="toc-1"><a href="#s1">1. Pengantar &amp; Notasi</a></li>
+      <li id="toc-2"><a href="#s2">2. Vektor &amp; Ruang Vektor</a></li>
+      <li id="toc-3"><a href="#s3">3. Matriks &amp; Operasi</a></li>
+      <li id="toc-4"><a href="#s4">4. Determinan &amp; Invers</a></li>
+      <li class="toc-section">Transformasi</li>
+      <li id="toc-5"><a href="#s5">5. Transformasi Linear</a></li>
+      <li id="toc-6"><a href="#s6">6. Rotasi 2D &amp; 3D</a></li>
+      <li id="toc-7"><a href="#s7">7. Koordinat Homogen</a></li>
+      <li id="toc-8"><a href="#s8">8. Sudut Euler &amp; RPY</a></li>
+      <li id="toc-9"><a href="#s9">9. Quaternion</a></li>
+      <li class="toc-section">Lanjutan</li>
+      <li id="toc-10"><a href="#s10">10. Eigenvalue &amp; Eigenvector</a></li>
+      <li id="toc-11"><a href="#s11">11. SVD</a></li>
+      <li id="toc-12"><a href="#s12">12. Jacobian Robot</a></li>
+      <li id="toc-13"><a href="#s13">13. Forward &amp; Inverse Kinematics</a></li>
+      <li class="toc-section">Aplikasi</li>
+      <li id="toc-14"><a href="#s14">14. Least Squares</a></li>
+      <li id="toc-15"><a href="#s15">15. Kontrol &amp; State Space</a></li>
+      <li id="toc-16"><a href="#s16">16. Aljabar Linear di Deep Learning</a></li>
+      <li id="toc-17"><a href="#s17">17. Implementasi Python</a></li>
+    </ul>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 1: PENGANTAR
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s1">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>Pengantar &amp; Notasi</h2>
+      </div>
+
+      <p>
+        Aljabar linear adalah bahasa universal robotika. Setiap posisi lengan robot, orientasi sensor, kecepatan end-effector, dan sinyal kontrol dinyatakan dalam bentuk <strong>vektor</strong> dan <strong>matriks</strong>. Pemahaman mendalam tentang struktur matematika ini adalah prasyarat mutlak sebelum mempelajari kinematika, dinamika, SLAM, maupun kontrol optimal.
+      </p>
+
+      <div class="callout info">
+        <span class="callout-icon">📐</span>
+        <div class="callout-body">
+          <strong>Ruang Lingkup Dokumen</strong>
+          Tutorial ini mencakup aljabar linear dari tingkat fondasi hingga aplikasi lanjutan dalam robotika modern: manipulator, mobile robot, drone, dan sistem persepsi berbasis deep learning.
+        </div>
+      </div>
+
+      <h3>Notasi Standar</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Simbol</th><th>Arti</th><th>Contoh</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>a, b, x</code> (huruf kecil italic)</td><td>Skalar</td><td>\(a = 3.14\)</td></tr>
+            <tr><td><code><b>v</b>, <b>u</b>, <b>p</b></code> (bold lowercase)</td><td>Vektor kolom</td><td>\(\mathbf{v} \in \mathbb{R}^3\)</td></tr>
+            <tr><td><code><b>A</b>, <b>R</b>, <b>T</b></code> (bold uppercase)</td><td>Matriks</td><td>\(\mathbf{A} \in \mathbb{R}^{m \times n}\)</td></tr>
+            <tr><td>\(\mathbf{v}^T\)</td><td>Transpose vektor/matriks</td><td>\([v_1, v_2, v_3]\)</td></tr>
+            <tr><td>\(\|\mathbf{v}\|\)</td><td>Norma Euclidean vektor</td><td>\(\|\mathbf{v}\|_2\)</td></tr>
+            <tr><td>\(\mathbf{I}_n\)</td><td>Matriks identitas \(n \times n\)</td><td>\(\mathbf{I}_3\)</td></tr>
+            <tr><td>\(\mathbf{A}^{-1}\)</td><td>Invers matriks</td><td>\(\mathbf{A}\mathbf{A}^{-1} = \mathbf{I}\)</td></tr>
+            <tr><td>\(\text{rank}(\mathbf{A})\)</td><td>Rank matriks</td><td>Dimensi ruang kolom</td></tr>
+            <tr><td>\({}^A\mathbf{p}_B\)</td><td>Vektor \(B\) dilihat dari frame \(A\)</td><td>Notasi robotika</td></tr>
+            <tr><td>\({}^A_B\mathbf{R}\)</td><td>Matriks rotasi dari \(B\) ke \(A\)</td><td>\(3\times 3\) ortogonal</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Sistem Koordinat dalam Robotika</h3>
+      <p>Robot menggunakan <strong>multiple frames of reference</strong> secara simultan. Konvensi standar industri:</p>
+      <div class="card-grid">
+        <div class="card"><div class="card-icon">🌍</div><div class="card-title">World Frame {W}</div><div class="card-desc">Frame global tetap. Semua posisi robot akhirnya dinyatakan relatif terhadap frame ini.</div></div>
+        <div class="card"><div class="card-icon">🤖</div><div class="card-title">Base Frame {B}</div><div class="card-desc">Frame tetap di pangkal robot. Untuk manipulator, ini adalah titik mounting di lantai.</div></div>
+        <div class="card"><div class="card-icon">🔗</div><div class="card-title">Link Frame {i}</div><div class="card-desc">Frame pada setiap link robot. Bergerak bersama link. Didefinisikan via konvensi Denavit-Hartenberg.</div></div>
+        <div class="card"><div class="card-icon">🎯</div><div class="card-title">Tool Frame {T}</div><div class="card-desc">Frame di ujung end-effector (gripper, sensor, las). Target planning kinematika invers.</div></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 2: VEKTOR
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s2">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Vektor &amp; Ruang Vektor</h2>
+      </div>
+
+      <h3>Definisi Vektor</h3>
+      <p>Vektor adalah elemen dari ruang vektor \(\mathbb{R}^n\). Dalam robotika 3D, posisi dinyatakan sebagai vektor kolom:</p>
+
+      <div class="math-block">
+        <span class="math-label">Vektor posisi 3D</span>
+        $$\mathbf{p} = \begin{bmatrix} x \\ y \\ z \end{bmatrix} \in \mathbb{R}^3, \qquad \mathbf{v} = \begin{bmatrix} v_1 \\ v_2 \\ \vdots \\ v_n \end{bmatrix} \in \mathbb{R}^n$$
+      </div>
+
+      <h3>Operasi Dasar Vektor</h3>
+
+      <h4>Penjumlahan dan Skalar</h4>
+      <div class="math-block">
+        $$\mathbf{u} + \mathbf{v} = \begin{bmatrix} u_1 + v_1 \\ u_2 + v_2 \\ u_3 + v_3 \end{bmatrix}, \qquad c\mathbf{v} = \begin{bmatrix} cv_1 \\ cv_2 \\ cv_3 \end{bmatrix}$$
+      </div>
+      <p class="hl-purple"><em>Aplikasi robotika:</em> Superposisi kecepatan, penggabungan gaya/momen, interpolasi lintasan.</p>
+
+      <h4>Dot Product (Produk Dalam)</h4>
+      <div class="math-block">
+        <span class="math-label">Inner Product</span>
+        $$\mathbf{u} \cdot \mathbf{v} = \mathbf{u}^T\mathbf{v} = \sum_{i=1}^{n} u_i v_i = \|\mathbf{u}\|\|\mathbf{v}\|\cos\theta$$
+      </div>
+
+      <div class="callout robot">
+        <span class="callout-icon">🤖</span>
+        <div class="callout-body">
+          <strong>Aplikasi: Deteksi Tabrakan</strong>
+          Sudut antara dua vektor: \(\cos\theta = \dfrac{\mathbf{u}\cdot\mathbf{v}}{\|\mathbf{u}\|\|\mathbf{v}\|}\). Jika \(\theta = 0°\) (dot product maksimal), dua vektor normal sejajar — digunakan dalam algoritma GJK untuk deteksi collision robot.
+        </div>
+      </div>
+
+      <h4>Cross Product (Produk Silang)</h4>
+      <div class="math-block">
+        <span class="math-label">Cross Product ℝ³</span>
+        $$\mathbf{u} \times \mathbf{v} = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ u_1 & u_2 & u_3 \\ v_1 & v_2 & v_3 \end{vmatrix} = \begin{bmatrix} u_2 v_3 - u_3 v_2 \\ u_3 v_1 - u_1 v_3 \\ u_1 v_2 - u_2 v_1 \end{bmatrix}$$
+      </div>
+      <p>Cross product menghasilkan vektor <strong>tegak lurus</strong> terhadap bidang \(\mathbf{u}\) dan \(\mathbf{v}\), dengan besar \(\|\mathbf{u}\|\|\mathbf{v}\|\sin\theta\).</p>
+
+      <div class="callout robot">
+        <span class="callout-icon">⚙️</span>
+        <div class="callout-body">
+          <strong>Aplikasi: Momen Torsi</strong>
+          Torsi pada joint robot: \(\boldsymbol{\tau} = \mathbf{r} \times \mathbf{F}\), di mana \(\mathbf{r}\) adalah vektor posisi dari titik pivot ke titik aplikasi gaya. Cross product memberikan arah dan besar torsi sekaligus.
+        </div>
+      </div>
+
+      <h3>Norma Vektor</h3>
+      <div class="math-block">
+        $$\|\mathbf{v}\|_1 = \sum_i |v_i|, \quad \|\mathbf{v}\|_2 = \sqrt{\sum_i v_i^2}, \quad \|\mathbf{v}\|_\infty = \max_i |v_i|, \quad \|\mathbf{v}\|_p = \left(\sum_i |v_i|^p\right)^{1/p}$$
+      </div>
+      <p>Vektor <strong>unit</strong>: \(\hat{\mathbf{v}} = \dfrac{\mathbf{v}}{\|\mathbf{v}\|_2}\). Digunakan untuk menyatakan arah murni tanpa magnitude (sumbu rotasi, normal permukaan).</p>
+
+      <h3>Kebebasan Linear &amp; Basis</h3>
+      <p>Set vektor \(\{\mathbf{v}_1, \ldots, \mathbf{v}_k\}\) <strong>bebas linear</strong> jika:</p>
+      <div class="math-block">
+        $$c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + \cdots + c_k\mathbf{v}_k = \mathbf{0} \implies c_1 = c_2 = \cdots = c_k = 0$$
+      </div>
+      <p><strong>Basis standar</strong> \(\mathbb{R}^3\): \(\mathbf{e}_1 = [1,0,0]^T\), \(\mathbf{e}_2 = [0,1,0]^T\), \(\mathbf{e}_3 = [0,0,1]^T\). Sumbu X, Y, Z dalam koordinat robot.</p>
+
+      <h3>Proyeksi Ortogonal</h3>
+      <div class="math-block">
+        <span class="math-label">Proyeksi</span>
+        $$\text{proj}_{\mathbf{u}}\mathbf{v} = \frac{\mathbf{v}\cdot\mathbf{u}}{\mathbf{u}\cdot\mathbf{u}}\,\mathbf{u} = \frac{\mathbf{v}^T\mathbf{u}}{\|\mathbf{u}\|^2}\,\mathbf{u}$$
+      </div>
+      <p><em>Aplikasi:</em> Dekomposisi kecepatan end-effector menjadi komponen tangensial dan normal terhadap constraint surface.</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 3: MATRIKS
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s3">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>Matriks &amp; Operasi</h2>
+      </div>
+
+      <h3>Definisi Matriks</h3>
+      <p>Matriks \(\mathbf{A} \in \mathbb{R}^{m \times n}\) adalah array bilangan dengan \(m\) baris dan \(n\) kolom:</p>
+      <div class="math-block">
+        $$\mathbf{A} = \begin{bmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\ a_{21} & a_{22} & \cdots & a_{2n} \\ \vdots & & \ddots & \vdots \\ a_{m1} & a_{m2} & \cdots & a_{mn} \end{bmatrix}$$
+      </div>
+
+      <h3>Perkalian Matriks</h3>
+      <p>Untuk \(\mathbf{A} \in \mathbb{R}^{m \times k}\) dan \(\mathbf{B} \in \mathbb{R}^{k \times n}\), hasil \(\mathbf{C} = \mathbf{A}\mathbf{B} \in \mathbb{R}^{m \times n}\):</p>
+      <div class="math-block">
+        <span class="math-label">Matrix multiplication</span>
+        $$c_{ij} = \sum_{l=1}^{k} a_{il}\, b_{lj} = \mathbf{a}_i^T \mathbf{b}_j$$
+      </div>
+
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>Non-Komutatif!</strong>
+          Umumnya \(\mathbf{A}\mathbf{B} \neq \mathbf{B}\mathbf{A}\). Ini kritis dalam robotika: urutan transformasi matriks rotasi menentukan orientasi akhir yang berbeda. \(R_z R_y R_x \neq R_x R_y R_z\).
+        </div>
+      </div>
+
+      <h3>Jenis-Jenis Matriks Penting dalam Robotika</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Jenis</th><th>Definisi</th><th>Properti</th><th>Penggunaan</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Identitas \(\mathbf{I}\)</strong></td><td>\(i_{ij} = 1\) if \(i=j\), else \(0\)</td><td>\(\mathbf{A}\mathbf{I} = \mathbf{I}\mathbf{A} = \mathbf{A}\)</td><td>Elemen netral perkalian</td></tr>
+            <tr><td><strong>Simetri</strong></td><td>\(\mathbf{A} = \mathbf{A}^T\)</td><td>Eigenvalue real semua</td><td>Inertia tensor, covariance</td></tr>
+            <tr><td><strong>Anti-simetri (skew)</strong></td><td>\(\mathbf{A} = -\mathbf{A}^T\)</td><td>Diagonal nol</td><td>Matriks cross product \([\boldsymbol{\omega}]_\times\)</td></tr>
+            <tr><td><strong>Ortogonal</strong></td><td>\(\mathbf{Q}^T\mathbf{Q} = \mathbf{I}\)</td><td>\(\mathbf{Q}^{-1} = \mathbf{Q}^T\), \(\det = \pm 1\)</td><td>Matriks rotasi</td></tr>
+            <tr><td><strong>Diagonal</strong></td><td>\(a_{ij} = 0\) for \(i \neq j\)</td><td>Mudah diinvers</td><td>Scaling, inertia diagonal</td></tr>
+            <tr><td><strong>Positif Definit (SPD)</strong></td><td>\(\mathbf{x}^T\mathbf{A}\mathbf{x} > 0\)</td><td>Eigenvalue positif semua</td><td>Inertia, Hessian, covariance</td></tr>
+            <tr><td><strong>Sparse</strong></td><td>Kebanyakan entri nol</td><td>Komputasi efisien</td><td>Jacobian robot besar, SLAM</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Matriks Skew-Symmetric (Cross Product Matrix)</h3>
+      <p>Sangat penting dalam robotika untuk menyatakan angular velocity dan cross product sebagai operasi matriks:</p>
+      <div class="math-block">
+        <span class="math-label">Skew-Symmetric Operator</span>
+        $$[\boldsymbol{\omega}]_\times = \begin{bmatrix} 0 & -\omega_z & \omega_y \\ \omega_z & 0 & -\omega_x \\ -\omega_y & \omega_x & 0 \end{bmatrix}, \quad \text{sehingga} \quad \boldsymbol{\omega} \times \mathbf{v} = [\boldsymbol{\omega}]_\times \mathbf{v}$$
+      </div>
+
+      <h3>Transpose</h3>
+      <div class="math-block">
+        $$(\mathbf{A}^T)_{ij} = A_{ji}, \qquad (\mathbf{AB})^T = \mathbf{B}^T\mathbf{A}^T, \qquad (\mathbf{ABC})^T = \mathbf{C}^T\mathbf{B}^T\mathbf{A}^T$$
+      </div>
+      <p><em>Kritis:</em> Untuk matriks rotasi ortogonal, \(\mathbf{R}^{-1} = \mathbf{R}^T\) — invers gratis tanpa Gauss-Jordan!</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 4: DETERMINAN & INVERS
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s4">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>Determinan &amp; Invers Matriks</h2>
+      </div>
+
+      <h3>Determinan</h3>
+      <p>Determinan adalah skalar yang mengukur "faktor skala volume" dari transformasi linear:</p>
+      <div class="math-block">
+        $$\det(\mathbf{A}_{2\times 2}) = ad - bc, \qquad \det\begin{bmatrix}a&b\\c&d\end{bmatrix} = ad - bc$$
+      </div>
+      <div class="math-block">
+        <span class="math-label">Ekspansi Laplace</span>
+        $$\det(\mathbf{A}_{3\times 3}) = a_{11}(a_{22}a_{33} - a_{23}a_{32}) - a_{12}(a_{21}a_{33} - a_{23}a_{31}) + a_{13}(a_{21}a_{32} - a_{22}a_{31})$$
+      </div>
+
+      <div class="callout info">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>Interpretasi Geometri</strong>
+          \(|\det(\mathbf{A})|\) = volume parallelotope yang dibentuk oleh kolom-kolom \(\mathbf{A}\). Jika \(\det = 0\): matriks singular (tidak bisa diinvers, rank deficient). Untuk matriks rotasi: \(\det(\mathbf{R}) = +1\) selalu.
+        </div>
+      </div>
+
+      <h3>Invers Matriks</h3>
+      <div class="math-block">
+        $$\mathbf{A}^{-1} = \frac{1}{\det(\mathbf{A})}\, \text{adj}(\mathbf{A}), \qquad \text{adj}(\mathbf{A})_{ij} = (-1)^{i+j} M_{ji}$$
+      </div>
+      <p>di mana \(M_{ji}\) adalah minor (determinan submatriks dengan baris \(j\) dan kolom \(i\) dihapus).</p>
+
+      <p>Dalam praktik komputasi, invers dihitung via <strong>dekomposisi LU</strong> (jauh lebih efisien dari formula analitik).</p>
+
+      <h3>Pseudo-Inverse (Moore-Penrose)</h3>
+      <p>Untuk matriks non-persegi (matriks Jacobian robot sering \(6 \times n\) dengan \(n \neq 6\)):</p>
+      <div class="math-block">
+        <span class="math-label">Moore-Penrose Pseudoinverse</span>
+        $$\mathbf{A}^+ = \mathbf{V}\boldsymbol{\Sigma}^+\mathbf{U}^T \quad \text{(via SVD)}$$
+        $$\text{Overdetermined } (m > n): \quad \mathbf{A}^+ = (\mathbf{A}^T\mathbf{A})^{-1}\mathbf{A}^T$$
+        $$\text{Underdetermined } (m < n): \quad \mathbf{A}^+ = \mathbf{A}^T(\mathbf{A}\mathbf{A}^T)^{-1}$$
+      </div>
+      <div class="callout robot">
+        <span class="callout-icon">🦾</span>
+        <div class="callout-body">
+          <strong>Aplikasi: Inverse Kinematics</strong>
+          Robot 7-DOF memiliki Jacobian \(6 \times 7\) (underdetermined). Pseudo-inverse memberikan solusi minimum-norm: \(\dot{\mathbf{q}} = \mathbf{J}^+\dot{\mathbf{x}}\). Konfigurasi sendi bergerak seminimal mungkin untuk mencapai kecepatan end-effector yang diinginkan.
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 5: TRANSFORMASI LINEAR
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s5">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2>Transformasi Linear</h2>
+      </div>
+
+      <h3>Definisi Formal</h3>
+      <p>Fungsi \(T: \mathbb{R}^n \to \mathbb{R}^m\) adalah transformasi linear jika:</p>
+      <div class="math-block">
+        $$T(\mathbf{u} + \mathbf{v}) = T(\mathbf{u}) + T(\mathbf{v}), \qquad T(c\mathbf{v}) = c\,T(\mathbf{v})$$
+      </div>
+      <p>Setiap transformasi linear dapat dinyatakan sebagai perkalian matriks: \(T(\mathbf{x}) = \mathbf{A}\mathbf{x}\).</p>
+
+      <h3>Empat Ruang Fundamental (Four Fundamental Subspaces)</h3>
+      <p>Untuk matriks \(\mathbf{A} \in \mathbb{R}^{m \times n}\) dengan \(\text{rank}(A) = r\):</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Ruang</th><th>Definisi</th><th>Dimensi</th><th>Relevansi Robot</th></tr></thead>
+          <tbody>
+            <tr><td><span class="hl-blue">Column Space \(C(\mathbf{A})\)</span></td><td>Semua \(\mathbf{A}\mathbf{x}\) untuk \(\mathbf{x} \in \mathbb{R}^n\)</td><td>\(r\)</td><td>Kecepatan Cartesian yang bisa dicapai</td></tr>
+            <tr><td><span class="hl-green">Null Space \(N(\mathbf{A})\)</span></td><td>\(\mathbf{A}\mathbf{x} = \mathbf{0}\)</td><td>\(n - r\)</td><td>Gerak sendi yang tidak menggerakkan end-effector (null-space motion)</td></tr>
+            <tr><td><span class="hl-gold">Row Space \(C(\mathbf{A}^T)\)</span></td><td>Semua kombinasi baris \(\mathbf{A}\)</td><td>\(r\)</td><td>Gaya Cartesian yang bisa ditransmisikan</td></tr>
+            <tr><td><span class="hl-red">Left Null Space \(N(\mathbf{A}^T)\)</span></td><td>\(\mathbf{A}^T\mathbf{y} = \mathbf{0}\)</td><td>\(m - r\)</td><td>Gaya yang tidak bisa dilawan (robot singular)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout robot">
+        <span class="callout-icon">🔧</span>
+        <div class="callout-body">
+          <strong>Null Space Motion dalam Redundant Robot</strong>
+          Robot 7-DOF (KUKA iiwa, Franka Panda) memiliki null space 1-dimensi. Gerak dalam null space memungkinkan robot menghindari rintangan atau singularitas tanpa mengubah pose end-effector: \(\dot{\mathbf{q}} = \mathbf{J}^+\dot{\mathbf{x}} + (\mathbf{I} - \mathbf{J}^+\mathbf{J})\dot{\mathbf{q}}_0\).
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 6: ROTASI 2D & 3D
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s6">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <h2>Rotasi 2D &amp; 3D</h2>
+      </div>
+
+      <h3>Rotasi 2D</h3>
+      <div class="math-block">
+        <span class="math-label">Rotation Matrix 2D</span>
+        $$\mathbf{R}(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix}, \qquad \mathbf{R}^{-1}(\theta) = \mathbf{R}(-\theta) = \mathbf{R}^T(\theta)$$
+      </div>
+
+      <h3>Rotasi 3D — Sumbu Koordinat</h3>
+      <div class="math-block">
+        <span class="math-label">Rotasi Elementar</span>
+        $$\mathbf{R}_x(\alpha) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\alpha & -\sin\alpha \\ 0 & \sin\alpha & \cos\alpha \end{bmatrix}, \quad \mathbf{R}_y(\beta) = \begin{bmatrix} \cos\beta & 0 & \sin\beta \\ 0 & 1 & 0 \\ -\sin\beta & 0 & \cos\beta \end{bmatrix}$$
+
+        $$\mathbf{R}_z(\gamma) = \begin{bmatrix} \cos\gamma & -\sin\gamma & 0 \\ \sin\gamma & \cos\gamma & 0 \\ 0 & 0 & 1 \end{bmatrix}$$
+      </div>
+
+      <h3>Rotasi Sumbu Arbitrer (Rodrigues' Rotation Formula)</h3>
+      <p>Rotasi sebesar \(\theta\) di sekitar sumbu satuan \(\hat{\mathbf{k}} = [k_x, k_y, k_z]^T\):</p>
+      <div class="math-block">
+        <span class="math-label">Rodrigues Formula</span>
+        $$\mathbf{R}(\hat{\mathbf{k}}, \theta) = \cos\theta\,\mathbf{I} + (1-\cos\theta)\,\hat{\mathbf{k}}\hat{\mathbf{k}}^T + \sin\theta\,[\hat{\mathbf{k}}]_\times$$
+      </div>
+      <p>di mana \([\hat{\mathbf{k}}]_\times\) adalah matriks skew-symmetric dari \(\hat{\mathbf{k}}\).</p>
+
+      <h3>Properti Matriks Rotasi</h3>
+      <div class="math-block">
+        $$\mathbf{R} \in SO(3) \Leftrightarrow \mathbf{R}^T\mathbf{R} = \mathbf{I}, \quad \det(\mathbf{R}) = +1$$
+      </div>
+      <p>\(SO(3)\) adalah <em>Special Orthogonal Group</em> — grup Lie yang menjadi fondasi orientasi 3D dalam robotika. Setiap orientasi 3D valid adalah elemen \(SO(3)\).</p>
+
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>Komposisi Rotasi</strong>
+          Rotasi berurutan: \({}^A_C\mathbf{R} = {}^A_B\mathbf{R}\, {}^B_C\mathbf{R}\). Perhatikan urutan! Rotasi post-multiply (relative to current frame) vs pre-multiply (relative to fixed frame) menghasilkan orientasi akhir yang berbeda.
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 7: KOORDINAT HOMOGEN
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s7">
+      <div class="section-header">
+        <span class="section-num">07</span>
+        <h2>Koordinat Homogen &amp; Matriks Transformasi</h2>
+      </div>
+
+      <h3>Motivasi</h3>
+      <p>Rotasi adalah transformasi linear (bisa dinyatakan sebagai matriks). Namun <strong>translasi bukan transformasi linear</strong> — ia tidak bisa dinyatakan sebagai perkalian matriks \(3 \times 3\). Solusi: augment ke dimensi-4 menggunakan <strong>koordinat homogen</strong>.</p>
+
+      <h3>Koordinat Homogen</h3>
+      <div class="math-block">
+        <span class="math-label">Homogeneous Coordinates</span>
+        $$\tilde{\mathbf{p}} = \begin{bmatrix} x \\ y \\ z \\ 1 \end{bmatrix} \in \mathbb{R}^4 \quad \text{(titik)}, \qquad \tilde{\mathbf{v}} = \begin{bmatrix} v_x \\ v_y \\ v_z \\ 0 \end{bmatrix} \in \mathbb{R}^4 \quad \text{(vektor/arah)}$$
+      </div>
+      <p>Komponen keempat \(w=1\) untuk titik (terpengaruh translasi), \(w=0\) untuk vektor (tidak terpengaruh translasi) — elegan secara matematis!</p>
+
+      <h3>Matriks Transformasi Homogen (HTM)</h3>
+      <div class="math-block">
+        <span class="math-label">Homogeneous Transformation Matrix</span>
+        $$\mathbf{T} = \begin{bmatrix} \mathbf{R}_{3\times 3} & \mathbf{p}_{3\times 1} \\ \mathbf{0}_{1\times 3} & 1 \end{bmatrix} \in SE(3), \qquad \mathbf{T}^{-1} = \begin{bmatrix} \mathbf{R}^T & -\mathbf{R}^T\mathbf{p} \\ \mathbf{0}^T & 1 \end{bmatrix}$$
+      </div>
+      <p>\(SE(3)\) adalah <em>Special Euclidean Group</em> — grup transformasi rigid body 3D (rotasi + translasi).</p>
+
+      <h3>Contoh: Transformasi Frame Kamera → Robot</h3>
+      <div class="math-block">
+        <span class="math-label">Example HTM</span>
+        $${}^W_C\mathbf{T} = \begin{bmatrix} 0 & 0 & 1 & 0.5 \\ -1 & 0 & 0 & 0.3 \\ 0 & -1 & 0 & 1.2 \\ 0 & 0 & 0 & 1 \end{bmatrix}$$
+      </div>
+      <p>Kolom 1–3 adalah matriks rotasi \(\mathbf{R}\), kolom 4 adalah posisi origin kamera dalam frame world \([0.5, 0.3, 1.2]^T\) meter.</p>
+
+      <h3>Komposisi Transformasi</h3>
+      <div class="math-block">
+        $${}^A_C\mathbf{T} = {}^A_B\mathbf{T}\, {}^B_C\mathbf{T}, \qquad {}^A\mathbf{p} = {}^A_B\mathbf{T}\, {}^B\mathbf{p}$$
+      </div>
+      <div class="callout robot">
+        <span class="callout-icon">🦿</span>
+        <div class="callout-body">
+          <strong>Rantai Kinematika Robot</strong>
+          Posisi end-effector dalam world frame: \({}^W\mathbf{p}_{EE} = {}^W_0\mathbf{T}\, {}^0_1\mathbf{T}\, {}^1_2\mathbf{T}\, \cdots\, {}^{n-1}_n\mathbf{T}\, {}^n\mathbf{p}_{EE}\). Setiap \({}^{i-1}_i\mathbf{T}\) adalah HTM joint ke-\(i\), dihitung via parameter Denavit-Hartenberg.
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 8: EULER ANGLES
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s8">
+      <div class="section-header">
+        <span class="section-num">08</span>
+        <h2>Sudut Euler &amp; Representasi RPY</h2>
+      </div>
+
+      <h3>Sudut Euler ZYX (Yaw-Pitch-Roll)</h3>
+      <p>Representasi orientasi paling umum dalam robotika dan drone. Tiga rotasi berurutan:</p>
+      <div class="math-block">
+        <span class="math-label">ZYX Euler (Aerospace Convention)</span>
+        $$\mathbf{R}_{ZYX}(\psi, \theta, \phi) = \mathbf{R}_z(\psi)\,\mathbf{R}_y(\theta)\,\mathbf{R}_x(\phi)$$
+        $$= \begin{bmatrix} c_\psi c_\theta & c_\psi s_\theta s_\phi - s_\psi c_\phi & c_\psi s_\theta c_\phi + s_\psi s_\phi \\ s_\psi c_\theta & s_\psi s_\theta s_\phi + c_\psi c_\phi & s_\psi s_\theta c_\phi - c_\psi s_\phi \\ -s_\theta & c_\theta s_\phi & c_\theta c_\phi \end{bmatrix}$$
+      </div>
+      <p>di mana \(c_\alpha = \cos\alpha\), \(s_\alpha = \sin\alpha\).</p>
+
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>Gimbal Lock!</strong>
+          Sudut Euler memiliki singularitas <em>gimbal lock</em> ketika \(\theta = \pm 90°\): dua derajat kebebasan menjadi satu — hilang satu DOF orientasi. Untuk drone dalam manuver akrobatik atau robot saat orientasi arbitrer, ini berbahaya. Solusi: gunakan <strong>quaternion</strong>.
+        </div>
+      </div>
+
+      <h3>Invers: Matriks Rotasi → Sudut Euler</h3>
+      <div class="math-block">
+        <span class="math-label">Extraction dari R</span>
+        $$\psi = \text{atan2}(r_{21}, r_{11}), \quad \theta = \text{atan2}(-r_{31}, \sqrt{r_{32}^2 + r_{33}^2}), \quad \phi = \text{atan2}(r_{32}, r_{33})$$
+      </div>
+      <p>Selalu gunakan <code>atan2(y, x)</code> (dua argumen) bukan <code>atan(y/x)</code> untuk mendapatkan kuadran yang benar.</p>
+
+      <h3>Konvensi Lain</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Konvensi</th><th>Urutan</th><th>Digunakan di</th></tr></thead>
+          <tbody>
+            <tr><td>ZYX (Tait-Bryan)</td><td>Yaw → Pitch → Roll</td><td>Aerospace, drone, ROS</td></tr>
+            <tr><td>ZYZ (Euler proper)</td><td>Precession → Nutation → Spin</td><td>Mekanika klasik, robot industri</td></tr>
+            <tr><td>XYZ (RPY)</td><td>Roll → Pitch → Yaw</td><td>Marine, beberapa robotika</td></tr>
+            <tr><td>ZXZ</td><td>—</td><td>Mekanika kuantum, kristalografi</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 9: QUATERNION
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s9">
+      <div class="section-header">
+        <span class="section-num">09</span>
+        <h2>Quaternion</h2>
+      </div>
+
+      <h3>Definisi</h3>
+      <p>Quaternion adalah ekstensi bilangan kompleks ke dimensi-4, diperkenalkan Hamilton (1843). Dalam robotika, unit quaternion merepresentasikan rotasi 3D tanpa gimbal lock:</p>
+      <div class="math-block">
+        <span class="math-label">Unit Quaternion</span>
+        $$\mathbf{q} = w + x\mathbf{i} + y\mathbf{j} + z\mathbf{k} = \begin{bmatrix} w \\ \mathbf{v} \end{bmatrix}, \quad \mathbf{v} = \begin{bmatrix} x \\ y \\ z \end{bmatrix}$$
+        $$\text{Unit quaternion: } \|\mathbf{q}\| = \sqrt{w^2 + x^2 + y^2 + z^2} = 1$$
+      </div>
+      <p>Aturan perkalian basis: \(\mathbf{i}^2 = \mathbf{j}^2 = \mathbf{k}^2 = \mathbf{ijk} = -1\), \(\mathbf{ij} = \mathbf{k}\), \(\mathbf{jk} = \mathbf{i}\), \(\mathbf{ki} = \mathbf{j}\).</p>
+
+      <h3>Quaternion ↔ Axis-Angle</h3>
+      <div class="math-block">
+        <span class="math-label">Konversi Axis-Angle</span>
+        $$\mathbf{q} = \begin{bmatrix} \cos(\theta/2) \\ \hat{\mathbf{k}}\sin(\theta/2) \end{bmatrix} = \begin{bmatrix} \cos(\theta/2) \\ k_x\sin(\theta/2) \\ k_y\sin(\theta/2) \\ k_z\sin(\theta/2) \end{bmatrix}$$
+      </div>
+
+      <h3>Perkalian Quaternion</h3>
+      <div class="math-block">
+        <span class="math-label">Hamilton Product</span>
+        $$\mathbf{q}_1 \otimes \mathbf{q}_2 = \begin{bmatrix} w_1 w_2 - \mathbf{v}_1 \cdot \mathbf{v}_2 \\ w_1 \mathbf{v}_2 + w_2 \mathbf{v}_1 + \mathbf{v}_1 \times \mathbf{v}_2 \end{bmatrix}$$
+      </div>
+
+      <h3>Rotasi Vektor dengan Quaternion</h3>
+      <div class="math-block">
+        <span class="math-label">Quaternion Rotation</span>
+        $$\mathbf{p}' = \mathbf{q} \otimes \mathbf{p} \otimes \mathbf{q}^* , \quad \text{di mana } \mathbf{p} = \begin{bmatrix}0 \\ \mathbf{v}\end{bmatrix}, \quad \mathbf{q}^* = \begin{bmatrix}w \\ -\mathbf{v}\end{bmatrix}$$
+      </div>
+
+      <h3>Quaternion → Matriks Rotasi</h3>
+      <div class="math-block">
+        $$\mathbf{R}(\mathbf{q}) = \begin{bmatrix} 1-2(y^2+z^2) & 2(xy-wz) & 2(xz+wy) \\ 2(xy+wz) & 1-2(x^2+z^2) & 2(yz-wx) \\ 2(xz-wy) & 2(yz+wx) & 1-2(x^2+y^2) \end{bmatrix}$$
+      </div>
+
+      <h3>SLERP — Spherical Linear Interpolation</h3>
+      <p>Interpolasi rotasi yang smooth di permukaan unit sphere \(S^3\):</p>
+      <div class="math-block">
+        <span class="math-label">SLERP</span>
+        $$\text{slerp}(\mathbf{q}_0, \mathbf{q}_1, t) = \mathbf{q}_0 \left(\mathbf{q}_0^{-1} \mathbf{q}_1\right)^t = \frac{\sin((1-t)\Omega)}{\sin\Omega}\mathbf{q}_0 + \frac{\sin(t\Omega)}{\sin\Omega}\mathbf{q}_1$$
+        $$\text{di mana } \cos\Omega = \mathbf{q}_0 \cdot \mathbf{q}_1$$
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-icon">✅</span>
+        <div class="callout-body">
+          <strong>Kapan Pakai Quaternion?</strong>
+          Selalu gunakan quaternion untuk: interpolasi orientasi smooth, filter orientasi (EKF, Madgwick), penghindaran gimbal lock, performa komputasi (16 mult + 12 add vs 27 mult matriks), dan aplikasi real-time (drone, legged robot, manipulator dengan workspace penuh).
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 10: EIGENVALUE
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s10">
+      <div class="section-header">
+        <span class="section-num">10</span>
+        <h2>Eigenvalue &amp; Eigenvector</h2>
+      </div>
+
+      <h3>Definisi</h3>
+      <p>Vektor \(\mathbf{v} \neq \mathbf{0}\) adalah eigenvector dari \(\mathbf{A}\) dengan eigenvalue \(\lambda\) jika:</p>
+      <div class="math-block">
+        $$\mathbf{A}\mathbf{v} = \lambda\mathbf{v} \quad \Leftrightarrow \quad (\mathbf{A} - \lambda\mathbf{I})\mathbf{v} = \mathbf{0}$$
+        $$\text{Characteristic equation: } \det(\mathbf{A} - \lambda\mathbf{I}) = 0$$
+      </div>
+
+      <h3>Dekomposisi Eigen (Eigendecomposition)</h3>
+      <div class="math-block">
+        <span class="math-label">Eigendecomposition</span>
+        $$\mathbf{A} = \mathbf{Q}\boldsymbol{\Lambda}\mathbf{Q}^{-1}, \quad \boldsymbol{\Lambda} = \text{diag}(\lambda_1, \ldots, \lambda_n), \quad \mathbf{Q} = [\mathbf{v}_1, \ldots, \mathbf{v}_n]$$
+      </div>
+      <p>Untuk matriks simetris \(\mathbf{A} = \mathbf{A}^T\): eigenvalue selalu real, eigenvectors saling ortogonal → \(\mathbf{A} = \mathbf{Q}\boldsymbol{\Lambda}\mathbf{Q}^T\) (spectral theorem).</p>
+
+      <h3>Aplikasi dalam Robotika</h3>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">⚖️</div>
+          <div class="card-title">Inertia Tensor</div>
+          <div class="card-desc">Eigenvalue inertia tensor adalah <em>principal moments of inertia</em>. Eigenvectors adalah sumbu-sumbu inersia utama — memudahkan analisis dinamika rotasi.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📊</div>
+          <div class="card-title">Analisis PCA</div>
+          <div class="card-desc">Principal Component Analysis di point cloud 3D: eigenvektor matriks kovarians memberikan arah variasi maksimal — berguna untuk estimasi normal surface dan segmentasi objek.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔄</div>
+          <div class="card-title">Stabilitas Sistem</div>
+          <div class="card-desc">Sistem dinamis \(\dot{\mathbf{x}} = \mathbf{A}\mathbf{x}\) stabil jika semua eigenvalue \(\mathbf{A}\) memiliki bagian real negatif (Re\((\lambda_i) < 0\)).</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎯</div>
+          <div class="card-title">Manipulability</div>
+          <div class="card-desc">Eigenvalue dari \(\mathbf{J}\mathbf{J}^T\) mengukur kemudahan gerak robot di berbagai arah. Singularitas terjadi saat eigenvalue minimum mendekati nol.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 11: SVD
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s11">
+      <div class="section-header">
+        <span class="section-num">11</span>
+        <h2>Singular Value Decomposition (SVD)</h2>
+      </div>
+
+      <h3>Teorema SVD</h3>
+      <p>Setiap matriks \(\mathbf{A} \in \mathbb{R}^{m \times n}\) dapat didekomposisi:</p>
+      <div class="math-block">
+        <span class="math-label">SVD Theorem</span>
+        $$\mathbf{A} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T$$
+        $$\mathbf{U} \in \mathbb{R}^{m\times m} \text{ ortogonal}, \quad \boldsymbol{\Sigma} \in \mathbb{R}^{m\times n} \text{ diagonal}, \quad \mathbf{V} \in \mathbb{R}^{n\times n} \text{ ortogonal}$$
+        $$\boldsymbol{\Sigma} = \text{diag}(\sigma_1, \sigma_2, \ldots, \sigma_r, 0, \ldots), \quad \sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_r > 0$$
+      </div>
+      <p>\(\sigma_i\) adalah <strong>singular values</strong>. Kolom \(\mathbf{U}\) adalah <em>left singular vectors</em>, kolom \(\mathbf{V}\) adalah <em>right singular vectors</em>.</p>
+
+      <h3>Interpretasi Geometri</h3>
+      <p>SVD mendekomposisi transformasi linear sembarang menjadi: <em>rotasi</em> (\(\mathbf{V}^T\)) → <em>stretching</em> (\(\boldsymbol{\Sigma}\)) → <em>rotasi</em> (\(\mathbf{U}\)). Ini cara paling fundamental memahami apa yang dilakukan sebuah transformasi.</p>
+
+      <h3>Low-Rank Approximation</h3>
+      <div class="math-block">
+        <span class="math-label">Eckart-Young Theorem</span>
+        $$\mathbf{A}_k = \sum_{i=1}^{k} \sigma_i \mathbf{u}_i \mathbf{v}_i^T = \mathbf{U}_k\boldsymbol{\Sigma}_k\mathbf{V}_k^T$$
+        $$\|\mathbf{A} - \mathbf{A}_k\|_F = \sqrt{\sum_{i=k+1}^{r}\sigma_i^2} \quad \text{(minimum)}$$
+      </div>
+
+      <h3>Kondisi Matriks &amp; Singularitas Robot</h3>
+      <div class="math-block">
+        $$\kappa(\mathbf{A}) = \frac{\sigma_{\max}}{\sigma_{\min}} = \text{condition number}$$
+      </div>
+      <p>Manipulability ellipsoid robot: sumbu-sumbu ellipsoid adalah singular vectors \(\mathbf{U}\), panjang sumbu adalah singular values \(\boldsymbol{\sigma}\). Robot mendekati singularitas ketika \(\sigma_{\min} \to 0\) (kondisi \(\kappa \to \infty\)).</p>
+
+      <div class="callout robot">
+        <span class="callout-icon">🔬</span>
+        <div class="callout-body">
+          <strong>Pseudo-inverse via SVD</strong>
+          \(\mathbf{A}^+ = \mathbf{V}\boldsymbol{\Sigma}^+\mathbf{U}^T\), di mana \(\boldsymbol{\Sigma}^+ = \text{diag}(1/\sigma_1, \ldots, 1/\sigma_r, 0, \ldots)\). Untuk mencegah instabilitas saat \(\sigma_i\) kecil: gunakan <em>Damped Least Squares (DLS)</em> — \(\mathbf{A}^+_{DLS} = \mathbf{A}^T(\mathbf{A}\mathbf{A}^T + \lambda^2\mathbf{I})^{-1}\) dengan \(\lambda\) sebagai damping factor.
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 12: JACOBIAN
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s12">
+      <div class="section-header">
+        <span class="section-num">12</span>
+        <h2>Jacobian Matrix Robot</h2>
+      </div>
+
+      <h3>Definisi Jacobian</h3>
+      <p>Jacobian \(\mathbf{J}(\mathbf{q}) \in \mathbb{R}^{6 \times n}\) memetakan kecepatan sendi ke kecepatan end-effector:</p>
+      <div class="math-block">
+        <span class="math-label">Velocity Mapping</span>
+        $$\dot{\mathbf{x}} = \mathbf{J}(\mathbf{q})\,\dot{\mathbf{q}}, \qquad \dot{\mathbf{x}} = \begin{bmatrix}\dot{\mathbf{p}} \\ \boldsymbol{\omega}\end{bmatrix} \in \mathbb{R}^6, \quad \dot{\mathbf{q}} \in \mathbb{R}^n$$
+        $$J_{ij} = \frac{\partial x_i}{\partial q_j}$$
+      </div>
+
+      <h3>Jacobian Geometrik</h3>
+      <p>Dihitung dari forward kinematics. Untuk setiap joint \(j\):</p>
+      <div class="math-block">
+        <span class="math-label">Geometric Jacobian Columns</span>
+        $$\text{Revolute joint: } \mathbf{J}_j = \begin{bmatrix} \hat{\mathbf{z}}_j \times (\mathbf{p}_e - \mathbf{p}_j) \\ \hat{\mathbf{z}}_j \end{bmatrix}, \quad \text{Prismatic: } \mathbf{J}_j = \begin{bmatrix} \hat{\mathbf{z}}_j \\ \mathbf{0} \end{bmatrix}$$
+      </div>
+      <p>di mana \(\hat{\mathbf{z}}_j\) adalah sumbu rotasi joint ke-\(j\) dan \(\mathbf{p}_e - \mathbf{p}_j\) adalah vektor dari joint \(j\) ke end-effector.</p>
+
+      <h3>Static Force/Torque Duality</h3>
+      <div class="math-block">
+        <span class="math-label">Force Duality (Virtual Work)</span>
+        $$\boldsymbol{\tau} = \mathbf{J}^T(\mathbf{q})\,\mathbf{F}_{ext}$$
+      </div>
+      <p>Prinsip virtual work: torsi sendi yang diperlukan untuk melawan gaya eksternal di end-effector = transpose Jacobian kali gaya. Ini fondasi <em>torque control</em> dan <em>impedance control</em>.</p>
+
+      <h3>Analisis Singularitas via Jacobian</h3>
+      <div class="math-block">
+        $$\text{Singularitas: } \det(\mathbf{J}\mathbf{J}^T) = 0 \quad \text{atau} \quad \text{rank}(\mathbf{J}) < 6$$
+        $$\text{Manipulability index: } w = \sqrt{\det(\mathbf{J}\mathbf{J}^T)} = \prod_{i=1}^{r}\sigma_i$$
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 13: KINEMATICS
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s13">
+      <div class="section-header">
+        <span class="section-num">13</span>
+        <h2>Forward &amp; Inverse Kinematics</h2>
+      </div>
+
+      <h3>Denavit-Hartenberg (DH) Parameters</h3>
+      <p>Konvensi standar untuk parameterisasi rantai kinematika. Setiap joint ke-\(i\) didefinisikan oleh 4 parameter:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Parameter</th><th>Simbol</th><th>Arti</th><th>Tipe</th></tr></thead>
+          <tbody>
+            <tr><td>Link length</td><td>\(a_i\)</td><td>Jarak antara \(z_{i-1}\) dan \(z_i\) sepanjang \(x_i\)</td><td>Konstanta</td></tr>
+            <tr><td>Link twist</td><td>\(\alpha_i\)</td><td>Sudut antara \(z_{i-1}\) dan \(z_i\) sekitar \(x_i\)</td><td>Konstanta</td></tr>
+            <tr><td>Link offset</td><td>\(d_i\)</td><td>Jarak antara \(x_{i-1}\) dan \(x_i\) sepanjang \(z_{i-1}\)</td><td>Variabel (prismatic)</td></tr>
+            <tr><td>Joint angle</td><td>\(\theta_i\)</td><td>Sudut antara \(x_{i-1}\) dan \(x_i\) sekitar \(z_{i-1}\)</td><td>Variabel (revolute)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>DH Transformation Matrix</h3>
+      <div class="math-block">
+        <span class="math-label">DH Homogeneous Transform</span>
+        $${}^{i-1}_i\mathbf{T} = \mathbf{R}_z(\theta_i)\,\mathbf{T}_z(d_i)\,\mathbf{T}_x(a_i)\,\mathbf{R}_x(\alpha_i)$$
+        $$= \begin{bmatrix} c_\theta & -s_\theta c_\alpha & s_\theta s_\alpha & a c_\theta \\ s_\theta & c_\theta c_\alpha & -c_\theta s_\alpha & a s_\theta \\ 0 & s_\alpha & c_\alpha & d \\ 0 & 0 & 0 & 1 \end{bmatrix}$$
+      </div>
+
+      <h3>Forward Kinematics (FK)</h3>
+      <div class="math-block">
+        $${}^0_n\mathbf{T}(\mathbf{q}) = {}^0_1\mathbf{T}(q_1)\, {}^1_2\mathbf{T}(q_2)\, \cdots\, {}^{n-1}_n\mathbf{T}(q_n)$$
+      </div>
+      <p>FK selalu unik dan efisien (\(\mathcal{O}(n)\) HTM perkalian). Hasil: pose end-effector \(\mathbf{T} = [\mathbf{R} | \mathbf{p}]\) dalam frame base.</p>
+
+      <h3>Inverse Kinematics (IK)</h3>
+      <p>Diberikan pose target \(\mathbf{T}_d\), cari konfigurasi sendi \(\mathbf{q}\) yang memenuhi \(FK(\mathbf{q}) = \mathbf{T}_d\). Jauh lebih sulit dari FK!</p>
+
+      <h4>Solusi Numerik: Jacobian Iteratif</h4>
+      <div class="math-block">
+        <span class="math-label">Newton-Raphson IK</span>
+        $$\mathbf{q}_{k+1} = \mathbf{q}_k + \mathbf{J}^+(\mathbf{q}_k)\,\mathbf{e}_k, \quad \mathbf{e}_k = \mathbf{x}_d - FK(\mathbf{q}_k)$$
+      </div>
+      <p>Dengan error pose \(\mathbf{e}_k \in \mathbb{R}^6\) (translasi + rotasi). Konvergen saat \(\|\mathbf{e}_k\| < \epsilon\).</p>
+
+      <h4>IK Analitik (untuk robot standar)</h4>
+      <p>Robot 6-DOF dengan pergelangan spherical (3 joint terakhir berpotongan di satu titik) memiliki solusi IK tertutup. Contoh: PUMA 560, UR5/UR10 — maksimum 8 konfigurasi berbeda.</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 14: LEAST SQUARES
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s14">
+      <div class="section-header">
+        <span class="section-num">14</span>
+        <h2>Least Squares &amp; Optimasi</h2>
+      </div>
+
+      <h3>Least Squares Problem</h3>
+      <p>Minimasi residual untuk sistem overdetermined \(\mathbf{A}\mathbf{x} = \mathbf{b}\) (lebih banyak persamaan dari variabel):</p>
+      <div class="math-block">
+        <span class="math-label">Ordinary Least Squares</span>
+        $$\min_{\mathbf{x}} \|\mathbf{A}\mathbf{x} - \mathbf{b}\|_2^2 \quad \Rightarrow \quad \mathbf{x}^* = (\mathbf{A}^T\mathbf{A})^{-1}\mathbf{A}^T\mathbf{b} = \mathbf{A}^+\mathbf{b}$$
+      </div>
+      <p><strong>Normal equations</strong>: \(\mathbf{A}^T\mathbf{A}\mathbf{x} = \mathbf{A}^T\mathbf{b}\).</p>
+
+      <h3>Weighted Least Squares</h3>
+      <div class="math-block">
+        $$\min_{\mathbf{x}} \|\mathbf{W}^{1/2}(\mathbf{A}\mathbf{x} - \mathbf{b})\|_2^2 \quad \Rightarrow \quad \mathbf{x}^* = (\mathbf{A}^T\mathbf{W}\mathbf{A})^{-1}\mathbf{A}^T\mathbf{W}\mathbf{b}$$
+      </div>
+
+      <h3>Regularisasi Tikhonov (Ridge Regression)</h3>
+      <div class="math-block">
+        $$\min_{\mathbf{x}} \|\mathbf{A}\mathbf{x} - \mathbf{b}\|_2^2 + \lambda\|\mathbf{x}\|_2^2 \quad \Rightarrow \quad \mathbf{x}^* = (\mathbf{A}^T\mathbf{A} + \lambda\mathbf{I})^{-1}\mathbf{A}^T\mathbf{b}$$
+      </div>
+      <p>Regularisasi \(\lambda > 0\) mencegah solusi blow-up saat \(\mathbf{A}\) near-singular. Ini basis <em>Damped Least Squares IK</em>.</p>
+
+      <h3>Aplikasi: Robot Calibration</h3>
+      <p>Kalibrasi kinematika robot: diberikan \(N\) pengukuran pose, cari koreksi parameter DH \(\Delta\mathbf{p}\) yang meminimasi error:</p>
+      <div class="math-block">
+        $$\min_{\Delta\mathbf{p}} \sum_{k=1}^{N} \|\mathbf{J}_k \Delta\mathbf{p} - \mathbf{e}_k\|_2^2 \quad \Rightarrow \quad \Delta\mathbf{p} = (\mathbf{J}_{stack}^T\mathbf{J}_{stack})^{-1}\mathbf{J}_{stack}^T\mathbf{e}_{stack}$$
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 15: STATE SPACE & CONTROL
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s15">
+      <div class="section-header">
+        <span class="section-num">15</span>
+        <h2>State Space &amp; Kontrol Linear</h2>
+      </div>
+
+      <h3>Representasi State Space</h3>
+      <p>Model sistem dinamis robot yang dilinearisasi di sekitar titik kerja:</p>
+      <div class="math-block">
+        <span class="math-label">Linear State Space Model</span>
+        $$\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u}$$
+        $$\mathbf{y} = \mathbf{C}\mathbf{x} + \mathbf{D}\mathbf{u}$$
+        $$\mathbf{x} \in \mathbb{R}^n \text{ (state)}, \quad \mathbf{u} \in \mathbb{R}^m \text{ (input)}, \quad \mathbf{y} \in \mathbb{R}^p \text{ (output)}$$
+      </div>
+
+      <h3>Controllability &amp; Observability</h3>
+      <div class="math-block">
+        $$\mathbf{C}_{ctrl} = \begin{bmatrix}\mathbf{B} & \mathbf{AB} & \mathbf{A}^2\mathbf{B} & \cdots & \mathbf{A}^{n-1}\mathbf{B}\end{bmatrix}$$
+        $$\text{Fully controllable} \Leftrightarrow \text{rank}(\mathbf{C}_{ctrl}) = n$$
+      </div>
+      <div class="math-block">
+        $$\mathbf{O} = \begin{bmatrix}\mathbf{C} \\ \mathbf{CA} \\ \mathbf{CA}^2 \\ \vdots \\ \mathbf{CA}^{n-1}\end{bmatrix}$$
+        $$\text{Fully observable} \Leftrightarrow \text{rank}(\mathbf{O}) = n$$
+      </div>
+
+      <h3>LQR — Linear Quadratic Regulator</h3>
+      <p>Optimal control: minimasi cost function quadratic:</p>
+      <div class="math-block">
+        <span class="math-label">LQR Cost Function</span>
+        $$J = \int_0^\infty \left(\mathbf{x}^T\mathbf{Q}\mathbf{x} + \mathbf{u}^T\mathbf{R}\mathbf{u}\right)dt$$
+        $$\mathbf{u}^* = -\mathbf{K}\mathbf{x}, \quad \mathbf{K} = \mathbf{R}^{-1}\mathbf{B}^T\mathbf{P}$$
+        $$\text{CARE: } \mathbf{A}^T\mathbf{P} + \mathbf{P}\mathbf{A} - \mathbf{P}\mathbf{B}\mathbf{R}^{-1}\mathbf{B}^T\mathbf{P} + \mathbf{Q} = \mathbf{0}$$
+      </div>
+      <p>CARE = Continuous Algebraic Riccati Equation. Solusinya \(\mathbf{P}\) adalah SPD matrix — memberikan gain kontrol optimal \(\mathbf{K}\).</p>
+
+      <h3>Kalman Filter</h3>
+      <div class="math-block">
+        <span class="math-label">Kalman Update Equations</span>
+        $$\text{Predict: } \hat{\mathbf{x}}_{k|k-1} = \mathbf{A}\hat{\mathbf{x}}_{k-1}, \quad \mathbf{P}_{k|k-1} = \mathbf{A}\mathbf{P}_{k-1}\mathbf{A}^T + \mathbf{Q}$$
+        $$\text{Gain: } \mathbf{K}_k = \mathbf{P}_{k|k-1}\mathbf{C}^T(\mathbf{C}\mathbf{P}_{k|k-1}\mathbf{C}^T + \mathbf{R})^{-1}$$
+        $$\text{Update: } \hat{\mathbf{x}}_k = \hat{\mathbf{x}}_{k|k-1} + \mathbf{K}_k(\mathbf{y}_k - \mathbf{C}\hat{\mathbf{x}}_{k|k-1})$$
+      </div>
+      <p>Kalman filter = estimator linier optimal (minimum variance). Esensial untuk sensor fusion IMU+GPS, odometry, SLAM.</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 16: DEEP LEARNING
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s16">
+      <div class="section-header">
+        <span class="section-num">16</span>
+        <h2>Aljabar Linear dalam Deep Learning</h2>
+      </div>
+
+      <h3>Forward Pass sebagai Operasi Matriks</h3>
+      <div class="math-block">
+        <span class="math-label">Layer Fully Connected</span>
+        $$\mathbf{z}^{(l)} = \mathbf{W}^{(l)}\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}, \quad \mathbf{a}^{(l)} = \sigma(\mathbf{z}^{(l)})$$
+      </div>
+      <p>Batch forward pass untuk \(N\) sampel sekaligus: \(\mathbf{Z} = \mathbf{W}\mathbf{A} + \mathbf{b}\mathbf{1}^T\) — satu operasi GEMM (General Matrix-Matrix Multiply) yang dioptimalkan di GPU.</p>
+
+      <h3>Backpropagation &amp; Jacobian</h3>
+      <div class="math-block">
+        $$\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(l)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(l)}} \left(\mathbf{a}^{(l-1)}\right)^T = \boldsymbol{\delta}^{(l)}\left(\mathbf{a}^{(l-1)}\right)^T$$
+        $$\boldsymbol{\delta}^{(l)} = \left(\mathbf{W}^{(l+1)}\right)^T \boldsymbol{\delta}^{(l+1)} \odot \sigma'(\mathbf{z}^{(l)})$$
+      </div>
+
+      <h3>Attention Mechanism (Transformer)</h3>
+      <div class="math-block">
+        <span class="math-label">Scaled Dot-Product Attention</span>
+        $$\text{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{softmax}\!\left(\frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d_k}}\right)\mathbf{V}$$
+      </div>
+      <p>Sepenuhnya operasi matriks: \(\mathbf{Q}\mathbf{K}^T\) adalah dot-product similarity, \(\sqrt{d_k}\) adalah normalisasi untuk stabilitas numerik, softmax adalah normalisasi baris, dikali \(\mathbf{V}\) untuk weighted sum.</p>
+
+      <h3>Konvolusi sebagai Matriks Toeplitz</h3>
+      <p>Konvolusi 1D \((f * g)[n]\) ekivalen dengan perkalian matriks Toeplitz (banded). Konvolusi 2D (CNN) ekivalen dengan doubly block circulant matrix multiplication — ini mengapa CNN dapat diimplementasikan via FFT.</p>
+
+      <h3>Tensorisasi dalam Robotics ML</h3>
+      <div class="math-block">
+        $$\text{Point cloud: } \mathbf{X} \in \mathbb{R}^{N \times 3}, \quad \text{Feature: } \mathbf{F} \in \mathbb{R}^{N \times C}$$
+        $$\text{PointNet global: } \mathbf{f}_{global} = \text{MaxPool}(\{\mathbf{MLP}(\mathbf{x}_i)\}_{i=1}^N) \in \mathbb{R}^C$$
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION 17: IMPLEMENTASI PYTHON
+         ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="s17">
+      <div class="section-header">
+        <span class="section-num">17</span>
+        <h2>Implementasi Python — NumPy &amp; SciPy</h2>
+      </div>
+
+      <h3>Setup &amp; Dasar</h3>
+      <pre><span class="lang-badge">Python</span><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> scipy.linalg <span class="kw">as</span> la
+<span class="kw">from</span> scipy.spatial.transform <span class="kw">import</span> Rotation
+
+<span class="cm"># Vektor dan matriks dasar</span>
+v = np.<span class="fn">array</span>([<span class="num">1.0</span>, <span class="num">2.0</span>, <span class="num">3.0</span>])
+A = np.<span class="fn">array</span>([[<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>],[<span class="num">4</span>,<span class="num">5</span>,<span class="num">6</span>],[<span class="num">7</span>,<span class="num">8</span>,<span class="num">9</span>]])
+
+<span class="cm"># Operasi dasar</span>
+dot   = np.<span class="fn">dot</span>(v, v)          <span class="cm"># dot product: 14.0</span>
+cross = np.<span class="fn">cross</span>(v, v)       <span class="cm"># cross product: [0,0,0]</span>
+norm  = np.linalg.<span class="fn">norm</span>(v)    <span class="cm"># norm: 3.742</span>
+vhat  = v / norm              <span class="cm"># unit vector</span>
+
+<span class="cm"># Matriks perkalian</span>
+B = np.<span class="fn">eye</span>(<span class="num">3</span>)
+C = A <span class="op">@</span> B                    <span class="cm"># matrix multiply (prefer @)</span>
+
+<span class="cm"># Eigendecomposition</span>
+eigvals, eigvecs = np.linalg.<span class="fn">eig</span>(A)
+
+<span class="cm"># SVD</span>
+U, sigma, Vt = np.linalg.<span class="fn">svd</span>(A, full_matrices=<span class="kw">False</span>)
+</code></pre>
+
+      <h3>Rotasi dengan scipy</h3>
+      <pre><span class="lang-badge">Python</span><code><span class="kw">from</span> scipy.spatial.transform <span class="kw">import</span> Rotation <span class="kw">as</span> R
+
+<span class="cm"># Buat rotasi dari berbagai representasi</span>
+r_euler = R.<span class="fn">from_euler</span>(<span class="str">'ZYX'</span>, [<span class="num">30</span>, <span class="num">45</span>, <span class="num">60</span>], degrees=<span class="kw">True</span>)
+r_quat  = R.<span class="fn">from_quat</span>([<span class="num">0</span>, <span class="num">0</span>, np.<span class="fn">sin</span>(np.pi/<span class="num">4</span>), np.<span class="fn">cos</span>(np.pi/<span class="num">4</span>)])
+r_rotvec= R.<span class="fn">from_rotvec</span>(np.pi/<span class="num">2</span> * np.<span class="fn">array</span>([<span class="num">0</span>, <span class="num">0</span>, <span class="num">1</span>]))
+r_matrix= R.<span class="fn">from_matrix</span>(np.<span class="fn">eye</span>(<span class="num">3</span>))
+
+<span class="cm"># Konversi antar representasi</span>
+matrix = r_euler.<span class="fn">as_matrix</span>()     <span class="cm"># → 3x3 rotation matrix</span>
+quat   = r_euler.<span class="fn">as_quat</span>()       <span class="cm"># → [x,y,z,w] (scipy convention)</span>
+euler  = r_quat.<span class="fn">as_euler</span>(<span class="str">'ZYX'</span>, degrees=<span class="kw">True</span>)
+
+<span class="cm"># Komposisi rotasi</span>
+r_total = r_euler * r_quat        <span class="cm"># Hamilton product</span>
+
+<span class="cm"># SLERP interpolasi</span>
+r0, r1 = R.<span class="fn">from_euler</span>(<span class="str">'z'</span>, <span class="num">0</span>), R.<span class="fn">from_euler</span>(<span class="str">'z'</span>, <span class="num">90</span>, degrees=<span class="kw">True</span>)
+times = np.<span class="fn">linspace</span>(<span class="num">0</span>, <span class="num">1</span>, <span class="num">10</span>)
+<span class="kw">from</span> scipy.spatial.transform <span class="kw">import</span> Slerp
+slerp = <span class="fn">Slerp</span>([<span class="num">0</span>, <span class="num">1</span>], R.<span class="fn">concatenate</span>([r0, r1]))
+interp = slerp(times)
+</code></pre>
+
+      <h3>Transformasi Homogen</h3>
+      <pre><span class="lang-badge">Python</span><code><span class="kw">def</span> <span class="fn">make_htm</span>(R, t):
+    <span class="str">"""Buat Homogeneous Transformation Matrix dari R dan t."""</span>
+    T = np.<span class="fn">eye</span>(<span class="num">4</span>)
+    T[:<span class="num">3</span>, :<span class="num">3</span>] = R
+    T[:<span class="num">3</span>,  <span class="num">3</span>] = t
+    <span class="kw">return</span> T
+
+<span class="kw">def</span> <span class="fn">htm_inv</span>(T):
+    <span class="str">"""Invers HTM yang efisien (tidak pakai np.linalg.inv)."""</span>
+    R = T[:<span class="num">3</span>, :<span class="num">3</span>]
+    t = T[:<span class="num">3</span>,  <span class="num">3</span>]
+    T_inv = np.<span class="fn">eye</span>(<span class="num">4</span>)
+    T_inv[:<span class="num">3</span>, :<span class="num">3</span>] = R.T
+    T_inv[:<span class="num">3</span>,  <span class="num">3</span>] = -R.T <span class="op">@</span> t
+    <span class="kw">return</span> T_inv
+
+<span class="cm"># Contoh penggunaan</span>
+Rz90 = R.<span class="fn">from_euler</span>(<span class="str">'z'</span>, <span class="num">90</span>, degrees=<span class="kw">True</span>).<span class="fn">as_matrix</span>()
+t    = np.<span class="fn">array</span>([<span class="num">0.5</span>, <span class="num">0.3</span>, <span class="num">1.0</span>])
+T    = <span class="fn">make_htm</span>(Rz90, t)
+
+<span class="cm"># Transformasi titik</span>
+p_local = np.<span class="fn">array</span>([<span class="num">1</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">1</span>])  <span class="cm"># homogeneous</span>
+p_world = T <span class="op">@</span> p_local
+</code></pre>
+
+      <h3>Jacobian &amp; Pseudo-Inverse IK</h3>
+      <pre><span class="lang-badge">Python</span><code><span class="kw">def</span> <span class="fn">jacobian_numerical</span>(fk_func, q, eps=<span class="num">1e-6</span>):
+    <span class="str">"""Jacobian numerik via finite differences."""</span>
+    n = <span class="fn">len</span>(q)
+    x0 = <span class="fn">fk_func</span>(q)
+    m = <span class="fn">len</span>(x0)
+    J = np.<span class="fn">zeros</span>((m, n))
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+        q_plus = q.<span class="fn">copy</span>(); q_plus[i] += eps
+        J[:, i] = (<span class="fn">fk_func</span>(q_plus) - x0) / eps
+    <span class="kw">return</span> J
+
+<span class="kw">def</span> <span class="fn">ik_jacobian</span>(fk_func, x_target, q_init, 
+               max_iter=<span class="num">200</span>, tol=<span class="num">1e-6</span>, lam=<span class="num">0.01</span>):
+    <span class="str">"""IK via Damped Least Squares Jacobian."""</span>
+    q = q_init.<span class="fn">copy</span>()
+    <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(max_iter):
+        x_cur = <span class="fn">fk_func</span>(q)
+        e = x_target - x_cur
+        <span class="kw">if</span> np.linalg.<span class="fn">norm</span>(e) < tol:
+            <span class="kw">break</span>
+        J    = <span class="fn">jacobian_numerical</span>(fk_func, q)
+        <span class="cm"># Damped Least Squares: J^T (JJ^T + λ²I)^{-1}</span>
+        JJt  = J <span class="op">@</span> J.T
+        dq   = J.T <span class="op">@</span> np.linalg.<span class="fn">solve</span>(JJt + lam**<span class="num">2</span>*np.<span class="fn">eye</span>(JJt.shape[<span class="num">0</span>]), e)
+        q   += dq
+    <span class="kw">return</span> q
+</code></pre>
+
+      <h3>Kalman Filter Sederhana</h3>
+      <pre><span class="lang-badge">Python</span><code><span class="kw">class</span> <span class="fn">KalmanFilter</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, A, C, Q, R_noise, x0, P0):
+        self.A, self.C   = A, C
+        self.Q, self.R   = Q, R_noise
+        self.x, self.P   = x0, P0
+        self.n           = A.shape[<span class="num">0</span>]
+
+    <span class="kw">def</span> <span class="fn">predict</span>(self):
+        self.x = self.A <span class="op">@</span> self.x
+        self.P = self.A <span class="op">@</span> self.P <span class="op">@</span> self.A.T + self.Q
+
+    <span class="kw">def</span> <span class="fn">update</span>(self, y):
+        S  = self.C <span class="op">@</span> self.P <span class="op">@</span> self.C.T + self.R
+        K  = self.P <span class="op">@</span> self.C.T <span class="op">@</span> np.linalg.<span class="fn">inv</span>(S)
+        self.x += K <span class="op">@</span> (y - self.C <span class="op">@</span> self.x)
+        self.P  = (np.<span class="fn">eye</span>(self.n) - K <span class="op">@</span> self.C) <span class="op">@</span> self.P
+
+<span class="cm"># Usage: estimasi posisi robot 2D</span>
+A  = np.<span class="fn">array</span>([[<span class="num">1</span>,<span class="num">0</span>,<span class="num">0.1</span>,<span class="num">0</span>],[<span class="num">0</span>,<span class="num">1</span>,<span class="num">0</span>,<span class="num">0.1</span>],[<span class="num">0</span>,<span class="num">0</span>,<span class="num">1</span>,<span class="num">0</span>],[<span class="num">0</span>,<span class="num">0</span>,<span class="num">0</span>,<span class="num">1</span>]])
+C  = np.<span class="fn">eye</span>(<span class="num">2</span>, <span class="num">4</span>)  <span class="cm"># observasi posisi saja (x, y)</span>
+kf = <span class="fn">KalmanFilter</span>(A, C, <span class="num">0.01</span>*np.<span class="fn">eye</span>(<span class="num">4</span>), <span class="num">0.1</span>*np.<span class="fn">eye</span>(<span class="num">2</span>),
+                  np.<span class="fn">zeros</span>(<span class="num">4</span>), np.<span class="fn">eye</span>(<span class="num">4</span>))
+</code></pre>
+
+      <div class="callout tip">
+        <span class="callout-icon">🐍</span>
+        <div class="callout-body">
+          <strong>Library Robotika Python</strong>
+          <code>roboticstoolbox-python</code> (Peter Corke) — FK/IK lengkap, visualisasi. <code>modern_robotics</code> (Lynch &amp; Park) — implementasi buku Modern Robotics. <code>pytransform3d</code> — transformasi 3D dan visualisasi. <code>pin</code> (Pinocchio) — dinamika robot rigid body ultra-cepat.
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         FINGERPRINT
+         ═══════════════════════════════════════════════════════ -->
+    <div class="fingerprint">
+      <div class="fp-header">// Document Fingerprint — BlueDragonSec</div>
+      <div class="fp-grid">
+        <div class="fp-item">
+          <div class="fp-key">AUTHOR</div>
+          <div class="fp-val">Antonius · BlueDragonSec</div>
+        </div>
+        <div class="fp-item">
+          <div class="fp-key">DOMAIN</div>
+          <div class="fp-val">bluedragonsec.com</div>
+        </div>
+        <div class="fp-item">
+          <div class="fp-key">CLASSIFICATION</div>
+          <div class="fp-val">Research · Curriculum</div>
+        </div>
+        <div class="fp-item">
+          <div class="fp-key">TOPIC</div>
+          <div class="fp-val">Linear Algebra for Robotics</div>
+        </div>
+        <div class="fp-item">
+          <div class="fp-key">RELEASE</div>
+          <div class="fp-val">2026-04-15</div>
+        </div>
+        <div class="fp-item">
+          <div class="fp-key">VERSION</div>
+          <div class="fp-val">v1.0.0</div>
+        </div>
+        <div class="fp-item">
+          <div class="fp-key">GITHUB</div>
+          <div class="fp-val">github.com/bluedragonsecurity</div>
+        </div>
+        <div class="fp-item">
+          <div class="fp-key">TWITTER</div>
+          <div class="fp-val">@bluedragonsec</div>
+        </div>
+      </div>
+      <div class="fp-hash">
+        DOC-SHA256: <span>bd2026::alg-lin-robotika::antonius::4f8a1c9e2b7d3e6f0a5b8c1d4e7f2a3b9c0d1e4f7a2b5c8d3e6f1a4b7c0d2e5f</span>
+      </div>
+      <div class="fp-hash" style="margin-top:8px">
+        &copy; 2026 BlueDragonSec — Tangerang, Indonesia. Referensi kurikulum Security Researcher Master Class. Distribusi bebas untuk keperluan pendidikan non-komersial dengan atribusi.
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- MOBILE TOC -->
+<button class="toc-toggle" id="tocToggle" aria-label="Daftar Isi">☰</button>
+<div class="toc-mobile-overlay" id="tocOverlay">
+  <div class="toc-mobile-panel" id="tocPanel">
+    <button class="toc-mobile-close" id="tocClose">✕</button>
+    <div style="padding:20px 0;">
+      <div class="toc-title" style="padding:0 20px 12px;">Daftar Isi</div>
+      <ul class="toc-list" id="toc-list-mobile">
+        <li class="toc-section">Fondasi</li>
+        <li><a href="#s1">1. Pengantar &amp; Notasi</a></li>
+        <li><a href="#s2">2. Vektor &amp; Ruang Vektor</a></li>
+        <li><a href="#s3">3. Matriks &amp; Operasi</a></li>
+        <li><a href="#s4">4. Determinan &amp; Invers</a></li>
+        <li class="toc-section">Transformasi</li>
+        <li><a href="#s5">5. Transformasi Linear</a></li>
+        <li><a href="#s6">6. Rotasi 2D &amp; 3D</a></li>
+        <li><a href="#s7">7. Koordinat Homogen</a></li>
+        <li><a href="#s8">8. Sudut Euler &amp; RPY</a></li>
+        <li><a href="#s9">9. Quaternion</a></li>
+        <li class="toc-section">Lanjutan</li>
+        <li><a href="#s10">10. Eigenvalue &amp; Eigenvector</a></li>
+        <li><a href="#s11">11. SVD</a></li>
+        <li><a href="#s12">12. Jacobian Robot</a></li>
+        <li><a href="#s13">13. Forward &amp; Inverse Kinematics</a></li>
+        <li class="toc-section">Aplikasi</li>
+        <li><a href="#s14">14. Least Squares</a></li>
+        <li><a href="#s15">15. Kontrol &amp; State Space</a></li>
+        <li><a href="#s16">16. Aljabar Linear di Deep Learning</a></li>
+        <li><a href="#s17">17. Implementasi Python</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const d = document.documentElement;
+  const prog = (d.scrollTop || document.body.scrollTop) / (d.scrollHeight - d.clientHeight) * 100;
+  document.getElementById('progress').style.width = prog + '%';
+});
+
+// Active TOC
+const sections = document.querySelectorAll('.section[id]');
+const tocItems = document.querySelectorAll('#toc-list li[id]');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id.replace('s','toc-');
+      tocItems.forEach(t => t.classList.remove('active'));
+      const active = document.getElementById(id);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -75% 0px' });
+sections.forEach(s => observer.observe(s));
+
+// Mobile TOC
+const toggle = document.getElementById('tocToggle');
+const overlay = document.getElementById('tocOverlay');
+const panel = document.getElementById('tocPanel');
+const close = document.getElementById('tocClose');
+
+toggle.addEventListener('click', () => {
+  panel.classList.add('open');
+  overlay.style.display = 'block';
+});
+close.addEventListener('click', () => {
+  panel.classList.remove('open');
+  overlay.style.display = 'none';
+});
+overlay.addEventListener('click', e => {
+  if (!panel.contains(e.target)) {
+    panel.classList.remove('open');
+    overlay.style.display = 'none';
+  }
+});
+
+// Close mobile TOC on link click
+document.querySelectorAll('#toc-list-mobile a').forEach(a => {
+  a.addEventListener('click', () => {
+    panel.classList.remove('open');
+    overlay.style.display = 'none';
+  });
+});
+</script>
+</body>
+</html>

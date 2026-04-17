@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Learning pada Robotika — Blue Dragon Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #080c10;
+    --bg2:       #0d1219;
+    --bg3:       #111923;
+    --surface:   #141c26;
+    --border:    #1e2d3d;
+    --border2:   #253648;
+    --accent:    #00d4ff;
+    --accent2:   #0087c8;
+    --dragon:    #0affb4;
+    --warn:      #f7c948;
+    --red:       #ff4d6d;
+    --muted:     #4a6278;
+    --text:      #c8d8e8;
+    --text2:     #8da8c0;
+    --text3:     #5a7a94;
+    --heading:   #e8f4ff;
+    --code-bg:   #0a1520;
+    --glow:      0 0 20px rgba(0,212,255,.18);
+    --glow2:     0 0 40px rgba(10,255,180,.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+
+  /* ── SCAN LINE overlay ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.06) 2px, rgba(0,0,0,.06) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── GRID BG ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── LAYOUT ── */
+  .wrapper { max-width: 900px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+
+  /* ── SIDEBAR NAV ── */
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: 220px;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    overflow-y: auto;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar-logo {
+    padding: 0 20px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .sidebar-logo .brand {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--dragon);
+    letter-spacing: .15em;
+    text-transform: uppercase;
+  }
+  .sidebar-logo .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: .08em;
+    margin-top: 4px;
+  }
+  .nav-section { padding: 0 16px; margin-bottom: 8px; }
+  .nav-section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    color: var(--muted);
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    padding: 8px 4px 4px;
+  }
+  .nav-section a {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text3);
+    text-decoration: none;
+    padding: 5px 8px;
+    border-radius: 4px;
+    border-left: 2px solid transparent;
+    transition: all .18s;
+    line-height: 1.4;
+  }
+  .nav-section a:hover, .nav-section a.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    background: rgba(0,212,255,.06);
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main { margin-left: 220px; padding: 0 0 80px; }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    padding: 80px 40px 60px;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    background: linear-gradient(160deg, #0a1520 0%, var(--bg) 60%);
+  }
+  .hero::before {
+    content: '龍';
+    position: absolute;
+    right: -20px; top: -40px;
+    font-size: 320px;
+    color: rgba(10,255,180,.03);
+    font-weight: 900;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--dragon);
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    border: 1px solid rgba(10,255,180,.3);
+    padding: 5px 12px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+    background: rgba(10,255,180,.05);
+  }
+  .hero-badge::before { content: '▶'; font-size: 7px; }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(28px,4vw,52px);
+    color: var(--heading);
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero .subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text2);
+    max-width: 540px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .meta-chip {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .1em;
+  }
+  .meta-chip b { color: var(--text2); }
+
+  /* ── CONTENT AREA ── */
+  .content { padding: 40px 40px 0; }
+
+  /* ── CHAPTER HEADER ── */
+  .chapter {
+    margin-bottom: 64px;
+    scroll-margin-top: 24px;
+  }
+  .chapter-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--dragon);
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .chapter-num::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(10,255,180,.3), transparent);
+  }
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(20px,2.5vw,32px);
+    color: var(--heading);
+    letter-spacing: -.02em;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+  h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--accent);
+    margin: 32px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h3::before {
+    content: '//';
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--dragon);
+    margin: 20px 0 8px;
+    letter-spacing: .05em;
+  }
+
+  p { color: var(--text); margin-bottom: 16px; font-size: 15px; }
+
+  /* ── INFO BOXES ── */
+  .box {
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin: 24px 0;
+    border-left: 3px solid;
+    font-size: 14px;
+  }
+  .box-info { background: rgba(0,212,255,.05); border-color: var(--accent); }
+  .box-warn { background: rgba(247,201,72,.05); border-color: var(--warn); }
+  .box-dragon { background: rgba(10,255,180,.05); border-color: var(--dragon); }
+  .box-danger { background: rgba(255,77,109,.05); border-color: var(--red); }
+  .box-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .box-info .box-label { color: var(--accent); }
+  .box-warn .box-label { color: var(--warn); }
+  .box-dragon .box-label { color: var(--dragon); }
+  .box-danger .box-label { color: var(--red); }
+
+  /* ── CODE BLOCKS ── */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    margin: 20px 0;
+    position: relative;
+  }
+  pre::before {
+    content: attr(data-lang);
+    position: absolute;
+    top: 8px; right: 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: .15em;
+    text-transform: uppercase;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #a8d8f0;
+    line-height: 1.7;
+  }
+  .kw { color: #79c0ff; }
+  .fn { color: #d2a8ff; }
+  .st { color: #a5d6ff; }
+  .cm { color: var(--muted); font-style: italic; }
+  .nm { color: #ffa657; }
+  .dr { color: var(--dragon); }
+  inline-code, .ic {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    padding: 2px 7px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  /* ── TABLES ── */
+  .tbl-wrap { overflow-x: auto; margin: 20px 0; border-radius: 4px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: var(--surface); }
+  th {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td { padding: 10px 16px; border-bottom: 1px solid var(--border); color: var(--text); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,212,255,.03); }
+
+  /* ── GRID CARDS ── */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 16px; margin: 24px 0; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .card:hover { border-color: var(--accent2); box-shadow: var(--glow); }
+  .card-icon { font-size: 24px; margin-bottom: 12px; }
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--heading);
+    margin-bottom: 6px;
+  }
+  .card-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  /* ── STEP LIST ── */
+  .step-list { list-style: none; margin: 16px 0; }
+  .step-list li {
+    display: flex;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+    font-size: 14px;
+  }
+  .step-list li:last-child { border-bottom: none; }
+  .step-num {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+  }
+
+  /* ── ARCH DIAGRAM (ASCII-art style) ── */
+  .arch-diagram {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+    margin: 20px 0;
+    overflow-x: auto;
+  }
+  .arch-diagram pre {
+    background: none; border: none; padding: 0; margin: 0;
+    font-size: 12px;
+    color: var(--dragon);
+  }
+  .arch-diagram pre::before { display: none; }
+
+  /* ── FORMULA BOX ── */
+  .formula {
+    background: var(--code-bg);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    padding: 16px 24px;
+    margin: 16px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--warn);
+    text-align: center;
+    letter-spacing: .05em;
+  }
+
+  /* ── PROGRESS TRACK ── */
+  .progress-track {
+    display: flex;
+    gap: 0;
+    margin: 32px 0;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .track-step {
+    flex: 1;
+    min-width: 120px;
+    position: relative;
+    text-align: center;
+    padding: 0 8px;
+  }
+  .track-step::after {
+    content: '';
+    position: absolute;
+    top: 14px; right: -1px;
+    width: calc(50% + 1px);
+    height: 2px;
+    background: var(--border2);
+    z-index: 0;
+  }
+  .track-step::before {
+    content: '';
+    position: absolute;
+    top: 14px; left: -1px;
+    width: calc(50% + 1px);
+    height: 2px;
+    background: var(--border2);
+    z-index: 0;
+  }
+  .track-step:first-child::before,
+  .track-step:last-child::after { display: none; }
+  .track-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    position: relative; z-index: 1;
+  }
+  .track-step.done .track-dot {
+    background: rgba(10,255,180,.15);
+    border-color: var(--dragon);
+    color: var(--dragon);
+  }
+  .track-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: .05em;
+    line-height: 1.4;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border2), transparent);
+    margin: 48px 0;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 32px 40px;
+    margin-top: 80px;
+  }
+  .footer-grid { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; justify-content: space-between; }
+  .fp-block { }
+  .fp-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .fp-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--dragon);
+    word-break: break-all;
+  }
+  .fp-dragon {
+    font-size: 48px;
+    opacity: .12;
+    line-height: 1;
+  }
+
+  /* ── TOC PROGRESS ── */
+  .reading-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--dragon), var(--accent));
+    z-index: 9998;
+    transition: width .1s;
+    width: 0%;
+  }
+
+  /* ── UL/OL ── */
+  ul.styled, ol.styled {
+    margin: 12px 0 16px 0;
+    padding-left: 0;
+    list-style: none;
+  }
+  ul.styled li, ol.styled li {
+    padding: 4px 0 4px 24px;
+    position: relative;
+    font-size: 14px;
+    color: var(--text);
+  }
+  ul.styled li::before {
+    content: '▸';
+    position: absolute; left: 0;
+    color: var(--accent);
+    font-size: 10px;
+    top: 7px;
+  }
+  ol.styled { counter-reset: item; }
+  ol.styled li::before {
+    counter-increment: item;
+    content: counter(item, decimal-leading-zero);
+    position: absolute; left: 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--dragon);
+    top: 5px;
+  }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .badge-cyan { background: rgba(0,212,255,.12); color: var(--accent); border: 1px solid rgba(0,212,255,.3); }
+  .badge-green { background: rgba(10,255,180,.12); color: var(--dragon); border: 1px solid rgba(10,255,180,.3); }
+  .badge-yellow { background: rgba(247,201,72,.12); color: var(--warn); border: 1px solid rgba(247,201,72,.3); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 800px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .hero { padding: 40px 20px 32px; }
+    .content { padding: 24px 20px 0; }
+    footer { padding: 24px 20px; }
+    .hero::before { font-size: 180px; }
+  }
+
+  @media (max-width: 500px) {
+    body { font-size: 14px; }
+    h2 { font-size: 22px; }
+    .card-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+  .chapter { animation: fadeIn .5s ease both; }
+
+  /* ── HIGHLIGHT SYNTAX SHORTHAND ── */
+  .py-kw { color: #ff79c6; }
+  .py-fn { color: #50fa7b; }
+  .py-st { color: #f1fa8c; }
+  .py-cm { color: #6272a4; font-style: italic; }
+  .py-nm { color: #bd93f9; }
+  .py-bl { color: #8be9fd; }
+</style>
+</head>
+<body>
+
+<div class="reading-bar" id="readBar"></div>
+
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Blue Dragon Sec</div>
+    <div class="sub">bluedragonsec.com</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Modul</div>
+    <a href="#ch0">00 · Pendahuluan</a>
+    <a href="#ch1">01 · Fondasi DL</a>
+    <a href="#ch2">02 · CNN & Persepsi</a>
+    <a href="#ch3">03 · RNN / LSTM</a>
+    <a href="#ch4">04 · Reinforcement Learning</a>
+    <a href="#ch5">05 · Transfer Learning</a>
+    <a href="#ch6">06 · Robot Vision</a>
+    <a href="#ch7">07 · Kontrol & Navigasi</a>
+    <a href="#ch8">08 · Manipulasi Objek</a>
+    <a href="#ch9">09 · Sim-to-Real</a>
+    <a href="#ch10">10 · Edge Deployment</a>
+    <a href="#ch11">11 · Keamanan DL Robot</a>
+    <a href="#ch12">12 · Proyek Lengkap</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Referensi</div>
+    <a href="#appendix">Appendix</a>
+    <a href="#fingerprint">Fingerprint</a>
+  </div>
+</nav>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<main class="main">
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-badge">Tutorial Teknis · Edisi 2026</div>
+  <h1><span>Deep Learning</span><br>pada Robotika</h1>
+  <p class="subtitle">
+    Panduan lengkap dari fondasi neural network hingga deployment model AI<br>
+    pada sistem robot otonom — ditulis untuk praktisi dan researcher.
+  </p>
+  <div class="hero-meta">
+    <span class="meta-chip">Author: <b>Antonius / Blue Dragon Security</b></span>
+    <span class="meta-chip">Level: <b>Intermediate → Advanced</b></span>
+    <span class="meta-chip">Bahasa: <b>Python 3.11 · PyTorch 2.x · ROS2 Humble</b></span>
+    <span class="meta-chip">Rev: <b>2026-04-15</b></span>
+  </div>
+</section>
+
+<!-- ── CONTENT ── -->
+<div class="content">
+
+<!-- ══════════════════════════════════════════
+     CH 0 — PENDAHULUAN
+══════════════════════════════════════════ -->
+<section class="chapter" id="ch0">
+  <div class="chapter-num">00 &nbsp;·&nbsp; Overview</div>
+  <h2>Pendahuluan & Peta Jalan</h2>
+
+  <p>
+    Deep Learning (DL) telah merevolusi robotika modern. Robot tidak lagi sekadar mengeksekusi program deterministik — mereka kini <em>belajar</em> dari data sensor, gambar kamera, dan umpan balik lingkungan untuk membuat keputusan otonom yang kompleks.
+  </p>
+
+  <div class="progress-track">
+    <div class="track-step done"><div class="track-dot">01</div><div class="track-label">Fondasi<br>Neural Net</div></div>
+    <div class="track-step done"><div class="track-dot">02</div><div class="track-label">Persepsi<br>Visual</div></div>
+    <div class="track-step done"><div class="track-dot">03</div><div class="track-label">Temporal<br>Modelling</div></div>
+    <div class="track-step done"><div class="track-dot">04</div><div class="track-label">Kontrol<br>RL</div></div>
+    <div class="track-step done"><div class="track-dot">05</div><div class="track-label">Navigasi<br>& Mapping</div></div>
+    <div class="track-step done"><div class="track-dot">06</div><div class="track-label">Edge<br>Deploy</div></div>
+  </div>
+
+  <h3>Ekosistem Teknologi</h3>
+  <div class="card-grid">
+    <div class="card"><div class="card-icon">🧠</div><div class="card-title">PyTorch 2.x</div><div class="card-desc">Framework utama untuk research & training model DL pada robotika.</div></div>
+    <div class="card"><div class="card-icon">🤖</div><div class="card-title">ROS 2 Humble</div><div class="card-desc">Middleware robot; publish/subscribe sensor dan aktuator.</div></div>
+    <div class="card"><div class="card-icon">🎮</div><div class="card-title">Isaac Gym / MuJoCo</div><div class="card-desc">Simulator fisika GPU-accelerated untuk training RL.</div></div>
+    <div class="card"><div class="card-icon">🔬</div><div class="card-title">OpenCV + PCL</div><div class="card-desc">Pemrosesan gambar 2D dan point cloud 3D.</div></div>
+    <div class="card"><div class="card-icon">⚡</div><div class="card-title">TensorRT / ONNX</div><div class="card-desc">Optimasi & deployment inferensi pada embedded GPU.</div></div>
+    <div class="card"><div class="card-icon">📡</div><div class="card-title">RealSense / ZED</div><div class="card-desc">Kamera depth untuk persepsi 3D real-time.</div></div>
+  </div>
+
+  <div class="box box-info">
+    <div class="box-label">📌 Prasyarat</div>
+    Anda diasumsikan familiar dengan Python, numpy, kalkulus dasar (gradien, chain rule), dan konsep robotika dasar (kinematika, sensor). Jika belum, pelajari terlebih dahulu sebelum lanjut ke bab inti.
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════
+     CH 1 — FONDASI DL
+══════════════════════════════════════════ -->
+<section class="chapter" id="ch1">
+  <div class="chapter-num">01 &nbsp;·&nbsp; Foundation</div>
+  <h2>Fondasi Deep Learning</h2>
+
+  <h3>1.1 Neuron Buatan & Perceptron</h3>
+  <p>Sebuah neuron tunggal menghitung kombinasi linear dari input ditambah bias, lalu dilewatkan ke fungsi aktivasi:</p>
+  <div class="formula">y = f( W · x + b )</div>
+  <p>Di mana <span class="ic">W</span> adalah bobot (weights), <span class="ic">x</span> vektor input, <span class="ic">b</span> bias, dan <span class="ic">f</span> fungsi aktivasi nonlinear.</p>
+
+  <h3>1.2 Fungsi Aktivasi</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Fungsi</th><th>Formula</th><th>Penggunaan</th><th>Kelebihan</th></tr></thead>
+      <tbody>
+        <tr><td><b>ReLU</b></td><td>max(0, x)</td><td>Hidden layers konvensional</td><td>Komputasi cepat, mengatasi vanishing gradient</td></tr>
+        <tr><td><b>Leaky ReLU</b></td><td>max(αx, x)</td><td>Saat dying ReLU jadi masalah</td><td>Gradien tidak nol untuk x &lt; 0</td></tr>
+        <tr><td><b>GELU</b></td><td>x·Φ(x)</td><td>Transformer, modern networks</td><td>Smooth, performa lebih baik di NLP/vision</td></tr>
+        <tr><td><b>Sigmoid</b></td><td>1/(1+e⁻ˣ)</td><td>Output biner</td><td>Probabilitas [0,1]</td></tr>
+        <tr><td><b>Tanh</b></td><td>(eˣ-e⁻ˣ)/(eˣ+e⁻ˣ)</td><td>LSTM gates, RNN</td><td>Output [-1,1], zero-centered</td></tr>
+        <tr><td><b>Softmax</b></td><td>eˣⁱ/Σeˣʲ</td><td>Klasifikasi multi-kelas</td><td>Distribusi probabilitas</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>1.3 Backpropagation & Chain Rule</h3>
+  <p>Algoritma backpropagation menghitung gradien loss terhadap setiap parameter menggunakan chain rule. Untuk jaringan dengan <em>L</em> layer:</p>
+  <div class="formula">∂L/∂Wˡ = (∂L/∂aˡ) · (∂aˡ/∂zˡ) · (∂zˡ/∂Wˡ)</div>
+
+  <h3>1.4 Optimizer Modern</h3>
+  <p>Dalam robotika, pemilihan optimizer krusial karena pelatihan sering melibatkan data non-stasioner dari lingkungan fisik:</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Optimizer</th><th>Karakteristik</th><th>Cocok Untuk</th></tr></thead>
+      <tbody>
+        <tr><td><b>Adam</b></td><td>Adaptive LR + momentum. β₁=0.9, β₂=0.999</td><td>Default untuk kebanyakan arsitektur</td></tr>
+        <tr><td><b>AdamW</b></td><td>Adam + weight decay yang benar</td><td>Transformer, ViT, CLIP</td></tr>
+        <tr><td><b>SGD + Nesterov</b></td><td>Lebih stabil untuk fine-tuning</td><td>Transfer learning final stage</td></tr>
+        <tr><td><b>RMSProp</b></td><td>Adaptive LR per parameter</td><td>RL (DQN, A3C)</td></tr>
+        <tr><td><b>Shampoo / SOAP</b></td><td>Second-order, efisien</td><td>Large model pre-training</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>1.5 Implementasi MLP Dasar di PyTorch</h3>
+  <pre data-lang="python"><code><span class="py-kw">import</span> torch
+<span class="py-kw">import</span> torch.nn <span class="py-kw">as</span> nn
+<span class="py-kw">import</span> torch.optim <span class="py-kw">as</span> optim
+
+<span class="py-cm"># Contoh: prediksi posisi joint robot dari sensor IMU</span>
+<span class="py-kw">class</span> <span class="py-fn">RobotStatePredictor</span>(nn.Module):
+    <span class="py-kw">def</span> <span class="py-fn">__init__</span>(self, input_dim=<span class="py-nm">12</span>, hidden=<span class="py-nm">256</span>, output_dim=<span class="py-nm">6</span>):
+        <span class="py-kw">super</span>().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(input_dim, hidden),
+            nn.LayerNorm(hidden),       <span class="py-cm"># lebih stabil dari BatchNorm untuk robot</span>
+            nn.GELU(),
+            nn.Dropout(<span class="py-nm">0.1</span>),
+            nn.Linear(hidden, hidden),
+            nn.LayerNorm(hidden),
+            nn.GELU(),
+            nn.Linear(hidden, output_dim)
+        )
+
+    <span class="py-kw">def</span> <span class="py-fn">forward</span>(self, x):
+        <span class="py-kw">return</span> self.net(x)
+
+<span class="py-cm"># Training loop</span>
+model    = <span class="py-fn">RobotStatePredictor</span>().cuda()
+optimizer = optim.AdamW(model.parameters(), lr=<span class="py-nm">1e-3</span>, weight_decay=<span class="py-nm">1e-4</span>)
+scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=<span class="py-nm">100</span>)
+loss_fn   = nn.HuberLoss()          <span class="py-cm"># robust terhadap outlier sensor</span>
+
+<span class="py-kw">for</span> epoch <span class="py-kw">in</span> <span class="py-fn">range</span>(<span class="py-nm">100</span>):
+    <span class="py-kw">for</span> x_batch, y_batch <span class="py-kw">in</span> dataloader:
+        pred = model(x_batch.cuda())
+        loss = loss_fn(pred, y_batch.cuda())
+        optimizer.zero_grad()
+        loss.backward()
+        nn.utils.clip_grad_norm_(model.parameters(), max_norm=<span class="py-nm">1.0</span>)
+        optimizer.step()
+    scheduler.step()
+</code></pre>
+
+  <div class="box box-warn">
+    <div class="box-label">⚠️ Penting</div>
+    Untuk data sensor robot (IMU, encoder, lidar), selalu gunakan <span class="ic">LayerNorm</span> alih-alih <span class="ic">BatchNorm</span>. BatchNorm sensitif terhadap batch size kecil dan data non-stasioner yang umum di robotika real-time.
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════
+     CH 2 — CNN & PERSEPSI
+══════════════════════════════════════════ -->
+<section class="chapter" id="ch2">
+  <div class="chapter-num">02 &nbsp;·&nbsp; Perception</div>
+  <h2>Convolutional Neural Networks & Persepsi Visual Robot</h2>
+
+  <h3>2.1 Arsitektur CNN untuk Robot Vision</h3>
+  <p>CNN adalah tulang punggung persepsi visual robot. Hierarki fitur dari edge → texture → object memungkinkan robot memahami lingkungan dari raw pixel.</p>
+
+  <div class="arch-diagram">
+    <pre>
+  INPUT IMAGE (640×480×3)
+       │
+  ┌────▼────────────────────────────────────┐
+  │  Conv2D 3×3, 64ch  →  ReLU  →  BN      │  ← Edge detectors
+  │  Conv2D 3×3, 64ch  →  ReLU  →  MaxPool │
+  └────┬────────────────────────────────────┘
+       │ 320×240×64
+  ┌────▼────────────────────────────────────┐
+  │  Conv2D 3×3, 128ch →  ReLU  →  BN      │  ← Texture features
+  │  Conv2D 3×3, 128ch →  ReLU  →  MaxPool │
+  └────┬────────────────────────────────────┘
+       │ 160×120×128
+  ┌────▼────────────────────────────────────┐
+  │  Conv2D 3×3, 256ch →  ReLU  ×3         │  ← Object parts
+  │  MaxPool 2×2                            │
+  └────┬────────────────────────────────────┘
+       │
+  ┌────▼────────────────────────────────────┐
+  │  FPN (Feature Pyramid Network)          │  ← Multi-scale
+  └────┬────────────────────────────────────┘
+       │
+  Detection Head / Segmentation Head / Depth Head</pre>
+  </div>
+
+  <h3>2.2 Object Detection: YOLOv10 di Robot</h3>
+  <pre data-lang="python"><code><span class="py-kw">from</span> ultralytics <span class="py-kw">import</span> YOLO
+<span class="py-kw">import</span> cv2
+<span class="py-kw">import</span> rclpy
+<span class="py-kw">from</span> rclpy.node <span class="py-kw">import</span> Node
+<span class="py-kw">from</span> sensor_msgs.msg <span class="py-kw">import</span> Image
+<span class="py-kw">from</span> cv_bridge <span class="py-kw">import</span> CvBridge
+
+<span class="py-kw">class</span> <span class="py-fn">RobotVisionNode</span>(Node):
+    <span class="py-kw">def</span> <span class="py-fn">__init__</span>(self):
+        <span class="py-kw">super</span>().__init__(<span class="py-st">'robot_vision'</span>)
+        self.model  = <span class="py-fn">YOLO</span>(<span class="py-st">'yolov10n.pt'</span>)        <span class="py-cm"># nano = cepat utk embedded</span>
+        self.model.to(<span class="py-st">'cuda'</span>)
+        self.bridge = <span class="py-fn">CvBridge</span>()
+        self.sub = self.create_subscription(
+            Image, <span class="py-st">'/camera/rgb/image_raw'</span>,
+            self.image_callback, <span class="py-nm">10</span>)
+
+    <span class="py-kw">def</span> <span class="py-fn">image_callback</span>(self, msg):
+        frame   = self.bridge.imgmsg_to_cv2(msg, <span class="py-st">'bgr8'</span>)
+        results = self.model.track(frame,
+                                   persist=<span class="py-kw">True</span>,
+                                   conf=<span class="py-nm">0.45</span>,
+                                   iou=<span class="py-nm">0.5</span>,
+                                   device=<span class="py-st">'cuda:0'</span>)
+        <span class="py-kw">for</span> r <span class="py-kw">in</span> results:
+            boxes   = r.boxes.xyxy.cpu().numpy()
+            classes = r.boxes.cls.cpu().numpy()
+            tracks  = r.boxes.id                   <span class="py-cm"># ByteTrack ID</span>
+            <span class="py-kw">for</span> i, box <span class="py-kw">in</span> <span class="py-fn">enumerate</span>(boxes):
+                self.get_logger().info(
+                    <span class="py-st">f"Obj [{classes[i]:.0f}] ID={tracks[i]} @ {box.astype(int)}"</span>)
+
+rclpy.init()
+rclpy.spin(<span class="py-fn">RobotVisionNode</span>())
+</code></pre>
+
+  <h3>2.3 Semantic Segmentation untuk Navigasi</h3>
+  <p>Segmentasi semantik memungkinkan robot memahami setiap piksel gambar — membedakan lantai, dinding, manusia, dan rintangan untuk navigasi aman:</p>
+
+  <pre data-lang="python"><code><span class="py-kw">import</span> torch
+<span class="py-kw">from</span> transformers <span class="py-kw">import</span> SegformerForSemanticSegmentation, SegformerImageProcessor
+<span class="py-kw">import</span> numpy <span class="py-kw">as</span> np
+
+<span class="py-cm"># Load SegFormer-B2 yang ringan untuk robot</span>
+processor = SegformerImageProcessor.from_pretrained(
+    <span class="py-st">"nvidia/segformer-b2-finetuned-ade-512-512"</span>)
+model = SegformerForSemanticSegmentation.from_pretrained(
+    <span class="py-st">"nvidia/segformer-b2-finetuned-ade-512-512"</span>).cuda().eval()
+
+<span class="py-kw">def</span> <span class="py-fn">segment_scene</span>(bgr_frame):
+    rgb   = cv2.cvtColor(bgr_frame, cv2.COLOR_BGR2RGB)
+    inp   = processor(images=rgb, return_tensors=<span class="py-st">"pt"</span>)
+    inp   = {k: v.cuda() <span class="py-kw">for</span> k, v <span class="py-kw">in</span> inp.items()}
+    <span class="py-kw">with</span> torch.no_grad():
+        logits = model(**inp).logits               <span class="py-cm"># (1, 150, H/4, W/4)</span>
+    seg = logits.argmax(dim=<span class="py-nm">1</span>).squeeze().cpu().numpy()
+    <span class="py-cm"># Resize ke ukuran frame asli</span>
+    seg = cv2.resize(seg.astype(np.uint8),
+                     (bgr_frame.shape[<span class="py-nm">1</span>], bgr_frame.shape[<span class="py-nm">0</span>]),
+                     interpolation=cv2.INTER_NEAREST)
+    <span class="py-kw">return</span> seg    <span class="py-cm"># class ID per-pixel</span>
+
+<span class="py-cm"># Ekstrak "free space" untuk path planning</span>
+FLOOR_IDS = {<span class="py-nm">3</span>, <span class="py-nm">28</span>}  <span class="py-cm"># floor, carpet di ADE20k</span>
+<span class="py-kw">def</span> <span class="py-fn">get_traversable_mask</span>(seg_map):
+    <span class="py-kw">return</span> np.isin(seg_map, <span class="py-fn">list</span>(FLOOR_IDS)).astype(np.uint8) * <span class="py-nm">255</span>
+</code></pre>
+
+  <h3>2.4 Depth Estimation & 3D Reconstruction</h3>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">Stereo Vision</div>
+      <div class="card-desc">Dua kamera + disparity map. Akurat jangkauan 0.3–10m. RAFT-Stereo memberikan akurasi state-of-the-art.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Monocular Depth</div>
+      <div class="card-desc">MiDaS / Depth Anything v2. Hanya 1 kamera, relative depth. Bagus untuk robot berbiaya rendah.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">LiDAR + RGB Fusion</div>
+      <div class="card-desc">PointNet++ atau VoxelNet menggabungkan point cloud dan fitur visual untuk persepsi 3D komprehensif.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Neural Radiance Field</div>
+      <div class="card-desc">NeRF / 3D Gaussian Splatting untuk rekonstruksi scene berkualitas tinggi. Robot bisa "mengingat" lingkungan.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════
+     CH 3 — RNN / LSTM
+══════════════════════════════════════════ -->
+<section class="chapter" id="ch3">
+  <div class="chapter-num">03 &nbsp;·&nbsp; Temporal</div>
+  <h2>RNN, LSTM & Temporal Modelling untuk Robot</h2>
+
+  <h3>3.1 Mengapa Temporal Modelling Penting di Robotika</h3>
+  <p>Robot beroperasi dalam waktu nyata — sensor menghasilkan <em>urutan data</em>, bukan data independen. Prediksi gerakan manusia, kontrol motor berulang, dan localization semuanya bergantung pada konteks temporal.</p>
+
+  <div class="box box-info">
+    <div class="box-label">Contoh Kasus</div>
+    Robot yang mengikuti manusia harus memprediksi ke mana manusia akan pergi (<em>trajectory prediction</em>). Ini membutuhkan memori sekuensial: LSTM atau Transformer-based architecture.
+  </div>
+
+  <h3>3.2 LSTM untuk Prediksi Trajectory</h3>
+  <pre data-lang="python"><code><span class="py-kw">import</span> torch
+<span class="py-kw">import</span> torch.nn <span class="py-kw">as</span> nn
+
+<span class="py-kw">class</span> <span class="py-fn">TrajectoryLSTM</span>(nn.Module):
+    <span class="py-st">"""
+    Memprediksi N langkah trajektori ke depan dari M langkah historis.
+    Input:  (batch, seq_len, 4)  — [x, y, vx, vy] per frame
+    Output: (batch, pred_len, 2) — [x, y] prediksi
+    """</span>
+    <span class="py-kw">def</span> <span class="py-fn">__init__</span>(self, input_dim=<span class="py-nm">4</span>, hidden=<span class="py-nm">128</span>,
+                 layers=<span class="py-nm">2</span>, pred_len=<span class="py-nm">12</span>):
+        <span class="py-kw">super</span>().__init__()
+        self.encoder = nn.LSTM(input_dim, hidden,
+                               num_layers=layers,
+                               batch_first=<span class="py-kw">True</span>,
+                               dropout=<span class="py-nm">0.2</span>)
+        self.decoder = nn.LSTM(hidden, hidden,
+                               num_layers=layers,
+                               batch_first=<span class="py-kw">True</span>,
+                               dropout=<span class="py-nm">0.2</span>)
+        self.fc_out   = nn.Linear(hidden, <span class="py-nm">2</span>)
+        self.fc_init  = nn.Linear(hidden, hidden)
+        self.pred_len = pred_len
+
+    <span class="py-kw">def</span> <span class="py-fn">forward</span>(self, x):
+        _, (h, c)    = self.encoder(x)
+        dec_in       = self.fc_init(h[-<span class="py-nm">1</span>]).unsqueeze(<span class="py-nm">1</span>)  <span class="py-cm"># seed</span>
+        preds = []
+        <span class="py-kw">for</span> _ <span class="py-kw">in</span> <span class="py-fn">range</span>(self.pred_len):
+            dec_out, (h, c) = self.decoder(dec_in, (h, c))
+            step_pred = self.fc_out(dec_out)
+            preds.append(step_pred)
+            dec_in = dec_out
+        <span class="py-kw">return</span> torch.cat(preds, dim=<span class="py-nm">1</span>)   <span class="py-cm"># (B, pred_len, 2)</span>
+</code></pre>
+
+  <h3>3.3 Temporal Fusion Transformer (TFT) untuk Sensor Fusion</h3>
+  <p>Untuk fusi multi-sensor (IMU + GPS + wheel encoder + kamera), Temporal Fusion Transformer unggul karena dapat menangani input dengan missing values dan skala waktu berbeda:</p>
+
+  <pre data-lang="python"><code><span class="py-kw">from</span> pytorch_forecasting <span class="py-kw">import</span> TemporalFusionTransformer, TimeSeriesDataSet
+
+<span class="py-cm"># Konfigurasi dataset: sensor robot multi-modal</span>
+dataset = <span class="py-fn">TimeSeriesDataSet</span>(
+    df_sensor,                          <span class="py-cm"># DataFrame dengan kolom sensor</span>
+    time_idx=<span class="py-st">"timestep"</span>,
+    target=<span class="py-st">"joint_pos_6"</span>,             <span class="py-cm"># posisi joint ke-6</span>
+    group_ids=[<span class="py-st">"robot_id"</span>],
+    max_encoder_length=<span class="py-nm">100</span>,             <span class="py-cm"># 100 step historis</span>
+    max_prediction_length=<span class="py-nm">20</span>,          <span class="py-cm"># prediksi 20 step ke depan</span>
+    time_varying_known_reals=[<span class="py-st">"imu_ax"</span>, <span class="py-st">"imu_ay"</span>, <span class="py-st">"imu_az"</span>],
+    time_varying_unknown_reals=[<span class="py-st">"enc_vel"</span>, <span class="py-st">"torque"</span>],
+    static_categoricals=[<span class="py-st">"robot_model"</span>],
+)
+
+tft = <span class="py-fn">TemporalFusionTransformer</span>.from_dataset(
+    dataset,
+    learning_rate=<span class="py-nm">1e-3</span>,
+    hidden_size=<span class="py-nm">64</span>,
+    attention_head_size=<span class="py-nm">4</span>,
+    dropout=<span class="py-nm">0.1</span>,
+    hidden_continuous_size=<span class="py-nm">32</span>,
+)
+</code></pre>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════
+     CH 4 — REINFORCEMENT LEARNING
+══════════════════════════════════════════ -->
+<section class="chapter" id="ch4">
+  <div class="chapter-num">04 &nbsp;·&nbsp; Reinforcement Learning</div>
+  <h2>Reinforcement Learning untuk Kontrol Robot</h2>
+
+  <h3>4.1 Formulasi Masalah RL dalam Robotika</h3>
+  <p>Kontrol robot dimodelkan sebagai Markov Decision Process (MDP):</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">State (s)</div>
+      <div class="card-desc">Posisi joint, kecepatan, data IMU, gambar kamera — representasi kondisi robot + lingkungan.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Action (a)</div>
+      <div class="card-desc">Torque motor, kecepatan target, atau joint angle delta yang dikirim ke aktuator.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Reward (r)</div>
+      <div class="card-desc">Fungsi skalar yang mendefinisikan tujuan: maju cepat, hemat energi, hindari jatuh.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Policy (π)</div>
+      <div class="card-desc">Neural network yang memetakan state → action. Inilah yang kita latih.</div>
+    </div>
+  </div>
+
+  <h3>4.2 PPO (Proximal Policy Optimization) — Standar Industri</h3>
+  <div class="formula">L_CLIP(θ) = E[ min( r_t(θ)·A_t, clip(r_t(θ), 1-ε, 1+ε)·A_t ) ]</div>
+  <p>PPO adalah algoritma on-policy yang menjaga update kebijakan tidak terlalu jauh dari kebijakan lama, mencegah divergensi yang fatal pada sistem fisik.</p>
+
+  <pre data-lang="python"><code><span class="py-kw">import</span> gymnasium <span class="py-kw">as</span> gym
+<span class="py-kw">from</span> stable_baselines3 <span class="py-kw">import</span> PPO
+<span class="py-kw">from</span> stable_baselines3.common.vec_env <span class="py-kw">import</span> SubprocVecEnv
+<span class="py-kw">from</span> stable_baselines3.common.callbacks <span class="py-kw">import</span> EvalCallback
+
+<span class="py-cm"># Training robot locomotion di MuJoCo</span>
+<span class="py-kw">def</span> <span class="py-fn">make_env</span>(rank):
+    <span class="py-kw">def</span> <span class="py-fn">_init</span>():
+        env = gym.make(<span class="py-st">'HalfCheetah-v4'</span>)
+        env.reset(seed=rank)
+        <span class="py-kw">return</span> env
+    <span class="py-kw">return</span> _init
+
+n_envs = <span class="py-nm">16</span>
+vec_env = <span class="py-fn">SubprocVecEnv</span>([<span class="py-fn">make_env</span>(i) <span class="py-kw">for</span> i <span class="py-kw">in</span> <span class="py-fn">range</span>(n_envs)])
+
+model = <span class="py-fn">PPO</span>(
+    <span class="py-st">"MlpPolicy"</span>, vec_env,
+    learning_rate=<span class="py-nm">3e-4</span>,
+    n_steps=<span class="py-nm">2048</span>,           <span class="py-cm"># rollout buffer per env</span>
+    batch_size=<span class="py-nm">512</span>,
+    n_epochs=<span class="py-nm">10</span>,
+    gamma=<span class="py-nm">0.99</span>,
+    gae_lambda=<span class="py-nm">0.95</span>,
+    clip_range=<span class="py-nm">0.2</span>,
+    ent_coef=<span class="py-nm">0.005</span>,
+    vf_coef=<span class="py-nm">0.5</span>,
+    policy_kwargs=<span class="py-fn">dict</span>(
+        net_arch=[<span class="py-nm">256</span>, <span class="py-nm">256</span>],
+        activation_fn=nn.Tanh           <span class="py-cm"># Tanh lebih smooth untuk kontrol</span>
+    ),
+    verbose=<span class="py-nm">1</span>,
+    device=<span class="py-st">'cuda'</span>
+)
+
+eval_cb = <span class="py-fn">EvalCallback</span>(
+    gym.make(<span class="py-st">'HalfCheetah-v4'</span>),
+    best_model_save_path=<span class="py-st">'./models/best/'</span>,
+    eval_freq=<span class="py-nm">50_000</span>, n_eval_episodes=<span class="py-nm">10</span>)
+
+model.learn(total_timesteps=<span class="py-nm">5_000_000</span>, callback=eval_cb)
+model.save(<span class="py-st">"cheetah_ppo"</span>)
+</code></pre>
+
+  <h3>4.3 SAC (Soft Actor-Critic) untuk Continuous Control</h3>
+  <p>SAC mengoptimalkan entropi kebijakan bersama reward, menghasilkan policy yang lebih <em>exploratory</em> dan robust terhadap gangguan fisik:</p>
+  <div class="formula">J(π) = Σ E[r(sₜ,aₜ) + α · H(π(·|sₜ))]</div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Algoritma</th><th>On/Off-Policy</th><th>Action Space</th><th>Kelebihan di Robotika</th></tr></thead>
+      <tbody>
+        <tr><td><b>PPO</b></td><td>On-policy</td><td>Kontinu / Diskrit</td><td>Stabil, mudah tune, cocok locomotion</td></tr>
+        <tr><td><b>SAC</b></td><td>Off-policy</td><td>Kontinu</td><td>Sample efficient, robust, manipulasi</td></tr>
+        <tr><td><b>TD3</b></td><td>Off-policy</td><td>Kontinu</td><td>Deterministik, kontrol presisi tinggi</td></tr>
+        <tr><td><b>DDPG</b></td><td>Off-policy</td><td>Kontinu</td><td>Base dari TD3/SAC, referensi klasik</td></tr>
+        <tr><td><b>DreamerV3</b></td><td>Off-policy</td><td>Kontinu</td><td>World model, training dari raw pixels</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.4 Reward Shaping untuk Locomotion</h3>
+  <pre data-lang="python"><code><span class="py-kw">class</span> <span class="py-fn">HumanoidReward</span>:
+    <span class="py-st">"""Reward function untuk humanoid robot berjalan tegak."""</span>
+    <span class="py-kw">def</span> <span class="py-fn">compute</span>(self, obs, action, next_obs, info):
+        <span class="py-cm"># Forward velocity (tujuan utama)</span>
+        r_vel   = info[<span class="py-st">'x_velocity'</span>] * <span class="py-nm">1.0</span>
+
+        <span class="py-cm"># Penalti energi (efisiensi)</span>
+        r_energy = -<span class="py-nm">0.001</span> * np.sum(action**<span class="py-nm">2</span>)
+
+        <span class="py-cm"># Penalti jatuh (ketinggian COM)</span>
+        com_height = info[<span class="py-st">'com_height'</span>]
+        r_alive = <span class="py-nm">2.0</span> <span class="py-kw">if</span> com_height > <span class="py-nm">0.8</span> <span class="py-kw">else</span> -<span class="py-nm">10.0</span>
+
+        <span class="py-cm"># Penalti jerk (gerakan halus)</span>
+        jerk    = np.linalg.norm(info[<span class="py-st">'joint_acc'</span>])
+        r_smooth = -<span class="py-nm">0.01</span> * jerk
+
+        <span class="py-cm"># Penalti keseimbangan lateral</span>
+        lean    = <span class="py-fn">abs</span>(info[<span class="py-st">'body_tilt_x'</span>])
+        r_upright = -<span class="py-nm">0.5</span> * lean
+
+        <span class="py-kw">return</span> r_vel + r_energy + r_alive + r_smooth + r_upright
+</code></pre>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════
+     CH 5 — TRANSFER LEARNING
+══════════════════════════════════════════ -->
+<section class="chapter" id="ch5">
+  <div class="chapter-num">05 &nbsp;·&nbsp; Transfer Learning</div>
+  <h2>Transfer Learning & Foundation Models di Robotika</h2>
+
+  <h3>5.1 Mengapa Transfer Learning Krusial untuk Robot</h3>
+  <p>Data berlabel dari robot fisik sangat mahal dan berbahaya untuk dikumpulkan. Transfer learning memanfaatkan pengetahuan dari dataset besar (ImageNet, CLIP, large language models) dan mengadaptasinya ke tugas robot dengan data minimal.</p>
+
+  <ul class="styled">
+    <li>Pre-trained vision backbone (ResNet, ViT) hemat 10-100x data labeled</li>
+    <li>CLIP embeddings sebagai universal representation untuk manipulation</li>
+    <li>Foundation models (RT-2, Octo) memberikan generalisasi lintas robot</li>
+    <li>LoRA / QLoRA fine-tuning VLM dengan GPU terbatas</li>
+  </ul>
+
+  <h3>5.2 Fine-tuning ViT untuk Klasifikasi Objek Robot</h3>
+  <pre data-lang="python"><code><span class="py-kw">from</span> transformers <span class="py-kw">import</span> ViTForImageClassification, ViTImageProcessor
+<span class="py-kw">import</span> torch, torch.nn <span class="py-kw">as</span> nn
+
+<span class="py-cm"># Load ViT-B/16 pre-trained ImageNet-21k</span>
+processor = ViTImageProcessor.from_pretrained(<span class="py-st">'google/vit-base-patch16-224'</span>)
+model     = ViTForImageClassification.from_pretrained(
+                <span class="py-st">'google/vit-base-patch16-224'</span>,
+                num_labels=<span class="py-nm">20</span>,           <span class="py-cm"># 20 kategori objek robot kita</span>
+                ignore_mismatched_sizes=<span class="py-kw">True</span>)
+
+<span class="py-cm"># Freeze semua kecuali 4 block terakhir + head</span>
+<span class="py-kw">for</span> name, param <span class="py-kw">in</span> model.vit.named_parameters():
+    layer_num = <span class="py-fn">int</span>(name.split(<span class="py-st">'.'</span>)[<span class="py-nm">2</span>]) <span class="py-kw">if</span> name.startswith(<span class="py-st">'encoder.layer'</span>) <span class="py-kw">else</span> -<span class="py-nm">1</span>
+    param.requires_grad = (layer_num >= <span class="py-nm">8</span>)   <span class="py-cm"># fine-tune layer 8-11</span>
+
+<span class="py-cm"># Differential learning rates</span>
+optimizer = torch.optim.AdamW([
+    {<span class="py-st">'params'</span>: model.vit.encoder.layer[<span class="py-nm">8</span>:<span class="py-nm">12</span>].parameters(), <span class="py-st">'lr'</span>: <span class="py-nm">1e-5</span>},
+    {<span class="py-st">'params'</span>: model.classifier.parameters(), <span class="py-st">'lr'</span>: <span class="py-nm">1e-4</span>},
+], weight_decay=<span class="py-nm">0.01</span>)
+</code></pre>
+
+  <h3>5.3 RT-2: Vision-Language-Action Model</h3>
+  <div class="box box-dragon">
+    <div class="box-label">🐉 State of the Art</div>
+    <b>RT-2</b> (Robotics Transformer 2) dari Google DeepMind menggabungkan VLM (PaLI-X) dengan action token untuk menghasilkan robot yang bisa mengikuti instruksi bahasa natural. Model ini fine-tune dari 55B parameter VLM dengan data robot arm manipulation. Ini menunjukkan emergent capability: robot bisa "berpikir secara visual" untuk tugas baru yang tidak ada dalam training data.
+  </div>
+
+  <h3>5.4 CLIP sebagai Zero-Shot Grounding</h3>
+  <pre data-lang="python"><code><span class="py-kw">import</span> clip, torch
+<span class="py-kw">from</span> PIL <span class="py-kw">import</span> Image
+
+model, preprocess = clip.load(<span class="py-st">"ViT-B/32"</span>, device=<span class="py-st">"cuda"</span>)
+
+<span class="py-kw">def</span> <span class="py-fn">find_target_object</span>(rgb_frame, text_query: str, candidate_crops: list):
+    <span class="py-st">"""
+    Zero-shot: temukan crop yang paling cocok dengan teks instruksi.
+    Contoh: text_query = "the red cup on the left"
+    """</span>
+    images  = [preprocess(<span class="py-fn">Image.fromarray</span>(c)).unsqueeze(<span class="py-nm">0</span>) <span class="py-kw">for</span> c <span class="py-kw">in</span> candidate_crops]
+    images  = torch.cat(images).cuda()
+    text    = clip.tokenize([text_query]).cuda()
+
+    <span class="py-kw">with</span> torch.no_grad():
+        img_feat  = model.encode_image(images)
+        txt_feat  = model.encode_text(text)
+        img_feat /= img_feat.norm(dim=-<span class="py-nm">1</span>, keepdim=<span class="py-kw">True</span>)
+        txt_feat /= txt_feat.norm(dim=-<span class="py-nm">1</span>, keepdim=<span class="py-kw">True</span>)
+        sims      = (img_feat @ txt_feat.T).squeeze()
+
+    best_idx = sims.argmax().item()
+    <span class="py-kw">return</span> candidate_crops[best_idx], sims[best_idx].item()
+</code></pre>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════
+     CH 6 — ROBOT VISION LANJUTAN
+══════════════════════════════════════════ -->
+<section class="chapter" id="ch6">
+  <div class="chapter-num">06 &nbsp;·&nbsp; Advanced Vision</div>
+  <h2>Robot Vision Lanjutan: 3D, Point Cloud & Pose Estimation</h2>
+
+  <h3>6.1 6-DoF Pose Estimation</h3>
+  <p>Pose estimation 6D (posisi + orientasi) adalah kunci untuk robot arm — robot harus tahu <em>di mana tepatnya</em> sebuah objek dalam 3D sebelum bisa mengambilnya.</p>
+
+  <pre data-lang="python"><code><span class="py-cm"># Menggunakan FoundPose / GigaPose untuk zero-shot 6D pose</span>
+<span class="py-kw">from</span> gigapose <span class="py-kw">import</span> GigaPoseEstimator
+<span class="py-kw">import</span> numpy <span class="py-kw">as</span> np
+
+estimator = <span class="py-fn">GigaPoseEstimator</span>(device=<span class="py-st">'cuda'</span>)
+
+<span class="py-cm"># Estimasi dari RGB-D frame</span>
+<span class="py-kw">def</span> <span class="py-fn">estimate_grasp_pose</span>(rgb, depth, K_intrinsics, obj_mesh_path):
+    result = estimator.estimate(
+        rgb=rgb,
+        depth=depth,
+        K=K_intrinsics,
+        mesh_path=obj_mesh_path,
+        n_hypotheses=<span class="py-nm">100</span>
+    )
+    R = result[<span class="py-st">'R'</span>]     <span class="py-cm"># rotation matrix (3×3)</span>
+    t = result[<span class="py-st">'t'</span>]     <span class="py-cm"># translation vector (3,)</span>
+    score = result[<span class="py-st">'score'</span>]
+    <span class="py-kw">return</span> R, t, score
+
+<span class="py-cm"># Konversi ke robot base frame</span>
+<span class="py-kw">def</span> <span class="py-fn">camera_to_robot</span>(R_cam, t_cam, T_cam2base):
+    <span class="py-st">"""Transform pose dari frame kamera ke frame robot."""</span>
+    T_obj_cam  = np.eye(<span class="py-nm">4</span>)
+    T_obj_cam[:<span class="py-nm">3</span>, :<span class="py-nm">3</span>] = R_cam
+    T_obj_cam[:<span class="py-nm">3</span>,  <span class="py-nm">3</span>] = t_cam
+    T_obj_robot = T_cam2base @ T_obj_cam
+    <span class="py-kw">return</span> T_obj_robot
+</code></pre>
+
+  <h3>6.2 PointNet++ untuk Klasifikasi 3D</h3>
+  <pre data-lang="python"><code><span class="py-kw">import</span> torch
+<span class="py-kw">import</span> torch.nn <span class="py-kw">as</span> nn
+<span class="py-kw">from</span> pointnet2_ops <span class="py-kw">import</span> pointnet2_utils <span class="py-kw">as</span> pn2
+
+<span class="py-kw">class</span> <span class="py-fn">PointNet2Encoder</span>(nn.Module):
+    <span class="py-st">"""Encoder point cloud untuk scene understanding robot."""</span>
+    <span class="py-kw">def</span> <span class="py-fn">__init__</span>(self, out_dim=<span class="py-nm">256</span>):
+        <span class="py-kw">super</span>().__init__()
+        self.sa1 = pn2.PointnetSAModule(
+            npoint=<span class="py-nm">512</span>, radius=<span class="py-nm">0.2</span>, nsample=<span class="py-nm">32</span>,
+            mlp=[<span class="py-nm">0</span>, <span class="py-nm">64</span>, <span class="py-nm">64</span>, <span class="py-nm">128</span>])
+        self.sa2 = pn2.PointnetSAModule(
+            npoint=<span class="py-nm">128</span>, radius=<span class="py-nm">0.4</span>, nsample=<span class="py-nm">64</span>,
+            mlp=[<span class="py-nm">128</span>, <span class="py-nm">128</span>, <span class="py-nm">128</span>, <span class="py-nm">256</span>])
+        self.sa3 = pn2.PointnetSAModule(
+            mlp=[<span class="py-nm">256</span>, <span class="py-nm">256</span>, <span class="py-nm">512</span>, out_dim])
+
+    <span class="py-kw">def</span> <span class="py-fn">forward</span>(self, xyz):
+        <span class="py-cm"># xyz: (B, N, 3) — N points dari lidar/depth camera</span>
+        xyz = xyz.contiguous()
+        xyz, feat = self.sa1(xyz, <span class="py-kw">None</span>)
+        xyz, feat = self.sa2(xyz, feat)
+        _, feat   = self.sa3(xyz, feat)
+        <span class="py-kw">return</span> feat.squeeze(-<span class="py-nm">1</span>)       <span class="py-cm"># (B, out_dim)</span>
+</code></pre>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════
+     CH 7 — KONTROL & NAVIGASI
+══════════════════════════════════════════ -->
+<section class="chapter" id="ch7">
+  <div class="chapter-num">07 &nbsp;·&nbsp; Navigation</div>
+  <h2>Kontrol End-to-End & Navigasi Neural</h2>
+
+  <h3>7.1 End-to-End Imitation Learning</h3>
+  <p>Behavior Cloning (BC) melatih policy langsung dari demonstrasi manusia — robot <em>meniru</em> expert tanpa perlu reward function:</p>
+
+  <pre data-lang="python"><code><span class="py-kw">class</span> <span class="py-fn">BehaviorCloningPolicy</span>(nn.Module):
+    <span class="py-st">"""
+    End-to-end: (image, proprio_state) → robot_action
+    Arsitektur ACT (Action Chunking Transformer) yang disederhanakan.
+    """</span>
+    <span class="py-kw">def</span> <span class="py-fn">__init__</span>(self):
+        <span class="py-kw">super</span>().__init__()
+        <span class="py-cm"># Visual encoder: ResNet18 + FPN</span>
+        resnet = models.resnet18(pretrained=<span class="py-kw">True</span>)
+        self.visual = nn.Sequential(*<span class="py-fn">list</span>(resnet.children())[:-<span class="py-nm">2</span>])
+        self.pool    = nn.AdaptiveAvgPool2d((<span class="py-nm">4</span>,<span class="py-nm">4</span>))
+
+        <span class="py-cm"># Proprio encoder (joint angles, velocities)</span>
+        self.proprio = nn.Sequential(
+            nn.Linear(<span class="py-nm">14</span>, <span class="py-nm">64</span>), nn.GELU(),
+            nn.Linear(<span class="py-nm">64</span>, <span class="py-nm">64</span>))
+
+        <span class="py-cm"># Fusion Transformer</span>
+        d_model = <span class="py-nm">512</span>
+        self.img_proj   = nn.Linear(<span class="py-nm">512</span>*<span class="py-nm">4</span>*<span class="py-nm">4</span>, d_model)
+        self.prop_proj  = nn.Linear(<span class="py-nm">64</span>, d_model)
+        enc_layer = nn.TransformerEncoderLayer(d_model, nhead=<span class="py-nm">8</span>,
+                        dim_feedforward=<span class="py-nm">2048</span>, batch_first=<span class="py-kw">True</span>)
+        self.transformer = nn.TransformerEncoder(enc_layer, num_layers=<span class="py-nm">4</span>)
+
+        <span class="py-cm"># Action head: output 100 action chunks (chunk policy)</span>
+        self.action_head = nn.Linear(d_model, <span class="py-nm">14</span> * <span class="py-nm">100</span>)
+
+    <span class="py-kw">def</span> <span class="py-fn">forward</span>(self, img, proprio):
+        B = img.shape[<span class="py-nm">0</span>]
+        v = self.pool(self.visual(img)).flatten(<span class="py-nm">1</span>)
+        v = self.img_proj(v).unsqueeze(<span class="py-nm">1</span>)
+        p = self.prop_proj(self.proprio(proprio)).unsqueeze(<span class="py-nm">1</span>)
+        tokens = torch.cat([v, p], dim=<span class="py-nm">1</span>)
+        out    = self.transformer(tokens).mean(<span class="py-nm">1</span>)
+        actions = self.action_head(out).reshape(B, <span class="py-nm">100</span>, <span class="py-nm">14</span>)
+        <span class="py-kw">return</span> actions
+</code></pre>
+
+  <h3>7.2 Neural SLAM & Navigasi Otonom</h3>
+  <p>NeRF-SLAM dan GaussianSLAM memungkinkan robot membangun peta 3D implisit dari kamera monocular, tanpa LiDAR:</p>
+
+  <div class="arch-diagram">
+    <pre>
+  ┌──────────────┐     ┌───────────────┐     ┌──────────────┐
+  │ RGB-D Camera │────▶│ Pose Tracker  │────▶│  Map Builder │
+  │ (30 fps)     │     │ (ORB-SLAM3 /  │     │  (NeRF /     │
+  └──────────────┘     │  DROID-SLAM)  │     │  3DGS scene) │
+                       └───────┬───────┘     └──────┬───────┘
+                               │ T_wc                │ Dense map
+                               ▼                     ▼
+                       ┌───────────────┐     ┌──────────────┐
+                       │ Global Planner│◀────│ Occupancy    │
+                       │ (A* / Dijkstr)│     │ Grid Extract │
+                       └───────┬───────┘     └──────────────┘
+                               │ Waypoints
+                               ▼
+                       ┌───────────────┐
+                       │ Local Planner │
+                       │ (DWA / TEB /  │
+                       │  learned)     │
+                       └───────┬───────┘
+                               │ cmd_vel
+                               ▼
+                         Robot Motors</pre>
+  </div>
+
+  <h3>7.3 Learned Local Planner dengan RL</h3>
+  <pre data-lang="python"><code><span class="py-cm"># Nav2 custom planner berbasis RL</span>
+<span class="py-kw">import</span> rclpy
+<span class="py-kw">from</span> nav2_simple_commander.robot_navigator <span class="py-kw">import</span> BasicNavigator
+<span class="py-kw">from</span> geometry_msgs.msg <span class="py-kw">import</span> PoseStamped
+<span class="py-kw">import</span> torch
+
+<span class="py-cm"># Policy yang dilatih dengan PPO di sim, sekarang running di robot</span>
+rl_policy = torch.jit.load(<span class="py-st">'nav_policy_sim2real.pt'</span>).cuda().eval()
+
+<span class="py-kw">def</span> <span class="py-fn">get_rl_cmd_vel</span>(laser_scan, goal_vec, current_vel):
+    <span class="py-st">"""
+    Input: 360-ray laser + goal direction + current velocity
+    Output: linear vel + angular vel
+    """</span>
+    obs = torch.FloatTensor(
+        np.concatenate([laser_scan, goal_vec, current_vel])
+    ).unsqueeze(<span class="py-nm">0</span>).cuda()
+
+    <span class="py-kw">with</span> torch.no_grad():
+        action = rl_policy(obs).squeeze().cpu().numpy()
+
+    linear_vel  = np.clip(action[<span class="py-nm">0</span>], -<span class="py-nm">0.5</span>, <span class="py-nm">0.5</span>)
+    angular_vel = np.clip(action[<span class="py-nm">1</span>], -<span class="py-nm">1.0</span>, <span class="py-nm">1.0</span>)
+    <span class="py-kw">return</span> linear_vel, angular_vel
+</code></pre>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════
+     CH 8 — MANIPULASI OBJEK
+══════════════════════════════════════════ -->
+<section class="chapter" id="ch8">
+  <div class="chapter-num">08 &nbsp;·&nbsp; Manipulation</div>
+  <h2>Manipulasi Objek dengan Deep Learning</h2>
+
+  <h3>8.1 Grasp Planning Neural Network</h3>
+  <p>GraspNet-1Billion dan Contact-GraspNet memprediksi ribuan konfigurasi grasp yang valid dari point cloud atau RGB-D, memilih yang terbaik berdasarkan kualitas dan kinematik robot:</p>
+
+  <pre data-lang="python"><code><span class="py-kw">from</span> contact_graspnet_pytorch <span class="py-kw">import</span> ContactGraspNetModel
+<span class="py-kw">import</span> numpy <span class="py-kw">as</span> np
+
+grasp_model = <span class="py-fn">ContactGraspNetModel</span>().cuda().eval()
+
+<span class="py-kw">def</span> <span class="py-fn">plan_grasp</span>(depth_image, rgb_image, K, segmask=<span class="py-kw">None</span>):
+    <span class="py-st">"""
+    Kembalikan daftar grasp poses (R, t, quality) diurutkan berdasar kualitas.
+    """</span>
+    pred_grasps, scores, contact_pts = grasp_model.predict(
+        depth_image=depth_image,
+        rgb=rgb_image,
+        K=K,
+        segmask=segmask,
+        z_range=[<span class="py-nm">0.2</span>, <span class="py-nm">1.8</span>],
+        local_regions=<span class="py-kw">True</span>,
+        filter_grasps=<span class="py-kw">True</span>
+    )
+    <span class="py-cm"># Sort by score descending</span>
+    sorted_idx = np.argsort(scores)[::-<span class="py-nm">1</span>]
+    <span class="py-kw">return</span> [(pred_grasps[i], scores[i]) <span class="py-kw">for</span> i <span class="py-kw">in</span> sorted_idx[:<span class="py-nm">10</span>]]
+</code></pre>
+
+  <h3>8.2 Diffusion Policy — State-of-the-Art Imitation Learning</h3>
+  <div class="box box-dragon">
+    <div class="box-label">🔬 Research Frontier 2024-2026</div>
+    <b>Diffusion Policy</b> memodelkan distribusi action sebagai proses diffusion, menghasilkan multi-modal policy yang dapat memilih dari berbagai cara yang valid untuk menyelesaikan tugas. Ini mengatasi mode collapse pada BC konvensional dan mengungguli semua metode imitation learning pada task manipulasi kompleks.
+  </div>
+
+  <pre data-lang="python"><code><span class="py-kw">from</span> diffusion_policy <span class="py-kw">import</span> DiffusionUnetHybridImagePolicy
+
+<span class="py-cm"># Konfigurasi Diffusion Policy dengan CNN backbone</span>
+config = {
+    <span class="py-st">"obs_encoder"</span>: {
+        <span class="py-st">"type"</span>: <span class="py-st">"MultiImageObsEncoder"</span>,
+        <span class="py-st">"rgb_model"</span>: <span class="py-st">"resnet18"</span>,
+        <span class="py-st">"obs_groups"</span>: {
+            <span class="py-st">"camera_0"</span>: [<span class="py-nm">3</span>, <span class="py-nm">96</span>, <span class="py-nm">96</span>],   <span class="py-cm"># wrist cam</span>
+            <span class="py-st">"camera_1"</span>: [<span class="py-nm">3</span>, <span class="py-nm">96</span>, <span class="py-nm">96</span>],   <span class="py-cm"># overhead cam</span>
+            <span class="py-st">"robot_eef_pos"</span>: [<span class="py-nm">3</span>],
+            <span class="py-st">"robot_eef_quat"</span>: [<span class="py-nm">4</span>],
+            <span class="py-st">"robot_gripper"</span>: [<span class="py-nm">1</span>],
+        }
+    },
+    <span class="py-st">"noise_scheduler"</span>: {
+        <span class="py-st">"type"</span>: <span class="py-st">"DDIMScheduler"</span>,
+        <span class="py-st">"num_train_timesteps"</span>: <span class="py-nm">100</span>,
+        <span class="py-st">"beta_schedule"</span>: <span class="py-st">"squaredcos_cap_v2"</span>,
+    },
+    <span class="py-st">"horizon"</span>: <span class="py-nm">16</span>,          <span class="py-cm"># prediksi 16 action ke depan</span>
+    <span class="py-st">"n_action_steps"</span>: <span class="py-nm">8</span>,    <span class="py-cm"># eksekusi 8 sebelum re-plan</span>
+    <span class="py-st">"n_obs_steps"</span>: <span class="py-nm">2</span>,
+    <span class="py-st">"action_dim"</span>: <span class="py-nm">10</span>,        <span class="py-cm"># 7 DoF arm + 3 gripper</span>
+}
+
+policy = <span class="py-fn">DiffusionUnetHybridImagePolicy</span>(**config)
+</code></pre>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════
+     CH 9 — SIM-TO-REAL
+══════════════════════════════════════════ -->
+<section class="chapter" id="ch9">
+  <div class="chapter-num">09 &nbsp;·&nbsp; Sim-to-Real</div>
+  <h2>Sim-to-Real Transfer</h2>
+
+  <h3>9.1 Domain Randomization</h3>
+  <p>Melatih dengan variasi parameter fisika dan visual yang masif di simulator sehingga policy menjadi robust terhadap ketidaksesuaian antara sim dan realitas:</p>
+
+  <pre data-lang="python"><code><span class="py-kw">from</span> isaacgym <span class="py-kw">import</span> gymapi, gymtorch
+<span class="py-kw">import</span> numpy <span class="py-kw">as</span> np
+
+<span class="py-kw">class</span> <span class="py-fn">DomainRandomizer</span>:
+    <span class="py-st">"""Randomisasi domain di Isaac Gym setiap N episode."""</span>
+
+    DR_RANGES = {
+        <span class="py-st">'friction'</span>:      (<span class="py-nm">0.1</span>,  <span class="py-nm">3.0</span>),
+        <span class="py-st">'restitution'</span>:   (<span class="py-nm">0.0</span>,  <span class="py-nm">0.9</span>),
+        <span class="py-st">'mass_scale'</span>:    (<span class="py-nm">0.5</span>,  <span class="py-nm">2.0</span>),
+        <span class="py-st">'stiffness'</span>:     (<span class="py-nm">200</span>,  <span class="py-nm">800</span>),
+        <span class="py-st">'damping'</span>:       (<span class="py-nm">10</span>,   <span class="py-nm">80</span>),
+        <span class="py-st">'gravity_z'</span>:     (-<span class="py-nm">9.8</span>, -<span class="py-nm">10.2</span>),
+    }
+    VISUAL_DR = {
+        <span class="py-st">'albedo'</span>:        (<span class="py-nm">0.3</span>,  <span class="py-nm">0.9</span>),
+        <span class="py-st">'roughness'</span>:     (<span class="py-nm">0.0</span>,  <span class="py-nm">1.0</span>),
+        <span class="py-st">'light_intensity'</span>: (<span class="py-nm">500</span>, <span class="py-nm">2000</span>),
+        <span class="py-st">'cam_noise'</span>:     (<span class="py-nm">0.0</span>,  <span class="py-nm">0.03</span>),
+    }
+
+    <span class="py-kw">def</span> <span class="py-fn">randomize_episode</span>(self, env, actor_handle):
+        <span class="py-kw">for</span> prop, (lo, hi) <span class="py-kw">in</span> self.DR_RANGES.items():
+            val = np.random.uniform(lo, hi)
+            self._set_property(env, actor_handle, prop, val)
+
+    <span class="py-kw">def</span> <span class="py-fn">add_observation_noise</span>(self, obs, sigma=<span class="py-nm">0.01</span>):
+        <span class="py-kw">return</span> obs + np.random.normal(<span class="py-nm">0</span>, sigma, obs.shape)
+</code></pre>
+
+  <h3>9.2 Adaptive Domain Randomization (ADR)</h3>
+  <p>OpenAI Dactyl menggunakan ADR: mulai dari lingkungan mudah, secara otomatis perluas range randomisasi selama agent berhasil:</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Teknik</th><th>Deskripsi</th><th>Kelebihan</th></tr></thead>
+      <tbody>
+        <tr><td><b>UDR</b></td><td>Uniform Domain Randomization — range tetap, distribusi uniform</td><td>Simple, baseline yang kuat</td></tr>
+        <tr><td><b>ADR</b></td><td>Rentang randomisasi dikembangkan otomatis berdasar performa</td><td>Scalable, digunakan di Dactyl</td></tr>
+        <tr><td><b>RARL</b></td><td>Adversarial RL — adversary melatih perturbasi terburuk</td><td>Policy sangat robust</td></tr>
+        <tr><td><b>Grounded Sim</b></td><td>Identifikasi parameter sim dari data real menggunakan Bayesian opt</td><td>Realistic gap minimization</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════
+     CH 10 — EDGE DEPLOYMENT
+══════════════════════════════════════════ -->
+<section class="chapter" id="ch10">
+  <div class="chapter-num">10 &nbsp;·&nbsp; Deployment</div>
+  <h2>Edge Deployment: Optimasi Model untuk Robot Embedded</h2>
+
+  <h3>10.1 Pipeline Optimasi</h3>
+  <ol class="styled">
+    <li>Training model penuh dengan PyTorch (FP32)</li>
+    <li>Pruning: hapus bobot tidak penting (magnitude/structured pruning)</li>
+    <li>Knowledge Distillation: latih student model dari teacher besar</li>
+    <li>Post-training Quantization (PTQ): FP32 → INT8/FP16</li>
+    <li>Export ke ONNX → TensorRT conversion</li>
+    <li>Benchmark latency + akurasi di target hardware</li>
+    <li>Deploy via TensorRT Engine atau TFLite/CoreML</li>
+  </ol>
+
+  <h3>10.2 TensorRT Deployment</h3>
+  <pre data-lang="python"><code><span class="py-kw">import</span> tensorrt <span class="py-kw">as</span> trt
+<span class="py-kw">import</span> torch
+<span class="py-kw">import</span> numpy <span class="py-kw">as</span> np
+
+<span class="py-cm"># Step 1: Export ke ONNX</span>
+model.eval()
+dummy = torch.randn(<span class="py-nm">1</span>, <span class="py-nm">3</span>, <span class="py-nm">640</span>, <span class="py-nm">640</span>).cuda()
+torch.onnx.export(
+    model, dummy, <span class="py-st">"robot_perception.onnx"</span>,
+    opset_version=<span class="py-nm">17</span>,
+    input_names=[<span class="py-st">'image'</span>],
+    output_names=[<span class="py-st">'detections'</span>, <span class="py-st">'embeddings'</span>],
+    dynamic_axes={<span class="py-st">'image'</span>: {<span class="py-nm">0</span>: <span class="py-st">'batch'</span>}})
+
+<span class="py-cm"># Step 2: ONNX → TensorRT Engine</span>
+TRT_LOGGER = trt.Logger(trt.Logger.WARNING)
+builder    = trt.Builder(TRT_LOGGER)
+network    = builder.create_network(
+    <span class="py-nm">1</span> &lt;&lt; <span class="py-fn">int</span>(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH))
+parser     = trt.OnnxParser(network, TRT_LOGGER)
+config     = builder.create_builder_config()
+config.set_flag(trt.BuilderFlag.FP16)   <span class="py-cm"># atau INT8 dengan calibrator</span>
+config.set_memory_pool_limit(trt.MemoryPoolType.WORKSPACE, <span class="py-nm">1</span> &lt;&lt; <span class="py-nm">30</span>)
+
+<span class="py-kw">with</span> <span class="py-fn">open</span>(<span class="py-st">'robot_perception.onnx'</span>, <span class="py-st">'rb'</span>) <span class="py-kw">as</span> f:
+    parser.parse(f.read())
+
+engine = builder.build_serialized_network(network, config)
+<span class="py-kw">with</span> <span class="py-fn">open</span>(<span class="py-st">'robot_perception.trt'</span>, <span class="py-st">'wb'</span>) <span class="py-kw">as</span> f:
+    f.write(engine)
+
+print(<span class="py-st">f"TensorRT engine saved — FP16 inference siap di Jetson!"</span>)
+</code></pre>
+
+  <h3>10.3 Perbandingan Hardware untuk Robot AI</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Hardware</th><th>TOPS</th><th>Power</th><th>Cocok Untuk</th><th>Harga</th></tr></thead>
+      <tbody>
+        <tr><td><b>NVIDIA Jetson Orin NX 16GB</b></td><td>70</td><td>10-15W</td><td>Mobile robot, drone, arm</td><td>~$500</td></tr>
+        <tr><td><b>NVIDIA Jetson AGX Orin 64GB</b></td><td>275</td><td>15-60W</td><td>Industrial robot, autonomous vehicles</td><td>~$1400</td></tr>
+        <tr><td><b>Intel RealSense D457 + NUC</b></td><td>~20</td><td>28W</td><td>Research robot, indoor nav</td><td>~$800</td></tr>
+        <tr><td><b>Coral TPU Edge</b></td><td>4</td><td>2W</td><td>Ultra-low power, inference only</td><td>~$60</td></tr>
+        <tr><td><b>RK3588 NPU (Orange Pi 5)</b></td><td>6</td><td>5-8W</td><td>Budget robot, education</td><td>~$80</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════
+     CH 11 — KEAMANAN DL ROBOT
+══════════════════════════════════════════ -->
+<section class="chapter" id="ch11">
+  <div class="chapter-num">11 &nbsp;·&nbsp; Security</div>
+  <h2>Keamanan Model DL pada Sistem Robot <span class="badge badge-green">BlueDragonSec</span></h2>
+
+  <div class="box box-danger">
+    <div class="box-label">⚠️ Security Advisory</div>
+    Model deep learning yang di-deploy pada robot fisik memiliki attack surface yang unik dan berbahaya. Serangan terhadap perception system dapat menyebabkan kecelakaan fisik, cedera manusia, atau kerusakan aset. Selalu terapkan defense-in-depth.
+  </div>
+
+  <h3>11.1 Adversarial Attacks pada Robot Vision</h3>
+  <p>Adversarial examples adalah input yang sengaja dimodifikasi secara kecil untuk menipu model DL:</p>
+
+  <pre data-lang="python"><code><span class="py-cm"># PGD (Projected Gradient Descent) Attack pada robot perception</span>
+<span class="py-kw">import</span> torch
+<span class="py-kw">import</span> torch.nn.functional <span class="py-kw">as</span> F
+
+<span class="py-kw">def</span> <span class="py-fn">pgd_attack</span>(model, image, target_class, epsilon=<span class="py-nm">8</span>/<span class="py-nm">255</span>,
+               alpha=<span class="py-nm">2</span>/<span class="py-nm">255</span>, iters=<span class="py-nm">40</span>):
+    <span class="py-st">"""
+    PGD adversarial attack untuk test robustness model robot.
+    HANYA untuk defensive testing / red team.
+    """</span>
+    x_adv = image.clone().detach().requires_grad_(<span class="py-kw">True</span>)
+    orig  = image.clone().detach()
+
+    <span class="py-kw">for</span> _ <span class="py-kw">in</span> <span class="py-fn">range</span>(iters):
+        logits = model(x_adv)
+        loss   = F.cross_entropy(logits, target_class)
+        model.zero_grad()
+        loss.backward()
+
+        <span class="py-kw">with</span> torch.no_grad():
+            x_adv += alpha * x_adv.grad.sign()
+            x_adv  = torch.clamp(orig + torch.clamp(x_adv - orig,
+                                 -epsilon, epsilon), <span class="py-nm">0</span>, <span class="py-nm">1</span>)
+        x_adv = x_adv.detach().requires_grad_(<span class="py-kw">True</span>)
+
+    <span class="py-kw">return</span> x_adv.detach()
+
+
+<span class="py-cm"># Adversarial Training — pertahanan terbaik</span>
+<span class="py-kw">def</span> <span class="py-fn">adversarial_train_step</span>(model, optimizer, x, y, epsilon=<span class="py-nm">4</span>/<span class="py-nm">255</span>):
+    <span class="py-cm"># Generate adversarial examples dalam inner loop</span>
+    x_adv = <span class="py-fn">pgd_attack</span>(model, x, y, epsilon=epsilon, iters=<span class="py-nm">7</span>)
+    model.train()
+    logits = model(x_adv)
+    loss   = F.cross_entropy(logits, y)
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+    <span class="py-kw">return</span> loss.item()
+</code></pre>
+
+  <h3>11.2 Model Backdoor & Data Poisoning</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Attack Type</th><th>Mekanisme</th><th>Impact pada Robot</th><th>Mitigasi</th></tr></thead>
+      <tbody>
+        <tr><td><b>Backdoor Attack</b></td><td>Trigger pattern tersembunyi di training data menyebabkan misclassification</td><td>Robot salah mengenali "teman" sebagai ancaman atau sebaliknya</td><td>Neural Cleanse, STRIP, spectral signatures</td></tr>
+        <tr><td><b>Data Poisoning</b></td><td>Modifikasi training dataset menyebabkan degradasi performa sistematis</td><td>Model navigasi membawa robot ke lokasi berbahaya</td><td>Data provenance, anomaly detection</td></tr>
+        <tr><td><b>Model Extraction</b></td><td>Query model berulang kali untuk clone fungsionalitasnya</td><td>Kloning IP model komersial</td><td>Rate limiting, output perturbation, watermarking</td></tr>
+        <tr><td><b>Adversarial Patch</b></td><td>Stiker fisik yang ditempel di lingkungan menipu robot vision</td><td>Robot mengabaikan stop sign atau manusia</td><td>Ensemble, certified defenses, physical robustness testing</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>11.3 Certified Robustness & Defenses</h3>
+  <pre data-lang="python"><code><span class="py-cm"># Randomized Smoothing — certified L2 robustness</span>
+<span class="py-kw">from</span> smoothing <span class="py-kw">import</span> Smooth
+
+<span class="py-cm"># Bungkus model dengan randomized smoothing certifier</span>
+smooth_model = <span class="py-fn">Smooth</span>(
+    base_classifier=model,
+    num_classes=<span class="py-nm">10</span>,
+    sigma=<span class="py-nm">0.25</span>               <span class="py-cm"># noise std utk certifikasi</span>
+)
+
+<span class="py-cm"># Prediksi dengan sertifikasi radius L2</span>
+prediction, radius = smooth_model.certify(
+    x=image,
+    n0=<span class="py-nm">100</span>,                  <span class="py-cm"># sample awal</span>
+    n=<span class="py-nm">100_000</span>,              <span class="py-cm"># sample sertifikasi</span>
+    alpha=<span class="py-nm">0.001</span>,            <span class="py-cm"># tingkat kepercayaan 99.9%</span>
+    batch_size=<span class="py-nm">1000</span>
+)
+<span class="py-kw">if</span> prediction != -<span class="py-nm">1</span>:
+    <span class="py-fn">print</span>(<span class="py-st">f"Predicted: {prediction}, certified radius: {radius:.3f}"</span>)
+    <span class="py-cm"># Robot AMAN mengambil keputusan ini selama perturbasi ≤ radius</span>
+</code></pre>
+
+  <div class="box box-dragon">
+    <div class="box-label">🐉 BlueDragonSec Recommendation</div>
+    Untuk robot yang beroperasi di lingkungan kritis (militer, medis, infrastruktur), implementasikan <b>defense-in-depth</b>: (1) adversarial training, (2) input validation layer, (3) ensemble voting dengan majority rule, (4) anomaly detection pada output distribusi, (5) hardware-based failsafe yang independen dari model DL.
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════
+     CH 12 — PROYEK LENGKAP
+══════════════════════════════════════════ -->
+<section class="chapter" id="ch12">
+  <div class="chapter-num">12 &nbsp;·&nbsp; Capstone</div>
+  <h2>Proyek Lengkap: Pick-and-Place Robot Otonom</h2>
+
+  <p>Proyek capstone ini mengintegrasikan seluruh modul: vision, perception, planning, dan kontrol menjadi satu sistem robot arm otonom yang dapat memilih dan meletakkan objek berdasarkan instruksi bahasa natural.</p>
+
+  <div class="arch-diagram">
+    <pre>
+  ╔══════════════════════════════════════════════════════════════╗
+  ║         ARSITEKTUR SISTEM PICK-AND-PLACE OTONOM              ║
+  ╠══════════════════════════════════════════════════════════════╣
+  ║                                                              ║
+  ║  [Instruksi Bahasa]  "taruh cangkir merah ke kotak biru"    ║
+  ║         │                                                    ║
+  ║         ▼                                                    ║
+  ║  ┌─────────────┐    ┌─────────────┐    ┌──────────────┐    ║
+  ║  │  LLM Parser │───▶│ CLIP Visual │───▶│  Grasp Net   │    ║
+  ║  │ (GPT-4o /   │    │  Grounding  │    │  (6D Pose)   │    ║
+  ║  │  Qwen2-VL)  │    │             │    │              │    ║
+  ║  └─────────────┘    └──────┬──────┘    └──────┬───────┘    ║
+  ║                             │ target bbox       │ T_grasp    ║
+  ║                             ▼                   ▼           ║
+  ║  ┌─────────────────────────────────────────────────────┐   ║
+  ║  │              Motion Planner                          │   ║
+  ║  │   MoveIt2 + learned collision avoidance (RL)         │   ║
+  ║  └────────────────────┬────────────────────────────────┘   ║
+  ║                        │ joint trajectory                    ║
+  ║                        ▼                                     ║
+  ║  ┌─────────────────────────────────────────────────────┐   ║
+  ║  │  Low-level Controller: PD + residual RL policy      │   ║
+  ║  │  (100Hz control loop di robot arm hardware)          │   ║
+  ║  └─────────────────────────────────────────────────────┘   ║
+  ║                                                              ║
+  ╚══════════════════════════════════════════════════════════════╝</pre>
+  </div>
+
+  <h3>12.1 Full Integration Code</h3>
+  <pre data-lang="python"><code><span class="py-cm">#!/usr/bin/env python3
+# ─────────────────────────────────────────────────
+# BlueDragonSec — Pick-and-Place Integration
+# Robot: UR5e + Robotiq 2F-85 + RealSense D435i
+# ROS2 Humble + MoveIt2
+# ─────────────────────────────────────────────────</span>
+
+<span class="py-kw">import</span> rclpy
+<span class="py-kw">from</span> rclpy.node <span class="py-kw">import</span> Node
+<span class="py-kw">import</span> numpy <span class="py-kw">as</span> np
+<span class="py-kw">import</span> torch
+<span class="py-kw">from</span> moveit2 <span class="py-kw">import</span> MoveIt2
+<span class="py-kw">from</span> openai <span class="py-kw">import</span> OpenAI
+<span class="py-kw">import</span> clip, json
+
+<span class="py-kw">class</span> <span class="py-fn">PickPlaceRobot</span>(Node):
+    <span class="py-kw">def</span> <span class="py-fn">__init__</span>(self):
+        <span class="py-kw">super</span>().__init__(<span class="py-st">'pick_place_node'</span>)
+        self.moveit    = <span class="py-fn">MoveIt2</span>(node=self, joint_names=[...])
+        self.llm       = <span class="py-fn">OpenAI</span>().chat
+        self.clip_mdl, self.clip_pp = clip.load(<span class="py-st">"ViT-L/14"</span>, device=<span class="py-st">"cuda"</span>)
+        self.grasp_net = <span class="py-fn">load_graspnet</span>()
+        self.detector  = <span class="py-fn">YOLO</span>(<span class="py-st">'yolov10s.pt'</span>).cuda()
+
+    <span class="py-kw">def</span> <span class="py-fn">execute_instruction</span>(self, instruction: str, rgbd_frame):
+        <span class="py-cm"># 1. Parse instruksi bahasa → target + destination</span>
+        parsed = self.<span class="py-fn">_parse_instruction</span>(instruction)
+        target_desc = parsed[<span class="py-st">'pick_object'</span>]
+        dest_desc   = parsed[<span class="py-st">'place_location'</span>]
+
+        <span class="py-cm"># 2. Deteksi semua objek di scene</span>
+        detections = self.detector(rgbd_frame.rgb)
+        crops = [<span class="py-fn">crop_bbox</span>(rgbd_frame.rgb, d.box) <span class="py-kw">for</span> d <span class="py-kw">in</span> detections]
+
+        <span class="py-cm"># 3. CLIP grounding untuk target</span>
+        target_crop, conf = <span class="py-fn">find_target_object</span>(
+            rgbd_frame.rgb, target_desc, crops)
+        self.get_logger().info(<span class="py-st">f"Target found (conf={conf:.2f}): {target_desc}"</span>)
+
+        <span class="py-cm"># 4. 6D pose estimation</span>
+        R, t, grasp_q = self.grasp_net.predict(
+            rgbd_frame.depth, rgbd_frame.K)
+
+        <span class="py-cm"># 5. Plan & execute: pre-grasp → grasp → lift → place</span>
+        T_grasp = <span class="py-fn">build_pose</span>(R, t)
+        <span class="py-kw">for</span> waypoint <span class="py-kw">in</span> self.<span class="py-fn">_plan_trajectory</span>(T_grasp, dest_desc):
+            self.moveit.<span class="py-fn">move_to_pose</span>(waypoint, velocity_scaling=<span class="py-nm">0.4</span>)
+
+    <span class="py-kw">def</span> <span class="py-fn">_parse_instruction</span>(self, instruction):
+        response = self.llm.completions.create(
+            model=<span class="py-st">"gpt-4o"</span>,
+            messages=[{
+                <span class="py-st">"role"</span>: <span class="py-st">"system"</span>,
+                <span class="py-st">"content"</span>: <span class="py-st">"Parse robot instruction to JSON: {pick_object, place_location}. ONLY return JSON."</span>
+            }, {<span class="py-st">"role"</span>: <span class="py-st">"user"</span>, <span class="py-st">"content"</span>: instruction}])
+        <span class="py-kw">return</span> json.loads(response.choices[<span class="py-nm">0</span>].message.content)
+
+
+<span class="py-kw">if</span> __name__ == <span class="py-st">'__main__'</span>:
+    rclpy.init()
+    robot = <span class="py-fn">PickPlaceRobot</span>()
+    robot.<span class="py-fn">execute_instruction</span>(
+        <span class="py-st">"ambil botol air dan letakkan di keranjang hijau"</span>,
+        rgbd=<span class="py-fn">get_current_rgbd_frame</span>()
+    )
+    rclpy.spin(robot)
+</code></pre>
+
+  <h3>12.2 Checklist Deployment Robot AI</h3>
+  <ul class="step-list">
+    <li><span class="step-num">01</span><span>Validasi akurasi model di lingkungan test sebelum deploy ke hardware fisik — minimum 95% precision/recall untuk safety-critical perception.</span></li>
+    <li><span class="step-num">02</span><span>Implementasi <b>safety watchdog</b>: independent process yang memonitor output model dan menghentikan robot jika deteksi anomali (confidence rendah, out-of-distribution input).</span></li>
+    <li><span class="step-num">03</span><span>Hardware E-stop tersambung ke sinyal terpisah dari software — tidak boleh bisa di-override oleh model DL.</span></li>
+    <li><span class="step-num">04</span><span>Logging semua inference: gambar input, output model, aksi robot — untuk forensic analysis jika terjadi insiden.</span></li>
+    <li><span class="step-num">05</span><span>Red-team testing: uji adversarial patches, distribusi shift (cahaya berbeda, objek baru), dan failure modes sebelum operational deployment.</span></li>
+    <li><span class="step-num">06</span><span>Dokumentasikan model card: training data, performance metrics, known limitations, intended use, out-of-scope scenarios.</span></li>
+  </ul>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════
+     APPENDIX
+══════════════════════════════════════════ -->
+<section class="chapter" id="appendix">
+  <div class="chapter-num">Appendix</div>
+  <h2>Referensi, Dataset & Resource</h2>
+
+  <h3>Dataset Penting untuk Robotika DL</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Dataset</th><th>Task</th><th>Size</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><b>Open X-Embodiment</b></td><td>Robot manipulation (22 robot)</td><td>1M+ episodes</td><td>Google, cross-robot generalization</td></tr>
+        <tr><td><b>DROID</b></td><td>Diverse robot interaction</td><td>76k demos</td><td>Stanford, in-the-wild manipulation</td></tr>
+        <tr><td><b>BridgeData V2</b></td><td>Table-top manipulation</td><td>60k demos</td><td>UC Berkeley, diverse tasks</td></tr>
+        <tr><td><b>nuScenes</b></td><td>Autonomous driving perception</td><td>1000 scenes</td><td>LiDAR + camera fusion</td></tr>
+        <tr><td><b>Replica / ScanNet</b></td><td>Indoor scene reconstruction</td><td>18/1500 scenes</td><td>SLAM, navigation research</td></tr>
+        <tr><td><b>YCB Video</b></td><td>6D object pose</td><td>92 videos</td><td>Standard benchmark pose estimation</td></tr>
+        <tr><td><b>LEROBOT (HuggingFace)</b></td><td>Multi-task robot learning</td><td>Growing</td><td>Community-driven, ACT/Diffusion Policy</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Paper Wajib Baca</h3>
+  <ul class="styled">
+    <li><b>Attention Is All You Need</b> (Vaswani et al., 2017) — Transformer foundation</li>
+    <li><b>PPO: Proximal Policy Optimization</b> (Schulman et al., 2017) — RL standard</li>
+    <li><b>SAC: Soft Actor-Critic</b> (Haarnoja et al., 2018) — continuous control RL</li>
+    <li><b>RT-2: Vision-Language-Action Models</b> (Brohan et al., 2023) — foundation model untuk robot</li>
+    <li><b>Diffusion Policy</b> (Chi et al., 2023) — state-of-the-art imitation learning</li>
+    <li><b>Contact GraspNet</b> (Sundermeyer et al., 2021) — 6D grasp generation</li>
+    <li><b>NeRF: Representing Scenes as Neural Radiance Fields</b> (Mildenhall et al., 2020)</li>
+    <li><b>DreamerV3</b> (Hafner et al., 2023) — world models untuk RL</li>
+    <li><b>ACT: Action Chunking with Transformers</b> (Zhao et al., 2023) — low-cost robot learning</li>
+    <li><b>Towards Safe & Adversarially Robust RL</b> — safety dalam robot RL</li>
+  </ul>
+</section>
+
+</div><!-- /.content -->
+
+<!-- ═══════════ FOOTER / FINGERPRINT ═══════════ -->
+<footer id="fingerprint">
+  <div class="footer-grid">
+    <div>
+      <div class="fp-label">Document Fingerprint</div>
+      <div class="fp-value">BDS-DL-ROBOT-2026::SHA256::
+4a9f2c1d7e83b056a2c89f14d3e7a951
+8b2c4f6a0e1d9c3b7a5f2e8d1c4b9f3a</div>
+    </div>
+    <div>
+      <div class="fp-label">Author</div>
+      <div class="fp-value">Antonius<br>Blue Dragon Security</div>
+    </div>
+    <div>
+      <div class="fp-label">Origin</div>
+      <div class="fp-value">bluedragonsec.com<br>Tangerang, Indonesia</div>
+    </div>
+    <div>
+      <div class="fp-label">Classification</div>
+      <div class="fp-value">PUBLIC · RESEARCH<br>Rev 2026-04-15</div>
+    </div>
+    <div class="fp-dragon">龍</div>
+  </div>
+  <div style="margin-top:24px; padding-top:20px; border-top:1px solid var(--border); font-family:'Space Mono',monospace; font-size:9px; color:var(--muted); letter-spacing:.1em;">
+    © 2026 BLUE DRAGON SECURITY (bluedragonsec.com) · Antonius · All rights reserved · Reproduction for commercial use prohibited without written permission.
+  </div>
+</footer>
+
+</main><!-- /.main -->
+
+<script>
+// Reading progress bar
+window.addEventListener('scroll', () => {
+  const el   = document.getElementById('readBar');
+  const doc  = document.documentElement;
+  const pct  = (doc.scrollTop / (doc.scrollHeight - doc.clientHeight)) * 100;
+  el.style.width = pct + '%';
+});
+
+// Active nav highlighting
+const sections  = document.querySelectorAll('section[id]');
+const navLinks  = document.querySelectorAll('.sidebar a');
+const observer  = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.sidebar a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

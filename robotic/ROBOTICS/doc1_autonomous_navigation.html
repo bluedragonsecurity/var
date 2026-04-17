@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Autonomous Navigation — Robotika</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>:root{--ac:0,212,170}:root{--bg:#0b0d0f;--bg2:#111417;--bg3:#181c21;--border:#2a3240;--border2:#3a4558;--text:#c8d4e0;--text2:#8a9ab0;--text3:#5a6a80;--mono:'IBM Plex Mono',monospace;--body:'IBM Plex Sans',sans-serif;--disp:'Bebas Neue',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.7;display:flex;min-height:100vh}
+#sidebar{width:280px;min-width:280px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;scrollbar-width:thin;transition:transform .3s ease}
+.sh{padding:22px 18px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:10}
+.sl{font-family:var(--disp);font-size:20px;letter-spacing:2px;line-height:1;margin-bottom:3px}
+.ss{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-family:var(--mono)}
+.nsec{padding:5px 18px 3px;font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--text3);margin-top:8px}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 18px;color:var(--text2);text-decoration:none;font-size:13px;transition:all .15s;border-left:2px solid transparent;line-height:1.3}
+.ni.active,.ni:hover{color:rgb(var(--ac));background:rgba(var(--ac),.07);border-left-color:rgb(var(--ac))}
+.nd{width:5px;height:5px;border-radius:50%;background:var(--border2);flex-shrink:0}
+.ni.active .nd,.ni:hover .nd{background:rgb(var(--ac))}
+#main{margin-left:280px;flex:1;min-width:0}
+#topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 36px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:90}
+.tbt{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:1px}
+#mbtn{display:none;background:none;border:1px solid var(--border2);color:var(--text);padding:5px 10px;border-radius:4px;cursor:pointer;font-size:15px}
+.content{max-width:920px;margin:0 auto;padding:44px 36px 80px}
+.hero{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:44px;margin-bottom:52px;position:relative;overflow:hidden}
+.hero::before{position:absolute;right:-10px;top:-10px;font-family:var(--disp);font-size:140px;color:rgba(var(--ac),.03);line-height:1;pointer-events:none;letter-spacing:4px}
+.hl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:3px;color:rgb(var(--ac));margin-bottom:14px}
+h1{font-family:var(--disp);font-size:48px;letter-spacing:3px;color:#fff;line-height:1.05;margin-bottom:14px}
+.hdesc{color:var(--text2);font-size:14.5px;max-width:620px;line-height:1.7}
+.htags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tag{padding:3px 10px;border:1px solid var(--border2);border-radius:3px;font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
+.ta{border-color:rgb(var(--ac));color:rgb(var(--ac))}.tb{border-color:#60c0e8;color:#60c0e8}.to{border-color:#e8a030;color:#e8a030}.tp2{border-color:#c060e0;color:#c060e0}.tr{border-color:#e06060;color:#e06060}
+.sec{margin-bottom:68px;scroll-margin-top:76px}
+.sech{display:flex;align-items:flex-start;gap:14px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.sn{font-family:var(--disp);font-size:44px;line-height:1;color:rgba(var(--ac),.15);flex-shrink:0;min-width:56px}
+.sc{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;color:rgb(var(--ac));margin-bottom:5px}
+h2{font-family:var(--disp);font-size:32px;letter-spacing:2px;color:#fff;line-height:1.1}
+h3{font-size:17px;font-weight:600;color:rgb(var(--ac));margin-top:32px;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+h3::before{content:'';width:3px;height:16px;background:rgb(var(--ac));border-radius:2px;flex-shrink:0}
+h4{font-size:14.5px;font-weight:600;color:#60c0e8;margin-top:22px;margin-bottom:9px}
+p{margin-bottom:13px;color:var(--text);font-size:14px}
+pre{background:var(--bg2);border:1px solid var(--border);border-left:3px solid rgb(var(--ac));border-radius:6px;padding:18px 22px;overflow-x:auto;margin:18px 0;font-family:var(--mono);font-size:12px;line-height:1.65;scrollbar-width:thin}
+pre::-webkit-scrollbar{height:4px}pre::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+code{font-family:var(--mono);font-size:12px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:rgb(var(--ac))}
+pre code{background:none;border:none;padding:0;color:var(--text)}
+.kw{color:#c060e0;font-weight:500}.fn{color:#60c0e8}.st{color:#80e060}.cm{color:#5a6a80;font-style:italic}.nm{color:#e8a030}.tp3{color:#f0c060}
+.math{background:var(--bg3);border:1px solid var(--border);border-left:3px solid #60c0e8;border-radius:6px;padding:18px 22px;margin:18px 0;font-family:var(--mono);font-size:13px;color:#c8ffd0;line-height:2;overflow-x:auto}
+.ib{border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin:18px 0;font-size:13.5px}
+.ib.note{border-left:3px solid #60c0e8;background:rgba(96,192,232,.05)}.ib.warn{border-left:3px solid #e8a030;background:rgba(232,160,48,.05)}.ib.tip{border-left:3px solid rgb(var(--ac));background:rgba(var(--ac),.05)}.ib.danger{border-left:3px solid #e06060;background:rgba(224,96,96,.06)}
+.ibl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;margin-bottom:7px;font-weight:600}.note .ibl{color:#60c0e8}.warn .ibl{color:#e8a030}.danger .ibl{color:#e06060}.tip .ibl{color:rgb(var(--ac))}
+.tw{overflow-x:auto;margin:18px 0}table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--bg3);color:rgb(var(--ac));font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:500;padding:11px 14px;text-align:left;border:1px solid var(--border)}
+td{padding:9px 14px;border:1px solid var(--border);color:var(--text);vertical-align:top}tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:18px 0}.card{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:16px}
+.ci{font-size:22px;margin-bottom:8px}.ct{font-weight:600;font-size:14px;color:var(--text);margin-bottom:5px}.cd{font-size:12px;color:var(--text2);line-height:1.5}
+.steps{counter-reset:sc;margin:18px 0}.step{display:flex;gap:18px;margin-bottom:18px;counter-increment:sc}.step::before{content:counter(sc,decimal-leading-zero);font-family:var(--disp);font-size:26px;color:rgba(var(--ac),.22);flex-shrink:0;min-width:38px;line-height:1;margin-top:2px}
+.stit{font-weight:600;color:var(--text);margin-bottom:5px;font-size:14px}.sdesc{font-size:13px;color:var(--text2);line-height:1.6}
+.divider{height:1px;background:linear-gradient(90deg,rgb(var(--ac)) 0%,var(--border) 60%,transparent 100%);margin:36px 0;opacity:.35}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99}
+@media(max-width:900px){#mbtn{display:block}#sidebar{transform:translateX(-100%)}#sidebar.open{transform:translateX(0)}#overlay.open{display:block}#main{margin-left:0}.content{padding:24px 18px 60px}h2{font-size:26px}.cg{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.cg{grid-template-columns:1fr}}.hero::before{content:'NAV'}</style>
+</head><body>
+<nav id="sidebar"><div class="sh"><div class="sl" style="color:rgb(var(--ac))">AUTONAV</div><div class="ss">Autonomous Navigation</div></div>
+<div style="padding:14px 0"><div class="nsec">Dasar</div><a href="#s1" class="ni"><span class="nd"></span>Arsitektur Navigasi</a><a href="#s2" class="ni"><span class="nd"></span>Sensor Suite</a><div class="nsec">Algoritma</div><a href="#s3" class="ni"><span class="nd"></span>Obstacle Avoidance</a><a href="#s4" class="ni"><span class="nd"></span>Path Planning</a><a href="#s5" class="ni"><span class="nd"></span>Localization AMCL</a><a href="#s6" class="ni"><span class="nd"></span>Occupancy Grid SLAM</a><div class="nsec">Implementasi</div><a href="#s7" class="ni"><span class="nd"></span>Arduino Ultrasonik</a><a href="#s8" class="ni"><span class="nd"></span>Arduino Encoder</a><a href="#s9" class="ni"><span class="nd"></span>Python ROS2 Nav2</a><a href="#s10" class="ni"><span class="nd"></span>Behavior Trees</a><a href="#s11" class="ni"><span class="nd"></span>Sensor Fusion EKF</a></div></nav>
+<div id="overlay"></div>
+<div id="main">
+<div id="topbar"><span class="tbt">DOC 1 — AUTONOMOUS NAVIGATION</span><button id="mbtn" onclick="toggleSidebar()">&#9776;</button></div>
+<div class="content">
+<div class="hero"><div class="hl">// DOC 01 / 07</div><h1>AUTONOMOUS<br>NAVIGATION</h1><p class="hdesc">Panduan komprehensif navigasi otonom: LiDAR, ultrasonik, IR, A*, DWA, VFH, AMCL, SLAM, Behavior Trees, Sensor Fusion EKF — source code Python & Arduino C.</p><div class="htags"><span class="tag ta">LiDAR/Sonar</span><span class="tag tb">A* DWA VFH</span><span class="tag to">Arduino C</span><span class="tag ta">ROS2 Nav2</span><span class="tag tb">AMCL SLAM</span></div></div>
+<section class="sec" id="s1"><div class="sech"><div class="sn">01</div><div><div class="sc">Overview</div><h2>ARSITEKTUR NAVIGASI</h2></div></div><p>Navigasi otonom memecahkan tiga masalah secara bersamaan: <b>lokalisasi</b> (robot di mana?), <b>pemetaan</b> (lingkungan seperti apa?), dan <b>perencanaan jalur</b> (bagaimana ke tujuan?).</p><div class="cg"><div class="card"><div class="ci">📍</div><div class="ct">Localization</div><div class="cd">Estimasi pose (x,y,θ) menggunakan AMCL particle filter atau EKF.</div></div><div class="card"><div class="ci">🗺️</div><div class="ct">Mapping</div><div class="cd">Occupancy grid dari LiDAR, update log-odds per cell via Bresenham ray casting.</div></div><div class="card"><div class="ci">🎯</div><div class="ct">Path Planning</div><div class="cd">A* untuk global path, DWA/VFH untuk local reactive navigation.</div></div><div class="card"><div class="ci">⚠️</div><div class="ct">Obstacle Avoidance</div><div class="cd">Reaktif: sensor threshold + costmap inflation + real-time replanning.</div></div></div><h3>Navigation Stack Architecture</h3><pre><span class="cm"># ROS2 Nav2 Data Flow:
+# GOAL -> Global Planner (A*/NavFn) -> Global Path
+#              |                           |
+# SENSORS -> Costmap 2D -> Local Planner (DWA/TEB) -> /cmd_vel
+# LiDAR      static+odom    real-time replanning
+#    |
+# AMCL Localizer &lt;-- map_server (pgm/yaml)
+#    |
+# /odom (encoder odometry)</span></pre><h3>Differential Drive Kinematics</h3><div class="math">ΔsL = r·ΔθL_encoder   ΔsR = r·ΔθR_encoder
+Δs  = (ΔsR + ΔsL) / 2           linear displacement
+Δθ  = (ΔsR - ΔsL) / L           angular (L = wheel base)
+
+x += Δs·cos(θ + Δθ/2)
+y += Δs·sin(θ + Δθ/2)
+θ += Δθ</div></section><section class="sec" id="s2"><div class="sech"><div class="sn">02</div><div><div class="sc">Hardware</div><h2>SENSOR SUITE</h2></div></div><h3>LiDAR Comparison</h3><div class="tw"><table><tr><th>Model</th><th>Range</th><th>FOV</th><th>Hz</th><th>Interface</th><th>Est. Harga</th></tr><tr><td>RPLiDAR A1</td><td>12m</td><td>360°</td><td>5.5</td><td>UART</td><td>~$99</td></tr><tr><td>RPLiDAR A3</td><td>25m</td><td>360°</td><td>15</td><td>UART</td><td>~$299</td></tr><tr><td>YDLiDAR X4</td><td>10m</td><td>360°</td><td>6</td><td>UART</td><td>~$60</td></tr><tr><td>SICK TiM571</td><td>25m</td><td>270°</td><td>15</td><td>Ethernet</td><td>~$800</td></tr></table></div><pre><span class="cm"># Python: Baca RPLiDAR, deteksi obstacle</span>
+<span class="kw">from</span> rplidar <span class="kw">import</span> <span class="tp3">RPLidar</span>
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+lidar = <span class="tp3">RPLidar</span>(<span class="st">'/dev/ttyUSB0'</span>)
+scan = np.<span class="fn">zeros</span>(<span class="nm">360</span>)
+
+<span class="kw">for</span> s <span class="kw">in</span> lidar.<span class="fn">iter_scans</span>():
+    <span class="kw">for</span> (_, ang, dist) <span class="kw">in</span> s:
+        idx = <span class="kw">int</span>(ang) % <span class="nm">360</span>
+        <span class="kw">if</span> dist > <span class="nm">0</span>: scan[idx] = dist/<span class="nm">1000.0</span>
+    front = np.<span class="fn">concatenate</span>([scan[<span class="nm">330</span>:], scan[:<span class="nm">30</span>]])
+    valid = front[front > <span class="nm">0.05</span>]
+    <span class="kw">if</span> <span class="fn">len</span>(valid) > <span class="nm">0</span> <span class="kw">and</span> valid.<span class="fn">min</span>() < <span class="nm">0.5</span>:
+        <span class="fn">print</span>(<span class="st">f"OBSTACLE: {valid.min():.2f}m"</span>)
+    <span class="kw">break</span></pre><h3>HC-SR04 Ultrasonik — Arduino</h3><div class="math">Jarak (cm) = (PulseWidth_us / 2) / 29.1
+Atau: Jarak = SpeedOfSound(343 m/s) × t/2
+Range: 2-400cm, Akurasi: ±3mm, Dead zone: &lt;2cm</div><pre><span class="cm">// Arduino: 5-sensor ultrasonik array dengan NewPing</span>
+<span class="kw">#include</span> &lt;NewPing.h&gt;
+<span class="kw">#define</span> N <span class="nm">5</span>
+<span class="kw">const int</span> T[N]={<span class="nm">22</span>,<span class="nm">24</span>,<span class="nm">26</span>,<span class="nm">28</span>,<span class="nm">30</span>}, E[N]={<span class="nm">23</span>,<span class="nm">25</span>,<span class="nm">27</span>,<span class="nm">29</span>,<span class="nm">31</span>};
+NewPing sonar[N]={NewPing(T[<span class="nm">0</span>],E[<span class="nm">0</span>],<span class="nm">200</span>),NewPing(T[<span class="nm">1</span>],E[<span class="nm">1</span>],<span class="nm">200</span>),
+  NewPing(T[<span class="nm">2</span>],E[<span class="nm">2</span>],<span class="nm">200</span>),NewPing(T[<span class="nm">3</span>],E[<span class="nm">3</span>],<span class="nm">200</span>),NewPing(T[<span class="nm">4</span>],E[<span class="nm">4</span>],<span class="nm">200</span>)};
+<span class="kw">float</span> d[N]; <span class="cm">// distances in cm</span>
+
+<span class="kw">void</span> <span class="fn">readAll</span>() {
+  <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nm">0</span>;i&lt;N;i++) {
+    <span class="kw">unsigned int</span> us = sonar[i].<span class="fn">ping_median</span>(<span class="nm">3</span>);
+    d[i] = (us==<span class="nm">0</span>) ? <span class="nm">200</span> : us/US_ROUNDTRIP_CM;
+  }
+}</pre><h3>IR Sharp GP2Y0A21 — Analog</h3><pre><span class="cm">// Arduino: Sharp IR jarak 10-80cm</span>
+<span class="kw">float</span> <span class="fn">readIR</span>(<span class="kw">int</span> pin) {
+  <span class="kw">int</span> raw = <span class="fn">analogRead</span>(pin);
+  <span class="kw">float</span> v = raw * (<span class="nm">5.0</span>/<span class="nm">1023.0</span>);
+  <span class="kw">if</span>(v &lt; <span class="nm">0.4</span>) <span class="kw">return</span> <span class="nm">80</span>;  <span class="cm">// out of range</span>
+  <span class="kw">return</span> <span class="nm">27.728</span> * <span class="fn">pow</span>(v, -<span class="nm">1.2045</span>);
+}</pre></section><section class="sec" id="s3"><div class="sech"><div class="sn">03</div><div><div class="sc">Algoritma</div><h2>OBSTACLE AVOIDANCE</h2></div></div><h3>VFH — Vector Field Histogram</h3><div class="math">1. Bangun polar histogram H(k) dari scan LiDAR:
+   H(k) = sum(m_ij^2 * (a - b*d_ij)) untuk tiap obstacle di sector k
+
+2. Threshold binary: H_b(k) = 1 jika H(k) > tau_high (blocked)
+
+3. Cari valley (run of free sectors) terlebar mendekati target direction
+
+4. Steering = tengah valley terdekat ke target heading</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">vfh_steering</span>(scan_360, target_deg, alpha=<span class="nm">5</span>, tau_hi=<span class="nm">3000</span>):
+    <span class="st">"""scan_360: distances[0..359], target_deg: goal direction"""</span>
+    n = <span class="nm">360</span>// alpha
+    hist = np.<span class="fn">zeros</span>(n)
+    a, b = <span class="nm">4</span>, <span class="nm">0.4</span>
+    <span class="kw">for</span> i, dist <span class="kw">in</span> <span class="fn">enumerate</span>(scan_360):
+        <span class="kw">if</span> dist &lt; <span class="nm">0.05</span> <span class="kw">or</span> dist &gt; <span class="nm">5</span>: <span class="kw">continue</span>
+        k = i // alpha
+        m = <span class="nm">1</span>/(<span class="nm">1</span>+dist)
+        hist[k] += m**<span class="nm">2</span> * (a - b*dist)
+    binary = (hist &gt; tau_hi).<span class="fn">astype</span>(<span class="fn">int</span>)
+    target_k = (target_deg // alpha) % n
+    best_angle, best_width = target_deg, <span class="nm">0</span>
+    in_v, vs, valleys = <span class="nm">False</span>, <span class="nm">0</span>, []
+    ext = np.<span class="fn">tile</span>(binary, <span class="nm">3</span>)
+    <span class="kw">for</span> k <span class="kw">in</span> <span class="fn">range</span>(n*<span class="nm">3</span>):
+        <span class="kw">if not</span> ext[k] <span class="kw">and not</span> in_v: vs=k; in_v=<span class="nm">True</span>
+        <span class="kw">elif</span> ext[k] <span class="kw">and</span> in_v:
+            w=k-vs; mid=(vs+k-<span class="nm">1</span>)//<span class="nm">2</span>%n
+            <span class="kw">if</span> w>=<span class="nm">3</span>: valleys.<span class="fn">append</span>((mid,w)); in_v=<span class="nm">False</span>
+    <span class="kw">if</span> valleys:
+        best_k = <span class="fn">min</span>(valleys, key=<span class="kw">lambda</span> v: <span class="fn">abs</span>(v[<span class="nm">0</span>]-target_k))[<span class="nm">0</span>]
+        best_angle = best_k * alpha
+    <span class="kw">return</span> best_angle</pre><h3>Dynamic Window Approach (DWA)</h3><div class="math">Feasible Velocity Set = Vs ∩ Vd ∩ Vr
+Vd = [v±a·dt] x [ω±α·dt]  -- dynamic window (accel limits)
+Vr = {v | v ≤ sqrt(2·d_obstacle·a_decel)}  -- admissible
+
+Score(v,ω) = α·heading + β·clearance + γ·velocity → maximize</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">dwa_plan</span>(x,y,yaw,v,w, gx,gy, obstacles,
+              max_v=<span class="nm">0.5</span>,max_w=<span class="nm">1.0</span>,max_a=<span class="nm">2.0</span>,max_dw=<span class="nm">3.2</span>,dt=<span class="nm">0.1</span>,pt=<span class="nm">2.0</span>):
+    best = (-<span class="nm">999</span>,<span class="nm">0</span>,<span class="nm">0</span>)
+    vmin=<span class="fn">max</span>(<span class="nm">0</span>,v-max_a*dt); vmax=<span class="fn">min</span>(max_v,v+max_a*dt)
+    wmin=<span class="fn">max</span>(-max_w,w-max_dw*dt); wmax=<span class="fn">min</span>(max_w,w+max_dw*dt)
+    <span class="kw">for</span> tv <span class="kw">in</span> np.<span class="fn">arange</span>(vmin,vmax+<span class="nm">0.02</span>,<span class="nm">0.02</span>):
+        <span class="kw">for</span> tw <span class="kw">in</span> np.<span class="fn">arange</span>(wmin,wmax+<span class="nm">0.05</span>,<span class="nm">0.05</span>):
+            cx,cy,cth=x,y,yaw; md=<span class="nm">999</span>
+            <span class="kw">for</span> _ <span class="kw">in</span> np.<span class="fn">arange</span>(<span class="nm">0</span>,pt,dt):
+                cx+=tv*np.<span class="fn">cos</span>(cth)*dt; cy+=tv*np.<span class="fn">sin</span>(cth)*dt; cth+=tw*dt
+                <span class="kw">for</span> ox,oy <span class="kw">in</span> obstacles:
+                    d=np.<span class="fn">hypot</span>(cx-ox,cy-oy)-<span class="nm">0.25</span>
+                    <span class="kw">if</span> d&lt;<span class="nm">0</span>: md=-<span class="nm">1</span>; <span class="kw">break</span>
+                    md=<span class="fn">min</span>(md,d)
+                <span class="kw">if</span> md&lt;<span class="nm">0</span>: <span class="kw">break</span>
+            <span class="kw">if</span> md&lt;=<span class="nm">0</span>: <span class="kw">continue</span>
+            ha=np.<span class="fn">arctan2</span>(gy-cy,gx-cx)
+            sc=np.pi-<span class="fn">abs</span>(ha-cth)+<span class="nm">1.2</span>*md+<span class="nm">0.5</span>*tv/max_v
+            <span class="kw">if</span> sc>best[<span class="nm">0</span>]: best=(sc,tv,tw)
+    <span class="kw">return</span> best[<span class="nm">1</span>], best[<span class="nm">2</span>]</pre></section><section class="sec" id="s4"><div class="sech"><div class="sn">04</div><div><div class="sc">Algoritma</div><h2>A* PATH PLANNING</h2></div></div><h3>A* dengan Inflated Costmap</h3><div class="math">f(n) = g(n) + h(n)
+g(n) = biaya aktual dari start ke n
+h(n) = octile heuristic: (dx+dy) + (sqrt(2)-2)*min(dx,dy)
+
+Robot radius inflation: binary_dilation(grid, struct=disk(r_cells))
+Ensures robot body tidak menabrak obstacle tepi</div><pre><span class="kw">import</span> heapq, numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy.ndimage <span class="kw">import</span> binary_dilation
+
+<span class="kw">class</span> <span class="tp3">AStarGrid</span>:
+    MOVES=[(-<span class="nm">1</span>,-<span class="nm">1</span>),(-<span class="nm">1</span>,<span class="nm">0</span>),(-<span class="nm">1</span>,<span class="nm">1</span>),(0,-<span class="nm">1</span>),(0,<span class="nm">1</span>),(<span class="nm">1</span>,-<span class="nm">1</span>),(<span class="nm">1</span>,<span class="nm">0</span>),(<span class="nm">1</span>,<span class="nm">1</span>)]
+    COSTS=[<span class="nm">1.414</span>,<span class="nm">1</span>,<span class="nm">1.414</span>,<span class="nm">1</span>,<span class="nm">1</span>,<span class="nm">1.414</span>,<span class="nm">1</span>,<span class="nm">1.414</span>]
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, grid, res=<span class="nm">0.05</span>):
+        self.g=grid; self.res=res; self.H,self.W=grid.shape
+
+    <span class="kw">def</span> <span class="fn">_h</span>(self,a,b):
+        dx,dy=<span class="fn">abs</span>(a[<span class="nm">0</span>]-b[<span class="nm">0</span>]),<span class="fn">abs</span>(a[<span class="nm">1</span>]-b[<span class="nm">1</span>])
+        <span class="kw">return</span> (dx+dy)+(<span class="nm">1.414</span>-<span class="nm">2</span>)*<span class="fn">min</span>(dx,dy)
+
+    <span class="kw">def</span> <span class="fn">plan</span>(self,start,goal,r_cells=<span class="nm">5</span>):
+        ig=binary_dilation(self.g,np.<span class="fn">ones</span>((<span class="nm">2</span>*r_cells+<span class="nm">1</span>,)*<span class="nm">2</span>))
+        oh=[(self.<span class="fn">_h</span>(start,goal),<span class="nm">0</span>,start)]; cf={}; gs={start:<span class="nm">0</span>}
+        <span class="kw">while</span> oh:
+            _,g,c=heapq.<span class="fn">heappop</span>(oh)
+            <span class="kw">if</span> c==goal:
+                p=[]; <span class="kw">while</span> c <span class="kw">in</span> cf: p.<span class="fn">append</span>(c); c=cf[c]
+                p.<span class="fn">append</span>(start); p.<span class="fn">reverse</span>()
+                <span class="kw">return</span> [(r*self.res,c2*self.res) <span class="kw">for</span> r,c2 <span class="kw">in</span> p]
+            <span class="kw">for</span> (dr,dc),cost <span class="kw">in</span> <span class="fn">zip</span>(self.MOVES,self.COSTS):
+                nb=(c[<span class="nm">0</span>]+dr,c[<span class="nm">1</span>]+dc)
+                <span class="kw">if not</span>(<span class="nm">0</span>&lt;=nb[<span class="nm">0</span>]&lt;self.H <span class="kw">and</span> <span class="nm">0</span>&lt;=nb[<span class="nm">1</span>]&lt;self.W): <span class="kw">continue</span>
+                <span class="kw">if</span> ig[nb[<span class="nm">0</span>],nb[<span class="nm">1</span>]]: <span class="kw">continue</span>
+                ng=gs[c]+cost
+                <span class="kw">if</span> ng&lt;gs.<span class="fn">get</span>(nb,<span class="nm">1e9</span>):
+                    gs[nb]=ng; cf[nb]=c
+                    heapq.<span class="fn">heappush</span>(oh,(ng+self.<span class="fn">_h</span>(nb,goal),ng,nb))
+        <span class="kw">return</span> []</pre></section><section class="sec" id="s5"><div class="sech"><div class="sn">05</div><div><div class="sc">Localization</div><h2>AMCL PARTICLE FILTER</h2></div></div><div class="math">Particle Filter: N particles = N hypothesis pose robot
+
+Predict: x_i = motion_model(x_i-1, u) + noise_motion
+Update:  w_i = p(z | x_i, map)  -- likelihood sensor measurement
+Normalize: sum(w_i) = 1
+Resample: N new particles sampled proportional to weights
+
+AMCL (Adaptive): KLD-sampling -- N adaptif berdasarkan uncertainty</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy.stats <span class="kw">import</span> norm
+
+<span class="kw">class</span> <span class="tp3">AMCL</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self,N=<span class="nm">500</span>):
+        self.N=N; self.p=<span class="nm">None</span>; self.w=np.<span class="fn">ones</span>(N)/N
+        self.alpha=[<span class="nm">0.05</span>,<span class="nm">0.01</span>,<span class="nm">0.05</span>,<span class="nm">0.01</span>]
+
+    <span class="kw">def</span> <span class="fn">init_uniform</span>(self,x0,x1,y0,y1):
+        self.p=np.<span class="fn">column_stack</span>([
+            np.random.<span class="fn">uniform</span>(x0,x1,self.N),
+            np.random.<span class="fn">uniform</span>(y0,y1,self.N),
+            np.random.<span class="fn">uniform</span>(-np.pi,np.pi,self.N)])
+
+    <span class="kw">def</span> <span class="fn">predict</span>(self,dr1,dt,dr2):
+        a=self.alpha; N=self.N
+        r1=dr1+np.random.<span class="fn">normal</span>(<span class="nm">0</span>,a[<span class="nm">0</span>]*<span class="fn">abs</span>(dr1)+a[<span class="nm">1</span>]*dt,N)
+        tr=dt+np.random.<span class="fn">normal</span>(<span class="nm">0</span>,a[<span class="nm">2</span>]*dt+a[<span class="nm">3</span>]*(dr1+dr2),N)
+        r2=dr2+np.random.<span class="fn">normal</span>(<span class="nm">0</span>,a[<span class="nm">0</span>]*<span class="fn">abs</span>(dr2)+a[<span class="nm">1</span>]*dt,N)
+        self.p[:,<span class="nm">0</span>]+=tr*np.<span class="fn">cos</span>(self.p[:,<span class="nm">2</span>]+r1)
+        self.p[:,<span class="nm">1</span>]+=tr*np.<span class="fn">sin</span>(self.p[:,<span class="nm">2</span>]+r1)
+        self.p[:,<span class="nm">2</span>]+=r1+r2
+
+    <span class="kw">def</span> <span class="fn">sensor_update</span>(self,scan,expect_fn,sigma=<span class="nm">0.2</span>):
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(self.N):
+            ex=<span class="fn">expect_fn</span>(self.p[i])
+            self.w[i]=np.<span class="fn">exp</span>(np.<span class="fn">clip</span>(np.<span class="fn">sum</span>(norm.<span class="fn">logpdf</span>(scan,ex,sigma)),-<span class="nm">500</span>,<span class="nm">0</span>))
+        self.w+=<span class="nm">1e-300</span>; self.w/=self.w.<span class="fn">sum</span>()
+
+    <span class="kw">def</span> <span class="fn">resample</span>(self):
+        idx=np.<span class="fn">zeros</span>(self.N,dtype=<span class="fn">int</span>); c=self.w[<span class="nm">0</span>]; i=<span class="nm">0</span>
+        u=np.random.<span class="fn">uniform</span>(<span class="nm">0</span>,<span class="nm">1</span>/self.N)
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(self.N):
+            beta=u+j/self.N
+            <span class="kw">while</span> beta>c: i+=<span class="nm">1</span>; c+=self.w[i]
+            idx[j]=i
+        self.p=self.p[idx]; self.w[:]=<span class="nm">1</span>/self.N
+
+    <span class="kw">def</span> <span class="fn">pose</span>(self):
+        x=np.<span class="fn">average</span>(self.p[:,<span class="nm">0</span>],weights=self.w)
+        y=np.<span class="fn">average</span>(self.p[:,<span class="nm">1</span>],weights=self.w)
+        t=np.<span class="fn">arctan2</span>(np.<span class="fn">average</span>(np.<span class="fn">sin</span>(self.p[:,<span class="nm">2</span>]),weights=self.w),
+                     np.<span class="fn">average</span>(np.<span class="fn">cos</span>(self.p[:,<span class="nm">2</span>]),weights=self.w))
+        <span class="kw">return</span> x,y,t</pre></section><section class="sec" id="s6"><div class="sech"><div class="sn">06</div><div><div class="sc">Mapping</div><h2>OCCUPANCY GRID SLAM</h2></div></div><div class="math">Log-odds update:
+l_t(m) = l_(t-1)(m) + l_sensor(m|z,x) - l_prior
+l_occ = +0.85  (cell occupied)  l_free = -0.85  (cell free)  l_prior = 0
+
+Probability: P = 1 - 1/(1 + exp(l))
+Clamp: l in [-20, +20]</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">class</span> <span class="tp3">OccGrid</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self,W=<span class="nm">400</span>,H=<span class="nm">400</span>,res=<span class="nm">0.05</span>):
+        self.W=W;self.H=H;self.res=res
+        self.lo=np.<span class="fn">zeros</span>((H,W))
+
+    <span class="kw">def</span> <span class="fn">w2g</span>(self,wx,wy): <span class="kw">return</span> <span class="kw">int</span>(wx/self.res+self.W/<span class="nm">2</span>),<span class="kw">int</span>(wy/self.res+self.H/<span class="nm">2</span>)
+
+    <span class="kw">def</span> <span class="fn">bres</span>(self,x0,y0,x1,y1):
+        pts=[];dx,dy=<span class="fn">abs</span>(x1-x0),<span class="fn">abs</span>(y1-y0)
+        sx=<span class="nm">1</span> <span class="kw">if</span> x1>x0 <span class="kw">else</span> -<span class="nm">1</span>;sy=<span class="nm">1</span> <span class="kw">if</span> y1>y0 <span class="kw">else</span> -<span class="nm">1</span>;e=dx-dy
+        <span class="kw">while True</span>:
+            pts.<span class="fn">append</span>((x0,y0))
+            <span class="kw">if</span> x0==x1 <span class="kw">and</span> y0==y1: <span class="kw">break</span>
+            e2=<span class="nm">2</span>*e
+            <span class="kw">if</span> e2>-dy: e-=dy;x0+=sx
+            <span class="kw">if</span> e2&lt;dx: e+=dx;y0+=sy
+        <span class="kw">return</span> pts
+
+    <span class="kw">def</span> <span class="fn">update</span>(self,rx,ry,angles,dists):
+        gx,gy=self.<span class="fn">w2g</span>(rx,ry)
+        <span class="kw">for</span> a,d <span class="kw">in</span> <span class="fn">zip</span>(angles,dists):
+            <span class="kw">if</span> d&lt;<span class="nm">0.05</span> <span class="kw">or</span> d&gt;<span class="nm">8</span>: <span class="kw">continue</span>
+            ex=rx+d*np.<span class="fn">cos</span>(a);ey=ry+d*np.<span class="fn">sin</span>(a)
+            egx,egy=self.<span class="fn">w2g</span>(ex,ey)
+            <span class="kw">for</span> px,py <span class="kw">in</span> self.<span class="fn">bres</span>(gx,gy,egx,egy)[:-<span class="nm">1</span>]:
+                <span class="kw">if</span> <span class="nm">0</span>&lt;=px&lt;self.W <span class="kw">and</span> <span class="nm">0</span>&lt;=py&lt;self.H:
+                    self.lo[py,px]=np.<span class="fn">clip</span>(self.lo[py,px]-<span class="nm">0.85</span>,-<span class="nm">20</span>,<span class="nm">20</span>)
+            <span class="kw">if</span> <span class="nm">0</span>&lt;=egx&lt;self.W <span class="kw">and</span> <span class="nm">0</span>&lt;=egy&lt;self.H:
+                self.lo[egy,egx]=np.<span class="fn">clip</span>(self.lo[egy,egx]+<span class="nm">0.85</span>,-<span class="nm">20</span>,<span class="nm">20</span>)
+
+    <span class="kw">def</span> <span class="fn">prob</span>(self): <span class="kw">return</span> <span class="nm">1</span>-<span class="nm">1</span>/(<span class="nm">1</span>+np.<span class="fn">exp</span>(self.lo))</pre></section><section class="sec" id="s7"><div class="sech"><div class="sn">07</div><div><div class="sc">Arduino C</div><h2>ARDUINO — ULTRASONIK NAVIGATION</h2></div></div><pre><span class="cm">// Arduino Mega: 5x ultrasonik + L298N state machine</span>
+<span class="kw">#include</span> &lt;NewPing.h&gt;
+<span class="kw">#define</span> N <span class="nm">5</span>
+NewPing sonar[N]={NewPing(<span class="nm">22</span>,<span class="nm">23</span>,<span class="nm">200</span>),NewPing(<span class="nm">24</span>,<span class="nm">25</span>,<span class="nm">200</span>),NewPing(<span class="nm">26</span>,<span class="nm">27</span>,<span class="nm">200</span>),
+                  NewPing(<span class="nm">28</span>,<span class="nm">29</span>,<span class="nm">200</span>),NewPing(<span class="nm">30</span>,<span class="nm">31</span>,<span class="nm">200</span>)};
+<span class="kw">#define</span> IN1 <span class="nm">2</span>; <span class="kw">#define</span> IN2 <span class="nm">3</span>; <span class="kw">#define</span> IN3 <span class="nm">4</span>; <span class="kw">#define</span> IN4 <span class="nm">5</span>;
+<span class="kw">#define</span> ENA <span class="nm">9</span>; <span class="kw">#define</span> ENB <span class="nm">10</span>;
+<span class="kw">float</span> d[N]; <span class="kw">int</span> turn_ms=<span class="nm">0</span>;
+<span class="kw">enum</span> {FWD,TL,TR,BACK,STOP} state=FWD;
+
+<span class="kw">void</span> <span class="fn">mot</span>(<span class="kw">int</span> L,<span class="kw">int</span> R){
+  <span class="fn">digitalWrite</span>(IN1,L>=<span class="nm">0</span>);   <span class="fn">digitalWrite</span>(IN2,L&lt;<span class="nm">0</span>);
+  <span class="fn">digitalWrite</span>(IN3,R>=<span class="nm">0</span>);   <span class="fn">digitalWrite</span>(IN4,R&lt;<span class="nm">0</span>);
+  <span class="fn">analogWrite</span>(ENA,<span class="fn">constrain</span>(<span class="fn">abs</span>(L),<span class="nm">0</span>,<span class="nm">255</span>));
+  <span class="fn">analogWrite</span>(ENB,<span class="fn">constrain</span>(<span class="fn">abs</span>(R),<span class="nm">0</span>,<span class="nm">255</span>));}
+
+<span class="kw">void</span> <span class="fn">read</span>(){
+  <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nm">0</span>;i&lt;N;i++){
+    <span class="kw">unsigned int</span> us=sonar[i].<span class="fn">ping_median</span>(<span class="nm">3</span>);
+    d[i]=(us==<span class="nm">0</span>)?<span class="nm">200</span>:us/US_ROUNDTRIP_CM;}}
+
+<span class="kw">void</span> <span class="fn">nav</span>(){
+  <span class="kw">float</span> F=d[<span class="nm">2</span>],L=<span class="fn">min</span>(d[<span class="nm">0</span>],d[<span class="nm">1</span>]),R=<span class="fn">min</span>(d[<span class="nm">3</span>],d[<span class="nm">4</span>]);
+  <span class="kw">switch</span>(state){
+    <span class="kw">case</span> FWD:
+      <span class="kw">if</span>(F&lt;<span class="nm">18</span>){state=(L>R)?TL:TR; turn_ms=<span class="nm">500</span>; <span class="fn">mot</span>(-<span class="nm">150</span>,-<span class="nm">150</span>); <span class="fn">delay</span>(<span class="nm">200</span>);}
+      <span class="kw">else if</span>(F&lt;<span class="nm">35</span>){
+        <span class="kw">int</span> sp=<span class="fn">map</span>((<span class="kw">int</span>)F,<span class="nm">18</span>,<span class="nm">35</span>,<span class="nm">80</span>,<span class="nm">180</span>);
+        <span class="fn">mot</span>(sp-(<span class="kw">int</span>)(R-L)*<span class="nm">2</span>,sp+(<span class="kw">int</span>)(R-L)*<span class="nm">2</span>);}
+      <span class="kw">else</span> <span class="fn">mot</span>(<span class="nm">200</span>,<span class="nm">200</span>); <span class="kw">break</span>;
+    <span class="kw">case</span> TL: <span class="fn">mot</span>(-<span class="nm">150</span>,<span class="nm">150</span>); turn_ms-=<span class="nm">50</span>; <span class="kw">if</span>(turn_ms&lt;=<span class="nm">0</span>) state=FWD; <span class="kw">break</span>;
+    <span class="kw">case</span> TR: <span class="fn">mot</span>(<span class="nm">150</span>,-<span class="nm">150</span>); turn_ms-=<span class="nm">50</span>; <span class="kw">if</span>(turn_ms&lt;=<span class="nm">0</span>) state=FWD; <span class="kw">break</span>;
+    <span class="kw">case</span> STOP: <span class="fn">mot</span>(<span class="nm">0</span>,<span class="nm">0</span>); <span class="kw">break</span>;}}
+
+<span class="kw">void</span> <span class="fn">setup</span>(){ Serial.<span class="fn">begin</span>(<span class="nm">115200</span>); }
+<span class="kw">void</span> <span class="fn">loop</span>(){ <span class="fn">read</span>(); <span class="fn">nav</span>(); <span class="fn">delay</span>(<span class="nm">50</span>); }</pre></section><section class="sec" id="s8"><div class="sech"><div class="sn">08</div><div><div class="sc">Arduino C</div><h2>ARDUINO — ENCODER + PID VELOCITY</h2></div></div><pre><span class="cm">// Encoder quadrature + PID velocity + odometry + ROS serial bridge</span>
+<span class="kw">#define</span> EL_A <span class="nm">2</span>; <span class="kw">#define</span> EL_B <span class="nm">4</span>; <span class="kw">#define</span> ER_A <span class="nm">3</span>; <span class="kw">#define</span> ER_B <span class="nm">5</span>;
+<span class="kw">volatile long</span> eL=<span class="nm">0</span>,eR=<span class="nm">0</span>;
+<span class="kw">void</span> <span class="fn">ISRL</span>(){ eL+=(<span class="fn">digitalRead</span>(EL_B)==<span class="fn">digitalRead</span>(EL_A))?<span class="nm">1</span>:-<span class="nm">1</span>; }
+<span class="kw">void</span> <span class="fn">ISRR</span>(){ eR+=(<span class="fn">digitalRead</span>(ER_B)==<span class="fn">digitalRead</span>(ER_A))?<span class="nm">1</span>:-<span class="nm">1</span>; }
+
+<span class="kw">const float</span> RW=<span class="nm">0.033</span>,BL=<span class="nm">0.23</span>,CPR=<span class="nm">4096</span>;
+<span class="kw">const float</span> DPT=<span class="nm">2</span>*PI*RW/CPR;  <span class="cm">// dist per tick</span>
+<span class="kw">float</span> px=<span class="nm">0</span>,py=<span class="nm">0</span>,pth=<span class="nm">0</span>,tvL=<span class="nm">0</span>,tvR=<span class="nm">0</span>,avL=<span class="nm">0</span>,avR=<span class="nm">0</span>;
+<span class="kw">long</span> peL=<span class="nm">0</span>,peR=<span class="nm">0</span>;
+<span class="kw">struct</span> PID{<span class="kw">float</span> kp,ki,kd,ii,pe;} pidL={<span class="nm">200</span>,<span class="nm">15</span>,<span class="nm">8</span>,<span class="nm">0</span>,<span class="nm">0</span>},pidR={<span class="nm">200</span>,<span class="nm">15</span>,<span class="nm">8</span>,<span class="nm">0</span>,<span class="nm">0</span>};
+
+<span class="kw">float</span> <span class="fn">pidCalc</span>(PID&amp; p,<span class="kw">float</span> tgt,<span class="kw">float</span> act,<span class="kw">float</span> dt){
+  <span class="kw">float</span> e=tgt-act;
+  p.ii=<span class="fn">constrain</span>(p.ii+e*dt,-<span class="nm">80</span>,<span class="nm">80</span>);
+  <span class="kw">float</span> out=p.kp*e+p.ki*p.ii+p.kd*(e-p.pe)/dt;
+  p.pe=e; <span class="kw">return</span> out;}
+
+<span class="kw">void</span> <span class="fn">odom</span>(<span class="kw">float</span> dt){
+  <span class="kw">long</span> dL=eL-peL,dR=eR-peR; peL=eL; peR=eR;
+  <span class="kw">float</span> dsL=dL*DPT,dsR=dR*DPT;
+  avL=dsL/dt; avR=dsR/dt;
+  <span class="kw">float</span> ds=(dsR+dsL)/<span class="nm">2</span>,dth=(dsR-dsL)/BL;
+  px+=ds*<span class="fn">cos</span>(pth+dth/<span class="nm">2</span>); py+=ds*<span class="fn">sin</span>(pth+dth/<span class="nm">2</span>); pth+=dth;}
+
+<span class="kw">void</span> <span class="fn">setup</span>(){
+  Serial.<span class="fn">begin</span>(<span class="nm">115200</span>);
+  <span class="fn">attachInterrupt</span>(<span class="fn">digitalPinToInterrupt</span>(EL_A),ISRL,CHANGE);
+  <span class="fn">attachInterrupt</span>(<span class="fn">digitalPinToInterrupt</span>(ER_A),ISRR,CHANGE);}
+
+<span class="kw">unsigned long</span> t0=<span class="nm">0</span>;
+<span class="kw">void</span> <span class="fn">loop</span>(){
+  <span class="kw">unsigned long</span> now=<span class="fn">micros</span>();
+  <span class="kw">float</span> dt=(now-t0)/<span class="nm">1e6</span>; <span class="kw">if</span>(dt&lt;<span class="nm">0.02</span>) <span class="kw">return</span>; t0=now;
+  <span class="fn">odom</span>(dt);
+  <span class="kw">if</span>(Serial.<span class="fn">available</span>()>=<span class="nm">8</span>){
+    <span class="kw">float</span> v,w; Serial.<span class="fn">readBytes</span>((<span class="kw">char</span>*)&amp;v,<span class="nm">4</span>); Serial.<span class="fn">readBytes</span>((<span class="kw">char</span>*)&amp;w,<span class="nm">4</span>);
+    tvL=v-w*BL/<span class="nm">2</span>; tvR=v+w*BL/<span class="nm">2</span>;}
+  <span class="fn">motorPWM</span>(<span class="fn">pidCalc</span>(pidL,tvL,avL,dt),<span class="fn">pidCalc</span>(pidR,tvR,avR,dt));
+  Serial.<span class="fn">printf</span>(<span class="st">"O:%.4f,%.4f,%.4f\n"</span>,px,py,pth);}</pre></section><section class="sec" id="s9"><div class="sech"><div class="sn">09</div><div><div class="sc">Python ROS2</div><h2>ROS2 NAV2 INTEGRATION</h2></div></div><pre><span class="cm">#!/usr/bin/env python3</span>
+<span class="kw">import</span> rclpy
+<span class="kw">from</span> nav2_simple_commander.robot_navigator <span class="kw">import</span> BasicNavigator, TaskResult
+<span class="kw">from</span> geometry_msgs.msg <span class="kw">import</span> PoseStamped
+<span class="kw">import</span> tf_transformations, time, math
+
+<span class="kw">def</span> <span class="fn">make_pose</span>(nav,x,y,yaw_deg=<span class="nm">0</span>):
+    p=PoseStamped(); p.header.frame_id=<span class="st">'map'</span>
+    p.header.stamp=nav.<span class="fn">get_clock</span>().<span class="fn">now</span>().<span class="fn">to_msg</span>()
+    p.pose.position.x=x; p.pose.position.y=y
+    q=tf_transformations.<span class="fn">quaternion_from_euler</span>(<span class="nm">0</span>,<span class="nm">0</span>,math.<span class="fn">radians</span>(yaw_deg))
+    p.pose.orientation.z=q[<span class="nm">2</span>]; p.pose.orientation.w=q[<span class="nm">3</span>]
+    <span class="kw">return</span> p
+
+rclpy.<span class="fn">init</span>(); nav=<span class="fn">BasicNavigator</span>()
+nav.<span class="fn">setInitialPose</span>(<span class="fn">make_pose</span>(nav,<span class="nm">0</span>,<span class="nm">0</span>))
+nav.<span class="fn">waitUntilNav2Active</span>()
+
+<span class="cm"># Waypoint patrol</span>
+wps=[(1.0,0.0,0),(1.0,1.5,90),(0.0,1.5,180),(0.0,0.0,270)]
+route=[<span class="fn">make_pose</span>(nav,x,y,t) <span class="kw">for</span> x,y,t <span class="kw">in</span> wps]
+nav.<span class="fn">followWaypoints</span>(route)
+
+<span class="kw">while not</span> nav.<span class="fn">isTaskComplete</span>():
+    fb=nav.<span class="fn">getFeedback</span>()
+    <span class="kw">if</span> fb: <span class="fn">print</span>(<span class="st">f"WP {fb.current_waypoint}/{len(wps)} dist={fb.distance_remaining:.2f}m"</span>)
+    time.<span class="fn">sleep</span>(<span class="nm">0.5</span>)
+
+<span class="fn">print</span>(nav.<span class="fn">getResult</span>())</pre><h3>Serial Bridge Node (ROS2 ↔ Arduino)</h3><pre><span class="kw">import</span> rclpy, serial, struct
+<span class="kw">from</span> rclpy.node <span class="kw">import</span> Node
+<span class="kw">from</span> geometry_msgs.msg <span class="kw">import</span> Twist; <span class="kw">from</span> nav_msgs.msg <span class="kw">import</span> Odometry
+
+<span class="kw">class</span> <span class="tp3">Bridge</span>(Node):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        <span class="fn">super</span>().__init__(<span class="st">'bridge'</span>)
+        self.ser=serial.<span class="fn">Serial</span>(<span class="st">'/dev/ttyUSB0'</span>,<span class="nm">115200</span>,timeout=<span class="nm">0.01</span>)
+        self.pub=self.<span class="fn">create_publisher</span>(Odometry,<span class="st">'/odom'</span>,<span class="nm">10</span>)
+        self.<span class="fn">create_subscription</span>(Twist,<span class="st">'/cmd_vel'</span>,self.<span class="fn">cmd_cb</span>,<span class="nm">10</span>)
+        self.<span class="fn">create_timer</span>(<span class="nm">0.02</span>,self.<span class="fn">serial_cb</span>)
+    <span class="kw">def</span> <span class="fn">cmd_cb</span>(self,msg):
+        self.ser.<span class="fn">write</span>(struct.<span class="fn">pack</span>(<span class="st">'ff'</span>,msg.linear.x,msg.angular.z))
+    <span class="kw">def</span> <span class="fn">serial_cb</span>(self):
+        <span class="kw">if</span> self.ser.<span class="fn">in_waiting</span>:
+            line=self.ser.<span class="fn">readline</span>().<span class="fn">decode</span>().<span class="fn">strip</span>()
+            <span class="kw">if</span> line.<span class="fn">startswith</span>(<span class="st">'O:'</span>):
+                x,y,th=<span class="fn">map</span>(float,line[<span class="nm">2</span>:].<span class="fn">split</span>(<span class="st">','</span>))
+                msg=Odometry(); msg.header.frame_id=<span class="st">'odom'</span>
+                msg.pose.pose.position.x=x; msg.pose.pose.position.y=y
+                self.pub.<span class="fn">publish</span>(msg)
+
+rclpy.<span class="fn">init</span>(); n=<span class="fn">Bridge</span>(); rclpy.<span class="fn">spin</span>(n)</pre></section><section class="sec" id="s10"><div class="sech"><div class="sn">010</div><div><div class="sc">Advanced</div><h2>BEHAVIOR TREES</h2></div></div><p>Behavior Trees (BT) adalah arsitektur kontrol modular. Setiap node mengembalikan SUCCESS, FAILURE, atau RUNNING.</p><div class="tw"><table><tr><th>Node</th><th>Logika</th><th>Use Case</th></tr><tr><td>Sequence →</td><td>AND: semua child harus SUCCESS</td><td>Urutan aksi</td></tr><tr><td>Selector ?</td><td>OR: cukup satu SUCCESS</td><td>Prioritized fallback</td></tr><tr><td>Parallel</td><td>Jalankan semua serentak</td><td>Concurrent tasks</td></tr><tr><td>Action</td><td>Leaf: eksekusi aksi</td><td>MoveBase, Pick</td></tr><tr><td>Condition</td><td>Leaf: cek kondisi</td><td>BatteryOK, ObstacleAhead</td></tr></table></div><pre><span class="kw">import</span> py_trees <span class="kw">as</span> pt
+<span class="kw">from</span> py_trees.behaviour <span class="kw">import</span> Behaviour
+<span class="kw">from</span> py_trees.common <span class="kw">import</span> Status
+
+<span class="kw">class</span> <span class="tp3">BatteryOK</span>(Behaviour):
+    <span class="kw">def</span> <span class="fn">update</span>(self):
+        level=pt.blackboard.Blackboard().<span class="fn">get</span>(<span class="st">'battery'</span>)
+        <span class="kw">return</span> Status.SUCCESS <span class="kw">if</span> level><span class="nm">20</span> <span class="kw">else</span> Status.FAILURE
+
+<span class="kw">class</span> <span class="tp3">ObstacleAhead</span>(Behaviour):
+    <span class="kw">def</span> <span class="fn">update</span>(self):
+        <span class="kw">return</span> Status.SUCCESS <span class="kw">if</span> pt.blackboard.Blackboard().<span class="fn">get</span>(<span class="st">'obstacle'</span>) <span class="kw">else</span> Status.FAILURE
+
+<span class="kw">class</span> <span class="tp3">AvoidObstacle</span>(Behaviour):
+    <span class="kw">def</span> <span class="fn">update</span>(self): <span class="fn">print</span>(<span class="st">'Avoiding...'</span>); <span class="kw">return</span> Status.SUCCESS
+
+<span class="kw">class</span> <span class="tp3">Navigate</span>(Behaviour):
+    <span class="kw">def</span> <span class="fn">update</span>(self): <span class="fn">print</span>(<span class="st">'Navigating...'</span>); <span class="kw">return</span> Status.RUNNING
+
+root=pt.composites.Sequence(<span class="st">'Root'</span>,memory=<span class="nm">False</span>)
+safety=pt.composites.Selector(<span class="st">'Safety'</span>,memory=<span class="nm">False</span>)
+safety.<span class="fn">add_children</span>([<span class="fn">BatteryOK</span>()])
+nav=pt.composites.Selector(<span class="st">'NavTask'</span>,memory=<span class="nm">False</span>)
+avoid_seq=pt.composites.Sequence(<span class="st">'AvoidIfObs'</span>)
+avoid_seq.<span class="fn">add_children</span>([<span class="fn">ObstacleAhead</span>(),<span class="fn">AvoidObstacle</span>()])
+nav.<span class="fn">add_children</span>([avoid_seq,<span class="fn">Navigate</span>()])
+root.<span class="fn">add_children</span>([safety,nav])
+bt=pt.trees.BehaviourTree(root)
+bt.<span class="fn">tick_tock</span>(period_ms=<span class="nm">100</span>)</pre></section><section class="sec" id="s11"><div class="sech"><div class="sn">011</div><div><div class="sc">Advanced</div><h2>SENSOR FUSION EKF</h2></div></div><div class="math">EKF: state x = [x, y, θ, vx, vy, ω]
+
+Predict:
+  x_pred = F·x_prev
+  P_pred = F·P·F^T + Q
+
+Update (per sensor):
+  K = P_pred·H^T·(H·P_pred·H^T + R)^-1
+  x = x_pred + K·(z - H·x_pred)
+  P = (I - K·H)·P_pred</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">class</span> <span class="tp3">NavEKF</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self,dt=<span class="nm">0.02</span>):
+        self.dt=dt; self.x=np.<span class="fn">zeros</span>(<span class="nm">6</span>)
+        self.P=np.<span class="fn">eye</span>(<span class="nm">6</span>)*<span class="nm">0.1</span>
+        self.F=np.<span class="fn">eye</span>(<span class="nm">6</span>); self.F[<span class="nm">0</span>,<span class="nm">3</span>]=dt; self.F[<span class="nm">1</span>,<span class="nm">4</span>]=dt; self.F[<span class="nm">2</span>,<span class="nm">5</span>]=dt
+        self.Q=np.<span class="fn">diag</span>([<span class="nm">1e-4</span>,<span class="nm">1e-4</span>,<span class="nm">1e-4</span>,<span class="nm">0.01</span>,<span class="nm">0.01</span>,<span class="nm">0.01</span>])
+
+    <span class="kw">def</span> <span class="fn">predict</span>(self,v,w):
+        th=self.x[<span class="nm">2</span>]; vx=v*np.<span class="fn">cos</span>(th); vy=v*np.<span class="fn">sin</span>(th)
+        self.x[<span class="nm">0</span>]+=vx*self.dt; self.x[<span class="nm">1</span>]+=vy*self.dt; self.x[<span class="nm">2</span>]+=w*self.dt
+        self.x[<span class="nm">3</span>]=vx; self.x[<span class="nm">4</span>]=vy; self.x[<span class="nm">5</span>]=w
+        self.P=self.F@self.P@self.F.T+self.Q
+
+    <span class="kw">def</span> <span class="fn">update_gps</span>(self,gx,gy):
+        H=np.<span class="fn">zeros</span>((<span class="nm">2</span>,<span class="nm">6</span>)); H[<span class="nm">0</span>,<span class="nm">0</span>]=<span class="nm">1</span>; H[<span class="nm">1</span>,<span class="nm">1</span>]=<span class="nm">1</span>
+        self.<span class="fn">_upd</span>(H,np.<span class="fn">diag</span>([<span class="nm">0.5</span>,<span class="nm">0.5</span>]),np.<span class="fn">array</span>([gx,gy]))
+
+    <span class="kw">def</span> <span class="fn">update_imu</span>(self,omega):
+        H=np.<span class="fn">zeros</span>((<span class="nm">1</span>,<span class="nm">6</span>)); H[<span class="nm">0</span>,<span class="nm">5</span>]=<span class="nm">1</span>
+        self.<span class="fn">_upd</span>(H,np.<span class="fn">array</span>([[<span class="nm">0.01</span>]]),np.<span class="fn">array</span>([omega]))
+
+    <span class="kw">def</span> <span class="fn">_upd</span>(self,H,R,z):
+        y=z-H@self.x; S=H@self.P@H.T+R
+        K=self.P@H.T@np.linalg.<span class="fn">inv</span>(S)
+        self.x+=K@y; self.P=(np.<span class="fn">eye</span>(<span class="nm">6</span>)-K@H)@self.P
+
+    <span class="kw">def</span> <span class="fn">pose</span>(self): <span class="kw">return</span> self.x[<span class="nm">0</span>],self.x[<span class="nm">1</span>],self.x[<span class="nm">2</span>]</pre></section>
+<div style="text-align:center;padding:40px 0;color:var(--text3);font-family:var(--mono);font-size:11px;border-top:1px solid var(--border);margin-top:40px">AUTONOMOUS NAVIGATION — DOC 01 / 07<br><span style="color:rgb(var(--ac));margin-top:8px;display:block">Antonius - bluedragonsec.com</span></div>
+</div></div><script>function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open')}
+document.getElementById('overlay').addEventListener('click',toggleSidebar);
+const secs=document.querySelectorAll('.sec'),nls=document.querySelectorAll('.ni');
+secs.forEach(s=>new IntersectionObserver(e=>{if(e[0].isIntersecting){const id=s.id;nls.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+id))}},{threshold:0.15,rootMargin:'-60px 0px -60% 0px'}).observe(s));
+nls.forEach(l=>l.addEventListener('click',()=>{if(window.innerWidth<=900)toggleSidebar()}));</script></body></html>

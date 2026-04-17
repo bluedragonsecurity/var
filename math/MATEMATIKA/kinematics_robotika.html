@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matematika Kinematika Robotika — Blue Dragon Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Noto+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep:       #060b14;
+    --bg-panel:      #0a1220;
+    --bg-card:       #0d1928;
+    --bg-code:       #071018;
+    --bd-accent:     #003a6e;
+    --cyan:          #00c8ff;
+    --cyan-dim:      #007eaa;
+    --green:         #00ffae;
+    --green-dim:     #00a06c;
+    --orange:        #ff8c42;
+    --red:           #ff4060;
+    --yellow:        #ffe066;
+    --text-primary:  #d4e8ff;
+    --text-body:     #8fb0d0;
+    --text-muted:    #4a6f90;
+    --glow-cyan:     0 0 18px rgba(0,200,255,0.35);
+    --glow-green:    0 0 18px rgba(0,255,174,0.30);
+    --font-display:  'Rajdhani', sans-serif;
+    --font-mono:     'Share Tech Mono', monospace;
+    --font-body:     'Noto Sans', sans-serif;
+    --radius:        6px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--text-body);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.75;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse 80% 40% at 50% -10%, rgba(0,80,160,0.18) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0,60,120,0.06) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,60,120,0.06) 40px);
+  }
+
+  /* ── SCANLINE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 2px);
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── TOP BAR ── */
+  #topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(6,11,20,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--bd-accent);
+    padding: 0 24px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.6);
+  }
+  #topbar .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    text-shadow: var(--glow-cyan);
+  }
+  #topbar .brand svg { width: 26px; height: 26px; }
+  #topbar .doc-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+  #topbar .version {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--green-dim);
+    border: 1px solid var(--green-dim);
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+
+  /* ── LAYOUT ── */
+  .wrapper {
+    display: flex;
+    min-height: calc(100vh - 52px);
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: var(--bg-panel);
+    border-right: 1px solid var(--bd-accent);
+    padding: 20px 0;
+    position: sticky;
+    top: 52px;
+    height: calc(100vh - 52px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bd-accent) transparent;
+  }
+  #sidebar::-webkit-scrollbar { width: 4px; }
+  #sidebar::-webkit-scrollbar-track { background: transparent; }
+  #sidebar::-webkit-scrollbar-thumb { background: var(--bd-accent); border-radius: 2px; }
+
+  .sidebar-section-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    padding: 12px 20px 6px;
+  }
+  .sidebar-section-title:not(:first-child) { margin-top: 10px; }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 20px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all .2s;
+    border-left: 2px solid transparent;
+  }
+  .nav-link:hover {
+    color: var(--cyan);
+    background: rgba(0,200,255,0.06);
+    border-left-color: var(--cyan);
+  }
+  .nav-link.active {
+    color: var(--cyan);
+    background: rgba(0,200,255,0.08);
+    border-left-color: var(--cyan);
+  }
+  .nav-link .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    flex-shrink: 0;
+    transition: all .2s;
+  }
+  .nav-link:hover .dot, .nav-link.active .dot {
+    background: var(--cyan);
+    box-shadow: var(--glow-cyan);
+  }
+  .nav-sub {
+    padding: 5px 20px 5px 36px;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: block;
+    transition: all .2s;
+    border-left: 2px solid transparent;
+  }
+  .nav-sub:hover {
+    color: var(--green);
+    border-left-color: var(--green);
+  }
+
+  /* ── MAIN CONTENT ── */
+  #content {
+    flex: 1;
+    padding: 40px 48px;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO SECTION ── */
+  .hero {
+    border: 1px solid var(--bd-accent);
+    background: linear-gradient(135deg, rgba(0,40,80,0.4) 0%, rgba(0,20,40,0.6) 100%);
+    border-radius: var(--radius);
+    padding: 40px 40px 36px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 400px; height: 200px;
+    background: radial-gradient(ellipse, rgba(0,200,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.1;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--cyan); text-shadow: var(--glow-cyan); }
+  .hero-desc {
+    font-size: 14px;
+    color: var(--text-body);
+    max-width: 680px;
+    line-height: 1.8;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .meta-item span { color: var(--cyan-dim); }
+
+  /* ── SECTION HEADERS ── */
+  .section {
+    margin-bottom: 52px;
+    scroll-margin-top: 72px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .section-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--cyan);
+    background: rgba(0,200,255,0.1);
+    border: 1px solid rgba(0,200,255,0.3);
+    padding: 3px 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(20px, 2.5vw, 26px);
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+  }
+  h3 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--cyan);
+    margin: 28px 0 14px;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h3::before {
+    content: '';
+    width: 3px; height: 18px;
+    background: var(--cyan);
+    border-radius: 2px;
+    box-shadow: var(--glow-cyan);
+    flex-shrink: 0;
+  }
+  h4 {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--green);
+    margin: 20px 0 10px;
+    letter-spacing: 0.3px;
+  }
+  p { margin-bottom: 14px; color: var(--text-body); }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--bd-accent) 0%, transparent 80%);
+    margin: 20px 0 28px;
+  }
+
+  /* ── MATH BLOCKS ── */
+  .math-block {
+    background: var(--bg-code);
+    border: 1px solid var(--bd-accent);
+    border-left: 3px solid var(--cyan);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin: 16px 0;
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    color: var(--cyan);
+    overflow-x: auto;
+    line-height: 2;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .math-block .comment {
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+  .math-block .highlight { color: var(--green); }
+  .math-block .label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .formula-inline {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--cyan);
+    background: rgba(0,200,255,0.07);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  /* ── MATRIX DISPLAY ── */
+  .matrix-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+  }
+  .matrix-bracket {
+    font-size: 48px;
+    line-height: 1;
+    color: var(--cyan-dim);
+    font-weight: 100;
+  }
+  .matrix-grid {
+    display: grid;
+    gap: 4px 20px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-primary);
+  }
+
+  /* ── TABLES ── */
+  .tbl-wrap { overflow-x: auto; margin: 16px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  thead tr {
+    background: rgba(0,200,255,0.1);
+    border-bottom: 2px solid var(--cyan-dim);
+  }
+  th {
+    padding: 10px 16px;
+    text-align: left;
+    color: var(--cyan);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+  td {
+    padding: 9px 16px;
+    border-bottom: 1px solid rgba(0,60,120,0.4);
+    color: var(--text-body);
+  }
+  tr:hover td { background: rgba(0,200,255,0.04); }
+
+  /* ── INFO CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--bd-accent);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .card:hover {
+    border-color: var(--cyan-dim);
+    box-shadow: 0 0 12px rgba(0,200,255,0.1);
+  }
+  .card-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+  .card-body { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+  /* ── CALLOUTS ── */
+  .callout {
+    display: flex;
+    gap: 14px;
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    margin: 18px 0;
+    font-size: 13.5px;
+  }
+  .callout-info {
+    background: rgba(0,200,255,0.06);
+    border: 1px solid rgba(0,200,255,0.2);
+    border-left: 3px solid var(--cyan);
+  }
+  .callout-warn {
+    background: rgba(255,140,66,0.06);
+    border: 1px solid rgba(255,140,66,0.2);
+    border-left: 3px solid var(--orange);
+  }
+  .callout-success {
+    background: rgba(0,255,174,0.05);
+    border: 1px solid rgba(0,255,174,0.2);
+    border-left: 3px solid var(--green);
+  }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .callout-text { color: var(--text-body); line-height: 1.7; }
+  .callout-text strong { color: var(--text-primary); }
+
+  /* ── STEP BOXES (IK) ── */
+  .step-list { counter-reset: steps; margin: 20px 0; }
+  .step {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .step::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 38px;
+    bottom: -20px;
+    width: 1px;
+    background: linear-gradient(180deg, var(--bd-accent) 0%, transparent 100%);
+  }
+  .step:last-child::before { display: none; }
+  .step-num {
+    counter-increment: steps;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(0,200,255,0.1);
+    border: 2px solid var(--cyan-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--cyan);
+    flex-shrink: 0;
+    font-weight: 700;
+    z-index: 1;
+  }
+  .step-body { flex: 1; padding-top: 6px; }
+  .step-title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  /* ── CODE BLOCKS ── */
+  .code-block {
+    background: var(--bg-code);
+    border: 1px solid var(--bd-accent);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin: 14px 0;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    overflow-x: auto;
+    color: #7ec8e3;
+    line-height: 1.8;
+    white-space: pre;
+  }
+  .code-block .kw { color: var(--cyan); }
+  .code-block .fn { color: var(--green); }
+  .code-block .cm { color: var(--text-muted); }
+  .code-block .num { color: var(--orange); }
+  .code-block .str { color: var(--yellow); }
+
+  /* ── FIGURE / DIAGRAM ── */
+  .diagram {
+    background: var(--bg-card);
+    border: 1px solid var(--bd-accent);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    overflow: hidden;
+  }
+  .diagram-caption {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 12px;
+    letter-spacing: 1px;
+  }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 3px;
+  }
+  .badge-cyan { background: rgba(0,200,255,0.12); color: var(--cyan); border: 1px solid rgba(0,200,255,0.3); }
+  .badge-green { background: rgba(0,255,174,0.10); color: var(--green); border: 1px solid rgba(0,255,174,0.25); }
+  .badge-orange { background: rgba(255,140,66,0.10); color: var(--orange); border: 1px solid rgba(255,140,66,0.25); }
+
+  /* ── ALGORITHM BOX ── */
+  .algo-box {
+    background: var(--bg-code);
+    border: 1px solid var(--green-dim);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin: 16px 0;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--text-body);
+    line-height: 2;
+  }
+  .algo-box .algo-title {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0,160,108,0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .algo-box .indent1 { padding-left: 20px; }
+  .algo-box .indent2 { padding-left: 40px; }
+  .algo-box .kw { color: var(--cyan); }
+  .algo-box .comm { color: var(--text-muted); }
+
+  /* ── IK HIGHLIGHT ── */
+  .ik-panel {
+    background: linear-gradient(135deg, rgba(0,40,30,0.5) 0%, rgba(0,20,15,0.7) 100%);
+    border: 1px solid var(--green-dim);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .ik-panel::before {
+    content: 'IK';
+    position: absolute;
+    right: 24px; top: 16px;
+    font-family: var(--font-display);
+    font-size: 80px;
+    font-weight: 700;
+    color: rgba(0,255,174,0.04);
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  /* ── FOOTER ── */
+  #footer {
+    background: var(--bg-panel);
+    border-top: 1px solid var(--bd-accent);
+    padding: 24px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 60px;
+  }
+  .fp-block {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+  .fp-block .fp-line { display: flex; gap: 8px; align-items: center; }
+  .fp-block .fp-key { color: var(--cyan-dim); }
+  .fp-hash {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(0,200,255,0.35);
+    letter-spacing: 1px;
+    word-break: break-all;
+    max-width: 340px;
+  }
+  .bds-logo-footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  /* ── WATERMARK ── */
+  .watermark {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: rgba(0,200,255,0.15);
+    letter-spacing: 2px;
+    writing-mode: vertical-rl;
+    pointer-events: none;
+    z-index: 50;
+    text-transform: uppercase;
+  }
+
+  /* ── PROGRESS INDICATOR ── */
+  #progress-bar {
+    position: fixed;
+    top: 52px;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--green));
+    z-index: 200;
+    transition: width 0.1s;
+    box-shadow: var(--glow-cyan);
+  }
+
+  /* ── TOC INDEX ── */
+  .toc-inline {
+    background: var(--bg-card);
+    border: 1px solid var(--bd-accent);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 36px;
+  }
+  .toc-inline h4 {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    color: var(--cyan-dim);
+  }
+  .toc-inline ol {
+    columns: 2;
+    column-gap: 32px;
+    padding-left: 20px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .toc-inline li { margin-bottom: 5px; }
+  .toc-inline a { color: var(--text-muted); text-decoration: none; transition: color .2s; }
+  .toc-inline a:hover { color: var(--cyan); }
+
+  /* ── MOBILE / RESPONSIVE ── */
+  @media (max-width: 900px) {
+    #sidebar { display: none; }
+    #content { padding: 24px 20px; }
+    .hero { padding: 28px 20px; }
+    #footer { padding: 20px; }
+    .toc-inline ol { columns: 1; }
+    .card-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 540px) {
+    #topbar .doc-title { display: none; }
+    .card-grid { grid-template-columns: 1fr; }
+    .matrix-bracket { font-size: 36px; }
+    .ik-panel { padding: 20px 16px; }
+  }
+
+  /* ── SCROLL TO TOP ── */
+  #scroll-top {
+    position: fixed;
+    bottom: 28px;
+    right: 20px;
+    width: 36px; height: 36px;
+    background: rgba(0,200,255,0.12);
+    border: 1px solid var(--cyan-dim);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    font-size: 16px;
+    color: var(--cyan);
+    text-decoration: none;
+    transition: all .2s;
+    opacity: 0;
+    pointer-events: none;
+  }
+  #scroll-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #scroll-top:hover {
+    background: rgba(0,200,255,0.22);
+    box-shadow: var(--glow-cyan);
+  }
+
+  /* ── MOBILE SIDEBAR TOGGLE ── */
+  #sidebar-toggle {
+    display: none;
+    background: none;
+    border: 1px solid var(--bd-accent);
+    border-radius: 4px;
+    color: var(--cyan);
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  @media (max-width: 900px) {
+    #sidebar-toggle { display: flex; align-items: center; }
+    #sidebar.open {
+      display: block;
+      position: fixed;
+      top: 52px; left: 0; bottom: 0;
+      z-index: 200;
+      width: 260px;
+    }
+    .sidebar-overlay {
+      display: block !important;
+      position: fixed;
+      inset: 52px 0 0 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 150;
+    }
+  }
+  .sidebar-overlay { display: none; }
+
+  /* ── SVG DIAGRAM ── */
+  .svg-arm { font-family: var(--font-mono); }
+</style>
+</head>
+<body>
+
+<div id="progress-bar" style="width:0%"></div>
+<div class="watermark">© BLUE DRAGON SECURITY — CONFIDENTIAL RESEARCH</div>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="brand">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="16,2 30,10 30,22 16,30 2,22 2,10" stroke="#00c8ff" stroke-width="1.5" fill="rgba(0,200,255,0.05)"/>
+      <path d="M10 16 C10 11 14 8 16 8 C18 8 22 11 22 16 C22 21 19 24 16 24 C14 24 10 21 10 16Z" stroke="#00ffae" stroke-width="1" fill="none"/>
+      <circle cx="16" cy="16" r="2.5" fill="#00c8ff"/>
+      <line x1="16" y1="8" x2="16" y2="2" stroke="#00c8ff" stroke-width="1"/>
+      <line x1="22" y1="16" x2="28" y2="16" stroke="#00c8ff" stroke-width="1"/>
+    </svg>
+    Blue Dragon Security
+  </div>
+  <div class="doc-title">DOC-KINEMATICS-ROBOTICS-v1.0</div>
+  <div style="display:flex;gap:10px;align-items:center">
+    <div class="version">REV 2026</div>
+    <button id="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+  </div>
+</div>
+
+<div class="wrapper">
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-section-title">Navigasi</div>
+  <a href="#intro" class="nav-link"><span class="dot"></span>1. Pendahuluan</a>
+  <a href="#transform" class="nav-link"><span class="dot"></span>2. Transformasi & Rotasi</a>
+  <a href="#s2-1" class="nav-sub">2.1 Matriks Rotasi</a>
+  <a href="#s2-2" class="nav-sub">2.2 Homogeneous Transform</a>
+  <a href="#s2-3" class="nav-sub">2.3 Euler & RPY</a>
+  <a href="#fk" class="nav-link"><span class="dot"></span>3. Forward Kinematics</a>
+  <a href="#s3-1" class="nav-sub">3.1 D-H Parameters</a>
+  <a href="#s3-2" class="nav-sub">3.2 D-H Convention</a>
+  <a href="#s3-3" class="nav-sub">3.3 Contoh 2-DOF</a>
+  <a href="#s3-4" class="nav-sub">3.4 Contoh 6-DOF</a>
+  <a href="#jacobian" class="nav-link"><span class="dot"></span>4. Jacobian</a>
+  <a href="#s4-1" class="nav-sub">4.1 Jacobian Geometrik</a>
+  <a href="#s4-2" class="nav-sub">4.2 Singularitas</a>
+  <a href="#ik" class="nav-link active"><span class="dot"></span>5. Inverse Kinematics ★</a>
+  <a href="#ik-konsep" class="nav-sub">5.1 Konsep & Tantangan</a>
+  <a href="#ik-analitik" class="nav-sub">5.2 Metode Analitik</a>
+  <a href="#ik-2dof" class="nav-sub">5.3 IK 2-DOF Lengkap</a>
+  <a href="#ik-3dof" class="nav-sub">5.4 IK 3-DOF</a>
+  <a href="#ik-wrist" class="nav-sub">5.5 Wrist Decoupling</a>
+  <a href="#ik-numeric" class="nav-sub">5.6 Metode Numerik</a>
+  <a href="#ik-nr" class="nav-sub">5.7 Newton-Raphson</a>
+  <a href="#ik-jac" class="nav-sub">5.8 Jacobian Pseudoinverse</a>
+  <a href="#ik-dls" class="nav-sub">5.9 Damped Least Squares</a>
+  <a href="#ik-ccd" class="nav-sub">5.10 CCD</a>
+  <a href="#ik-fabrik" class="nav-sub">5.11 FABRIK</a>
+  <a href="#workspace" class="nav-link"><span class="dot"></span>6. Workspace Analysis</a>
+  <a href="#python" class="nav-link"><span class="dot"></span>7. Implementasi Python</a>
+  <a href="#ref" class="nav-link"><span class="dot"></span>Referensi</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main id="content">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">▸ BLUE DRAGON SECURITY — TECHNICAL CURRICULUM</div>
+    <h1>Matematika <span>Kinematika</span><br>untuk Robotika</h1>
+    <p class="hero-desc">
+      Dokumentasi komprehensif matematika kinematika robot: transformasi koordinat, forward kinematics,
+      Jacobian, dan — dengan detail penuh — <strong style="color:var(--green)">Inverse Kinematics</strong> menggunakan metode analitik dan numerik.
+      Dirancang untuk sistem robot industri, manipulator, dan penelitian lanjutan.
+    </p>
+    <div class="hero-meta">
+      <div class="meta-item">📅 <span>April 2026</span></div>
+      <div class="meta-item">🏷 <span>v1.0 — Robotics Kinematics</span></div>
+      <div class="meta-item">🔑 <span>bluedragonsec.com</span></div>
+      <div class="meta-item">📐 <span>DOF: 2 → 7-Axis Coverage</span></div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc-inline">
+    <h4>▸ Daftar Isi</h4>
+    <ol>
+      <li><a href="#intro">Pendahuluan & Konsep Dasar</a></li>
+      <li><a href="#transform">Transformasi Koordinat & Rotasi</a></li>
+      <li><a href="#fk">Forward Kinematics & D-H</a></li>
+      <li><a href="#jacobian">Jacobian & Velocity Kinematics</a></li>
+      <li><a href="#ik">Inverse Kinematics (Lengkap)</a></li>
+      <li><a href="#workspace">Workspace Analysis</a></li>
+      <li><a href="#python">Implementasi Python</a></li>
+    </ol>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- 1. PENDAHULUAN -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section" id="intro">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Pendahuluan & Konsep Dasar</h2>
+    </div>
+    <div class="section-divider"></div>
+
+    <p>
+      <strong style="color:var(--text-primary)">Kinematika robot</strong> adalah ilmu yang mempelajari gerak robot tanpa mempertimbangkan gaya atau torsi yang menyebabkan gerak tersebut. Kinematika berfokus pada hubungan geometrik antara konfigurasi joint dan posisi/orientasi end-effector di ruang Cartesian.
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <span class="card-icon">⚙️</span>
+        <div class="card-title">Forward Kinematics (FK)</div>
+        <div class="card-body">Diberikan sudut/posisi joint → tentukan posisi dan orientasi end-effector di dunia nyata.</div>
+      </div>
+      <div class="card">
+        <span class="card-icon">🎯</span>
+        <div class="card-title">Inverse Kinematics (IK)</div>
+        <div class="card-body">Diberikan posisi/orientasi target → tentukan sudut joint yang harus dicapai robot.</div>
+      </div>
+      <div class="card">
+        <span class="card-icon">📐</span>
+        <div class="card-title">Velocity Kinematics</div>
+        <div class="card-body">Hubungan antara kecepatan joint (joint velocity) dengan kecepatan end-effector via Jacobian.</div>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔗</span>
+        <div class="card-title">Kinematic Chain</div>
+        <div class="card-body">Serial linkage: serangkaian rigid link yang dihubungkan oleh revolute atau prismatic joint.</div>
+      </div>
+    </div>
+
+    <h3>1.1 Derajat Kebebasan (DOF)</h3>
+    <p>DOF (Degrees of Freedom) adalah jumlah variabel independen yang diperlukan untuk mendeskripsikan konfigurasi sistem.</p>
+    <div class="math-block"><span class="label">Grübler-Kutzbach Formula</span>DOF = λ(n − 1 − j) + Σfᵢ
+
+<span class="highlight">Dimana:</span>
+  λ = 6 (ruang 3D),  3 (ruang 2D)
+  n = jumlah link (termasuk ground)
+  j = jumlah joint
+  fᵢ = DOF joint ke-i
+
+<span class="comment">Revolute joint  → fᵢ = 1
+Prismatic joint → fᵢ = 1
+Ball-socket     → fᵢ = 3</span>
+
+<span class="comment">Contoh robot 6-DOF serial:</span>
+DOF = 6(7 − 1 − 6) + 6×1 = 0 + 6 = <span class="highlight">6</span></div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <div class="callout-text">
+        <strong>Catatan penting:</strong> Robot dengan 6 DOF memiliki kemampuan untuk menempatkan end-effector di posisi (x,y,z) dan orientasi (roll,pitch,yaw) mana pun di dalam workspace-nya. Robot redundan memiliki DOF &gt; 6.
+      </div>
+    </div>
+
+    <h3>1.2 Sistem Koordinat</h3>
+    <p>Konvensi yang digunakan adalah sistem koordinat kanan (right-handed) sesuai standar ISO 9283:</p>
+    <div class="diagram">
+      <svg width="320" height="200" viewBox="0 0 320 200" class="svg-arm">
+        <defs>
+          <marker id="ah" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#00c8ff"/>
+          </marker>
+          <marker id="ag" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#00ffae"/>
+          </marker>
+          <marker id="ar" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#ff4060"/>
+          </marker>
+        </defs>
+        <!-- Axes -->
+        <line x1="120" y1="120" x2="240" y2="120" stroke="#00c8ff" stroke-width="2" marker-end="url(#ah)"/>
+        <line x1="120" y1="120" x2="120" y2="20" stroke="#00ffae" stroke-width="2" marker-end="url(#ag)"/>
+        <line x1="120" y1="120" x2="60" y2="160" stroke="#ff4060" stroke-width="2" marker-end="url(#ar)"/>
+        <circle cx="120" cy="120" r="4" fill="#00c8ff"/>
+        <text x="248" y="124" fill="#00c8ff" font-size="14" font-family="Share Tech Mono">X</text>
+        <text x="114" y="14" fill="#00ffae" font-size="14" font-family="Share Tech Mono">Z</text>
+        <text x="40" y="170" fill="#ff4060" font-size="14" font-family="Share Tech Mono">Y</text>
+        <text x="100" y="140" fill="#4a6f90" font-size="11" font-family="Share Tech Mono">O</text>
+        <!-- Grid lines -->
+        <line x1="60" y1="80" x2="180" y2="80" stroke="#003a6e" stroke-width="0.5"/>
+        <line x1="60" y1="120" x2="180" y2="120" stroke="#003a6e" stroke-width="0.5"/>
+        <line x1="120" y1="40" x2="120" y2="160" stroke="#003a6e" stroke-width="0.5"/>
+      </svg>
+      <div class="diagram-caption">FIG-01 ▸ Sistem Koordinat Kanan (Right-Handed Coordinate System)</div>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- 2. TRANSFORMASI -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section" id="transform">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Transformasi Koordinat & Rotasi</h2>
+    </div>
+    <div class="section-divider"></div>
+
+    <h3 id="s2-1">2.1 Matriks Rotasi 3D</h3>
+    <p>Rotasi murni di ruang 3D direpresentasikan oleh matriks ortogonal 3×3 dengan determinan = +1. Tiga rotasi dasar:</p>
+
+    <h4>Rotasi terhadap sumbu X (Roll)</h4>
+    <div class="math-block"><span class="label">Rx(α) — Rotasi sumbu X</span>        ⎡ 1    0        0   ⎤
+Rₓ(α) = ⎢ 0   cos(α)  -sin(α) ⎥
+        ⎣ 0   sin(α)   cos(α) ⎦</div>
+
+    <h4>Rotasi terhadap sumbu Y (Pitch)</h4>
+    <div class="math-block"><span class="label">Ry(β) — Rotasi sumbu Y</span>        ⎡  cos(β)   0   sin(β) ⎤
+Ry(β) = ⎢    0      1     0   ⎥
+        ⎣ -sin(β)   0   cos(β) ⎦</div>
+
+    <h4>Rotasi terhadap sumbu Z (Yaw)</h4>
+    <div class="math-block"><span class="label">Rz(γ) — Rotasi sumbu Z</span>        ⎡ cos(γ)  -sin(γ)   0 ⎤
+Rz(γ) = ⎢ sin(γ)   cos(γ)   0 ⎥
+        ⎣   0        0      1 ⎦</div>
+
+    <div class="callout callout-success">
+      <span class="callout-icon">✅</span>
+      <div class="callout-text">
+        <strong>Properti penting:</strong> R⁻¹ = Rᵀ (inverse = transpose). Rotasi komposit: R = R₁·R₂·R₃ — urutan perkalian penting (tidak komutatif)!
+      </div>
+    </div>
+
+    <h3 id="s2-2">2.2 Homogeneous Transformation Matrix</h3>
+    <p>Matriks 4×4 yang menggabungkan rotasi (R) dan translasi (p) dalam satu representasi:</p>
+    <div class="math-block"><span class="label">Homogeneous Transformation Matrix T</span>     ⎡ R₃ₓ₃  | p₃ₓ₁ ⎤        ⎡ r₁₁  r₁₂  r₁₃  pₓ ⎤
+T = ⎢ ——————|—————⎥  =  ⎢ r₂₁  r₂₂  r₂₃  py ⎥
+     ⎣  0ᵀ   |   1  ⎦        ⎢ r₃₁  r₃₂  r₃₃  pz ⎥
+                              ⎣  0    0    0    1  ⎦
+
+<span class="comment">R = matriks rotasi 3×3
+p = vektor translasi [px, py, pz]ᵀ
+Baris terakhir [0 0 0 1] = konstanta</span>
+
+<span class="highlight">Invers matriks transformasi:</span>
+T⁻¹ = ⎡  Rᵀ   | -Rᵀp ⎤
+      ⎣  0ᵀ   |   1  ⎦</div>
+
+    <h4>Komposisi Transformasi</h4>
+    <div class="math-block">T₀ₙ = T₀₁ · T₁₂ · T₂₃ · ... · Tₙ₋₁,ₙ
+
+<span class="comment">Posisi end-effector:  p = T₀ₙ[0:3, 3]
+Orientasi end-effector: R = T₀ₙ[0:3, 0:3]</span></div>
+
+    <h3 id="s2-3">2.3 Representasi Orientasi</h3>
+
+    <h4>Euler Angles (ZYZ Convention)</h4>
+    <div class="math-block"><span class="label">ZYZ Euler Angles</span>R(φ,θ,ψ) = Rz(φ) · Ry(θ) · Rz(ψ)
+
+<span class="comment">Ekstrak dari matriks R:</span>
+θ = atan2(√(r₁₃²+r₂₃²), r₃₃)
+φ = atan2(r₂₃/sin θ, r₁₃/sin θ)
+ψ = atan2(r₃₂/sin θ, -r₃₁/sin θ)</div>
+
+    <h4>Roll-Pitch-Yaw (RPY / ZYX)</h4>
+    <div class="math-block"><span class="label">RPY — Extrinsic ZYX Convention</span>R(r,p,y) = Rz(y) · Ry(p) · Rx(r)
+
+<span class="comment">Ekstrak RPY dari matriks R:</span>
+roll  (r) = atan2(r₃₂, r₃₃)
+pitch (p) = atan2(-r₃₁, √(r₃₂²+r₃₃²))
+yaw   (y) = atan2(r₂₁, r₁₁)
+
+<span class="highlight">⚠ Gimbal Lock terjadi saat pitch = ±90°</span></div>
+
+    <h4>Quaternion (Representasi Stabil)</h4>
+    <div class="math-block"><span class="label">Unit Quaternion q = [w, x, y, z]</span>q = w + xi + yj + zk,   w² + x² + y² + z² = 1
+
+<span class="comment">Axis-angle → Quaternion:</span>
+w = cos(θ/2)
+x = kx·sin(θ/2)
+y = ky·sin(θ/2)
+z = kz·sin(θ/2)
+
+<span class="comment">Quaternion → Matriks Rotasi:</span>
+R = ⎡ 1-2(y²+z²)   2(xy-wz)    2(xz+wy)  ⎤
+    ⎢ 2(xy+wz)    1-2(x²+z²)   2(yz-wx)  ⎥
+    ⎣ 2(xz-wy)    2(yz+wx)    1-2(x²+y²) ⎦
+
+<span class="highlight">Keunggulan: bebas gimbal lock, interpolasi slerp lebih smooth</span></div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- 3. FORWARD KINEMATICS -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section" id="fk">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Forward Kinematics (FK)</h2>
+    </div>
+    <div class="section-divider"></div>
+
+    <p>Forward kinematics menghitung posisi dan orientasi end-effector dari konfigurasi joint yang diketahui menggunakan convention <strong style="color:var(--cyan)">Denavit-Hartenberg (D-H)</strong>.</p>
+
+    <h3 id="s3-1">3.1 Parameter Denavit-Hartenberg (D-H)</h3>
+    <p>Setiap link ke-i memiliki 4 parameter D-H yang mendeskripsikan relasi geometrik dengan link ke-(i-1):</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Parameter</th><th>Simbol</th><th>Definisi</th><th>Jenis</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Link Length</td><td class="formula-inline">aᵢ</td><td>Jarak sepanjang xᵢ dari zᵢ₋₁ ke zᵢ</td><td><span class="badge badge-cyan">Konstan</span></td></tr>
+          <tr><td>Link Twist</td><td class="formula-inline">αᵢ</td><td>Sudut dari zᵢ₋₁ ke zᵢ di sekitar xᵢ</td><td><span class="badge badge-cyan">Konstan</span></td></tr>
+          <tr><td>Link Offset</td><td class="formula-inline">dᵢ</td><td>Jarak sepanjang zᵢ₋₁ dari xᵢ₋₁ ke xᵢ</td><td><span class="badge badge-orange">Var (prismatic)</span></td></tr>
+          <tr><td>Joint Angle</td><td class="formula-inline">θᵢ</td><td>Sudut dari xᵢ₋₁ ke xᵢ di sekitar zᵢ₋₁</td><td><span class="badge badge-green">Var (revolute)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s3-2">3.2 D-H Transformation Matrix</h3>
+    <div class="math-block"><span class="label">Matriks Transformasi D-H untuk Joint ke-i</span>Tᵢ₋₁,ᵢ = Rot(z, θᵢ) · Trans(z, dᵢ) · Trans(x, aᵢ) · Rot(x, αᵢ)
+
+     ⎡ cos θᵢ  -sin θᵢ·cos αᵢ   sin θᵢ·sin αᵢ   aᵢ·cos θᵢ ⎤
+   = ⎢ sin θᵢ   cos θᵢ·cos αᵢ  -cos θᵢ·sin αᵢ   aᵢ·sin θᵢ ⎥
+     ⎢    0          sin αᵢ          cos αᵢ          dᵢ     ⎥
+     ⎣    0             0               0              1     ⎦
+
+<span class="comment">Kalikan secara berurutan untuk mendapat pose end-effector:</span>
+T₀ₙ = T₀₁(θ₁) · T₁₂(θ₂) · T₂₃(θ₃) · ... · Tₙ₋₁,ₙ(θₙ)</div>
+
+    <h3 id="s3-3">3.3 Contoh Lengkap: Robot 2-DOF Planar</h3>
+    <div class="diagram">
+      <svg width="400" height="200" viewBox="0 0 400 200">
+        <defs>
+          <marker id="ah2" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+            <polygon points="0 0, 7 2.5, 0 5" fill="#00c8ff"/>
+          </marker>
+        </defs>
+        <!-- Ground -->
+        <line x1="60" y1="160" x2="100" y2="160" stroke="#4a6f90" stroke-width="3"/>
+        <line x1="60" y1="160" x2="65" y2="170" stroke="#4a6f90" stroke-width="1.5"/>
+        <line x1="70" y1="160" x2="75" y2="170" stroke="#4a6f90" stroke-width="1.5"/>
+        <line x1="80" y1="160" x2="85" y2="170" stroke="#4a6f90" stroke-width="1.5"/>
+        <line x1="90" y1="160" x2="95" y2="170" stroke="#4a6f90" stroke-width="1.5"/>
+        <!-- Joint 1 -->
+        <circle cx="80" cy="155" r="8" fill="none" stroke="#00c8ff" stroke-width="2"/>
+        <circle cx="80" cy="155" r="3" fill="#00c8ff"/>
+        <!-- Link 1 -->
+        <line x1="80" y1="155" x2="200" y2="110" stroke="#00ffae" stroke-width="3"/>
+        <text x="130" y="125" fill="#00ffae" font-size="12" font-family="Share Tech Mono">L₁</text>
+        <!-- Joint 2 -->
+        <circle cx="200" cy="110" r="8" fill="none" stroke="#00c8ff" stroke-width="2"/>
+        <circle cx="200" cy="110" r="3" fill="#00c8ff"/>
+        <!-- Link 2 -->
+        <line x1="200" y1="110" x2="310" y2="75" stroke="#ff8c42" stroke-width="3"/>
+        <text x="255" y="85" fill="#ff8c42" font-size="12" font-family="Share Tech Mono">L₂</text>
+        <!-- End effector -->
+        <polygon points="310,75 316,68 322,78" fill="#00c8ff" stroke="none"/>
+        <!-- Angles -->
+        <path d="M 95 155 A 20 20 0 0 1 87,136" fill="none" stroke="#7ec8e3" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="100" y="148" fill="#7ec8e3" font-size="11" font-family="Share Tech Mono">θ₁</text>
+        <path d="M 215 110 A 20 20 0 0 1 208,91" fill="none" stroke="#7ec8e3" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="220" y="102" fill="#7ec8e3" font-size="11" font-family="Share Tech Mono">θ₂</text>
+        <!-- Target -->
+        <text x="318" y="72" fill="#4a6f90" font-size="11" font-family="Share Tech Mono">EE</text>
+      </svg>
+      <div class="diagram-caption">FIG-02 ▸ Robot Planar 2-DOF</div>
+    </div>
+
+    <div class="math-block"><span class="label">D-H Parameter Tabel — Robot 2-DOF</span>
+Joint | θᵢ  | dᵢ | aᵢ | αᵢ
+──────|─────|────|────|────
+  1   |  θ₁ |  0 | L₁ |  0
+  2   |  θ₂ |  0 | L₂ |  0
+
+<span class="label">Matriks T₀₁:</span>
+T₀₁ = ⎡ cos θ₁  -sin θ₁   0   L₁cos θ₁ ⎤
+      ⎢ sin θ₁   cos θ₁   0   L₁sin θ₁ ⎥
+      ⎢    0        0      1       0     ⎥
+      ⎣    0        0      0       1     ⎦
+
+<span class="label">Matriks T₁₂:</span>
+T₁₂ = ⎡ cos θ₂  -sin θ₂   0   L₂cos θ₂ ⎤
+      ⎢ sin θ₂   cos θ₂   0   L₂sin θ₂ ⎥
+      ⎢    0        0      1       0     ⎥
+      ⎣    0        0      0       1     ⎦
+
+<span class="label">Pose End-Effector T₀₂ = T₀₁ · T₁₂:</span>
+px = L₁cos θ₁ + L₂cos(θ₁+θ₂)
+py = L₁sin θ₁ + L₂sin(θ₁+θ₂)
+
+<span class="highlight">Orientasi total = θ₁ + θ₂</span></div>
+
+    <h3 id="s3-4">3.4 Robot 6-DOF (PUMA-Style) — D-H Tabel</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Joint</th><th>θᵢ</th><th>dᵢ</th><th>aᵢ</th><th>αᵢ</th><th>Keterangan</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>θ₁</td><td>d₁</td><td>0</td><td>90°</td><td>Waist / Base rotation</td></tr>
+          <tr><td>2</td><td>θ₂</td><td>0</td><td>a₂</td><td>0°</td><td>Shoulder</td></tr>
+          <tr><td>3</td><td>θ₃</td><td>0</td><td>a₃</td><td>90°</td><td>Elbow</td></tr>
+          <tr><td>4</td><td>θ₄</td><td>d₄</td><td>0</td><td>-90°</td><td>Wrist roll</td></tr>
+          <tr><td>5</td><td>θ₅</td><td>0</td><td>0</td><td>90°</td><td>Wrist pitch</td></tr>
+          <tr><td>6</td><td>θ₆</td><td>d₆</td><td>0</td><td>0°</td><td>Wrist yaw / tool</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- 4. JACOBIAN -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section" id="jacobian">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Jacobian & Velocity Kinematics</h2>
+    </div>
+    <div class="section-divider"></div>
+
+    <p>Jacobian adalah matriks yang menghubungkan <em>kecepatan joint</em> dengan <em>kecepatan end-effector</em>. Sangat penting untuk IK numerik dan kontrol robot.</p>
+
+    <h3 id="s4-1">4.1 Jacobian Geometrik</h3>
+    <div class="math-block"><span class="label">Velocity Kinematics</span>ẋ = J(q) · q̇
+
+⎡ ṗx ⎤     ⎡ J_L ⎤
+⎢ ṗy ⎥     ⎢ J_L ⎥       (6×n matrix)
+⎢ ṗz ⎥  =  ⎢ ... ⎥  ·  q̇ₙₓ₁
+⎢ ωx ⎥     ⎢ J_A ⎥
+⎢ ωy ⎥     ⎢ J_A ⎥
+⎣ ωz ⎦     ⎣ J_A ⎦
+
+<span class="comment">J_L = kolom linear velocity (translasi)
+J_A = kolom angular velocity (rotasi)
+n   = jumlah joint</span>
+
+<span class="label">Kolom ke-i Jacobian:</span>
+<span class="comment">Untuk revolute joint:</span>
+Jᵢ_L = zᵢ₋₁ × (pₙ - pᵢ₋₁)
+Jᵢ_A = zᵢ₋₁
+
+<span class="comment">Untuk prismatic joint:</span>
+Jᵢ_L = zᵢ₋₁
+Jᵢ_A = 0
+
+<span class="comment">Dimana zᵢ₋₁ = kolom ke-3 R₀,ᵢ₋₁  (sumbu z frame i-1)
+pᵢ₋₁ = posisi origin frame i-1
+pₙ   = posisi end-effector</span></div>
+
+    <h4>Contoh Jacobian 2-DOF Planar</h4>
+    <div class="math-block">J = ⎡ -L₁sin θ₁ - L₂sin(θ₁+θ₂)   -L₂sin(θ₁+θ₂) ⎤
+    ⎣  L₁cos θ₁ + L₂cos(θ₁+θ₂)    L₂cos(θ₁+θ₂) ⎦
+
+<span class="comment">det(J) = L₁·L₂·sin θ₂</span>
+<span class="highlight">Singularitas terjadi saat θ₂ = 0° atau 180° (arm fully extended/folded)</span></div>
+
+    <h3 id="s4-2">4.2 Singularitas</h3>
+    <div class="callout callout-warn">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-text">
+        <strong>Singularitas</strong> terjadi ketika rank(J) &lt; 6 — Jacobian kehilangan rank. Robot kehilangan kemampuan bergerak dalam satu atau lebih arah. <strong>det(J) = 0</strong> adalah kondisi singularitas. Harus dihindari dalam kontrol robot real-time.
+      </div>
+    </div>
+
+    <div class="math-block"><span class="label">Deteksi Singularitas</span>Cek: det(J) ≈ 0  →  singularitas
+
+Tiga jenis pada robot 6-DOF:
+1. Wrist singularity   : θ₅ = 0 (sumbu z₄ ∥ z₆)
+2. Shoulder singularity: wrist center di atas/bawah joint 1
+3. Elbow singularity   : arm sepenuhnya ter-extend (θ₃ = 0/π)
+
+<span class="label">Kondisi Number (manipulability):</span>
+μ = √(det(J·Jᵀ))   →  besar = jauh dari singularitas</div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- 5. INVERSE KINEMATICS — SECTION UTAMA -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section" id="ik">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>Inverse Kinematics <span class="badge badge-green">★ DETAIL LENGKAP</span></h2>
+    </div>
+    <div class="section-divider"></div>
+
+    <div class="ik-panel">
+      <h4 style="color:var(--green);font-family:var(--font-display);font-size:18px;margin-bottom:12px;">🎯 Apa itu Inverse Kinematics?</h4>
+      <p style="color:var(--text-body);font-size:14px;line-height:1.8;margin:0">
+        Inverse Kinematics (IK) adalah operasi kebalikan dari FK: <strong style="color:var(--text-primary)">diberikan pose end-effector yang diinginkan (posisi + orientasi), cari nilai joint angle q = [θ₁, θ₂, ..., θₙ] yang mencapai pose tersebut.</strong>
+        IK jauh lebih sulit dari FK karena: (1) solusi bisa tidak ada, (2) solusi bisa tidak unik (multiple solutions), (3) persamaan bersifat nonlinear dan transcendental, dan (4) tidak selalu ada bentuk closed-form.
+      </p>
+    </div>
+
+    <!-- ────────────────────────────────── -->
+    <h3 id="ik-konsep">5.1 Konsep, Tantangan, dan Klasifikasi</h3>
+
+    <div class="card-grid">
+      <div class="card">
+        <span class="card-icon">📊</span>
+        <div class="card-title">Tidak Ada Solusi</div>
+        <div class="card-body">Target berada di luar workspace robot, atau target memerlukan orientasi yang tidak bisa dicapai.</div>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔀</span>
+        <div class="card-title">Multiple Solutions</div>
+        <div class="card-body">Robot 6-DOF umumnya memiliki hingga 16 solusi berbeda untuk satu target pose.</div>
+      </div>
+      <div class="card">
+        <span class="card-icon">∞</span>
+        <div class="card-title">Infinite Solutions</div>
+        <div class="card-body">Robot redundan (DOF &gt; 6) memiliki infinitely many solutions — space null-space.</div>
+      </div>
+      <div class="card">
+        <span class="card-icon">⚡</span>
+        <div class="card-title">Real-time Constraint</div>
+        <div class="card-body">Kontrol robot memerlukan IK dalam hitungan milidetik (&lt;1ms untuk servo loop 1kHz).</div>
+      </div>
+    </div>
+
+    <div class="math-block"><span class="label">Problem Formulation</span>Diberikan:    T_desired = ⎡ R_d  | p_d ⎤   (target pose)
+                            ⎣  0   |  1  ⎦
+
+Cari:  q* = [θ₁*, θ₂*, ..., θₙ*]ᵀ
+
+Sehingga:  FK(q*) = T_desired
+
+Secara matematis: <span class="highlight">q* = FK⁻¹(T_desired)</span>
+
+Error function:
+e(q) = T_desired ⊖ FK(q)
+
+  ⎡ Δpx ⎤   ⎡ p_d - p(q)  ⎤   ← position error (3D)
+  ⎢ Δpy ⎥ = ⎢      ...    ⎥
+  ⎢ Δpz ⎥   ⎣      ...    ⎦
+  ⎢ Δωx ⎥
+  ⎢ Δωy ⎥   ← orientation error (axis-angle dari R_d·R(q)ᵀ)
+  ⎣ Δωz ⎦</div>
+
+    <!-- ────────────────────────────────── -->
+    <h3 id="ik-analitik">5.2 Metode Analitik (Closed-Form)</h3>
+    <p>Metode analitik menghasilkan persamaan eksplisit untuk setiap joint angle. Lebih cepat dari numerik tapi hanya tersedia untuk struktur robot tertentu.</p>
+
+    <div class="callout callout-success">
+      <span class="callout-icon">✅</span>
+      <div class="callout-text">
+        <strong>Pieper's Theorem:</strong> Closed-form IK selalu ada untuk robot 6-DOF jika: (1) 3 joint terakhir berpotongan di satu titik (spherical wrist), ATAU (2) 3 joint berurutan adalah prismatic. Sebagian besar robot industri mengikuti kondisi ini.
+      </div>
+    </div>
+
+    <!-- ────────────────────────────────── -->
+    <h3 id="ik-2dof">5.3 IK Analitik 2-DOF Planar — Langkah Demi Langkah</h3>
+
+    <div class="step-list">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Setup Problem — Definisikan Target</div>
+          <p>Diberikan posisi target end-effector (px, py) dan panjang link L₁, L₂. Tujuan: cari θ₁ dan θ₂.</p>
+          <div class="math-block">Target: (px, py)
+Parameter: L₁, L₂
+
+Dari FK:
+px = L₁cos θ₁ + L₂cos(θ₁+θ₂)  ... (1)
+py = L₁sin θ₁ + L₂sin(θ₁+θ₂)  ... (2)</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Cari θ₂ — Hukum Cosinus</div>
+          <p>Kuadratkan dan jumlahkan persamaan (1) dan (2):</p>
+          <div class="math-block">px² + py²
+= (L₁cos θ₁ + L₂cos(θ₁+θ₂))² + (L₁sin θ₁ + L₂sin(θ₁+θ₂))²
+
+Setelah ekspansi dan penyederhanaan identitas trigonometri:
+
+px² + py² = L₁² + L₂² + 2·L₁·L₂·cos θ₂
+
+<span class="highlight">Isolasi cos θ₂:</span>
+cos θ₂ = (px² + py² - L₁² - L₂²) / (2·L₁·L₂)
+
+<span class="comment">Definisikan: D = (px² + py² - L₁² - L₂²) / (2·L₁·L₂)</span>
+
+Kondisi solusi: |D| ≤ 1  →  target dapat dicapai
+               |D| > 1  →  target di luar workspace (NO SOLUTION)
+
+<span class="highlight">Hitung θ₂:</span>
+θ₂ = atan2(±√(1 - D²), D)
+
++ → "elbow up"   (konfigurasi siku di atas)
+- → "elbow down" (konfigurasi siku di bawah)</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Cari θ₁ — Decompose Angle</div>
+          <p>Dengan θ₂ sudah diketahui, gunakan persamaan (1) dan (2):</p>
+          <div class="math-block">Definisikan:
+  k₁ = L₁ + L₂·cos θ₂
+  k₂ = L₂·sin θ₂
+
+Persamaan (1) dan (2) menjadi:
+  px = k₁·cos θ₁ - k₂·sin θ₁   ... (1')
+  py = k₁·sin θ₁ + k₂·cos θ₁   ... (2')
+
+Ini adalah sistem linear dalam cos θ₁ dan sin θ₁.
+Selesaikan dengan rotasi sudut:
+
+<span class="highlight">θ₁ = atan2(py, px) - atan2(k₂, k₁)</span>
+
+<span class="comment">atan2 diperlukan untuk mendapatkan sudut di quadrant yang tepat
+Jangan gunakan atan biasa — kehilangan informasi tanda!</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Dua Solusi Valid</div>
+          <p>Setiap target memiliki dua solusi (jika ada solusi):</p>
+          <div class="math-block"><span class="highlight">Solusi 1 — "Elbow Up":</span>
+  θ₂⁺ = atan2(+√(1-D²), D)
+  k₁⁺ = L₁ + L₂·cos θ₂⁺
+  k₂⁺ = L₂·sin θ₂⁺
+  θ₁⁺ = atan2(py, px) - atan2(k₂⁺, k₁⁺)
+
+<span class="highlight">Solusi 2 — "Elbow Down":</span>
+  θ₂⁻ = atan2(-√(1-D²), D)
+  k₁⁻ = L₁ + L₂·cos θ₂⁻
+  k₂⁻ = L₂·sin θ₂⁻
+  θ₁⁻ = atan2(py, px) - atan2(k₂⁻, k₁⁻)
+
+Pilih solusi berdasarkan:
+  - Joint limit constraints
+  - Jarak terdekat dari konfigurasi saat ini (minimum joint motion)
+  - Obstacle avoidance</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">Verifikasi dengan Forward Kinematics</div>
+          <div class="math-block">Verifikasi: FK(θ₁*, θ₂*) ≈ (px, py) ?
+
+px_check = L₁·cos θ₁* + L₂·cos(θ₁*+θ₂*)
+py_check = L₁·sin θ₁* + L₂·sin(θ₁*+θ₂*)
+
+error = √((px - px_check)² + (py - py_check)²)
+<span class="highlight">Terima solusi jika error &lt; threshold (misal: 1e-6 meter)</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ────────────────────────────────── -->
+    <h3 id="ik-3dof">5.4 IK Analitik 3-DOF Planar</h3>
+    <p>Untuk robot 3-DOF planar, kita juga perlu mengontrol orientasi φ = θ₁ + θ₂ + θ₃:</p>
+    <div class="step-list">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Hitung Posisi "Wrist" (Joint 3)</div>
+          <div class="math-block"><span class="comment">Target: (px, py, φ_desired)
+Link lengths: L₁, L₂, L₃</span>
+
+Hitung posisi sebelum link L₃ (wrist point):
+pwx = px - L₃·cos(φ)
+pwy = py - L₃·sin(φ)
+
+<span class="highlight">Masalah kini tereduksi ke 2-DOF IK ke (pwx, pwy)!</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Selesaikan 2-DOF IK untuk θ₁ dan θ₂</div>
+          <div class="math-block">Gunakan prosedur 2-DOF IK pada (pwx, pwy):
+
+D = (pwx² + pwy² - L₁² - L₂²) / (2·L₁·L₂)
+θ₂ = atan2(±√(1-D²), D)
+k₁ = L₁ + L₂·cos θ₂
+k₂ = L₂·sin θ₂
+θ₁ = atan2(pwy, pwx) - atan2(k₂, k₁)</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Hitung θ₃ dari Constraint Orientasi</div>
+          <div class="math-block"><span class="highlight">θ₃ = φ_desired - θ₁ - θ₂</span>
+
+Verifikasi orientasi:
+φ_check = θ₁ + θ₂ + θ₃ = φ_desired ✓</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ────────────────────────────────── -->
+    <h3 id="ik-wrist">5.5 Wrist Decoupling untuk Robot 6-DOF</h3>
+    <p>Metode paling efisien untuk robot 6-DOF dengan spherical wrist (joint 4, 5, 6 berpotongan di satu titik):</p>
+
+    <div class="step-list">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Hitung Posisi Wrist Center (WC)</div>
+          <div class="math-block"><span class="comment">Target pose: T_desired = [R_d | p_d]</span>
+
+Posisi wrist center adalah offset d₆ ke belakang dari end-effector:
+
+p_wc = p_d - d₆ · R_d · [0, 0, 1]ᵀ
+
+p_wc = p_d - d₆ · n̂_z
+
+<span class="comment">n̂_z = kolom ke-3 dari R_d (arah z tool frame)
+d₆   = offset dari wrist center ke ujung tool</span>
+
+Komponen:
+wc_x = p_dx - d₆·r₁₃
+wc_y = p_dy - d₆·r₂₃
+wc_z = p_dz - d₆·r₃₃</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Selesaikan θ₁, θ₂, θ₃ dari Posisi WC</div>
+          <div class="math-block"><span class="highlight">Solve for θ₁ (waist rotation):</span>
+θ₁ = atan2(wc_y, wc_x)
+  <span class="comment">atau θ₁ = atan2(wc_y, wc_x) + π  (konfigurasi "flipped")</span>
+
+<span class="highlight">Solve for θ₃ (elbow):</span>
+r = √(wc_x² + wc_y²) - a₂  <span class="comment">(jarak horizontal dari joint 2)</span>
+s = wc_z - d₁               <span class="comment">(jarak vertikal dari joint 2)</span>
+
+D₃ = (r² + s² - a₂² - a₃²) / (2·a₂·a₃)
+θ₃ = atan2(±√(1-D₃²), D₃)
+
+<span class="highlight">Solve for θ₂ (shoulder):</span>
+θ₂ = atan2(s, r) - atan2(a₃·sin θ₃, a₂ + a₃·cos θ₃)</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Hitung Matriks Rotasi Wrist R₃₆</div>
+          <div class="math-block"><span class="comment">Dari θ₁, θ₂, θ₃ yang sudah diketahui, hitung R₀₃:</span>
+R₀₃ = R₀₁(θ₁) · R₁₂(θ₂) · R₂₃(θ₃)
+
+<span class="highlight">Isolasi rotasi wrist:</span>
+R₃₆ = (R₀₃)⁻¹ · R_desired
+     = (R₀₃)ᵀ · R_desired
+
+<span class="comment">R₃₆ adalah matriks 3×3 yang hanya bergantung pada θ₄, θ₅, θ₆</span>
+
+Bentuk R₃₆ untuk robot dengan ZYZ wrist:
+R₃₆ = ⎡ c₄c₅c₆-s₄s₆   -c₄c₅s₆-s₄c₆   c₄s₅ ⎤
+      ⎢ s₄c₅c₆+c₄s₆   -s₄c₅s₆+c₄c₆   s₄s₅ ⎥
+      ⎣    -s₅c₆            s₅s₆        c₅   ⎦</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Ekstrak θ₄, θ₅, θ₆ dari R₃₆</div>
+          <div class="math-block"><span class="label">Bandingkan elemen R₃₆ dengan bentuk analitik:</span>
+
+<span class="highlight">Jika sin θ₅ ≠ 0 (kasus umum, bukan singularitas):</span>
+
+θ₅ = atan2(√(R₃₆[0,2]² + R₃₆[1,2]²), R₃₆[2,2])
+   = atan2(√(r₁₃² + r₂₃²), r₃₃)
+
+<span class="comment">Solusi 1 (θ₅ > 0):</span>
+θ₄ = atan2(R₃₆[1,2]/sin θ₅, R₃₆[0,2]/sin θ₅)
+   = atan2(r₂₃/sin θ₅, r₁₃/sin θ₅)
+
+θ₆ = atan2(R₃₆[2,1]/sin θ₅, -R₃₆[2,0]/sin θ₅)
+   = atan2(r₃₂/sin θ₅, -r₃₁/sin θ₅)
+
+<span class="comment">Solusi 2 (θ₅ < 0): negasi θ₅, lalu koreksi θ₄ dan θ₆:</span>
+θ₅' = -θ₅
+θ₄' = atan2(-r₂₃/sin θ₅, -r₁₃/sin θ₅)
+θ₆' = atan2(-r₃₂/sin θ₅, r₃₁/sin θ₅)
+
+<span class="highlight">Jika sin θ₅ = 0 (SINGULARITAS WRIST):</span>
+θ₅ = 0,  hanya (θ₄ + θ₆) yang bisa ditentukan
+  → Set θ₄ = θ₄_current,  θ₆ = target_sum - θ₄
+  → Atau gunakan DLS untuk melewati singularitas</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">Pilih Konfigurasi Terbaik</div>
+          <div class="math-block"><span class="comment">Robot 6-DOF spherical wrist menghasilkan hingga 8 solusi:</span>
+
+Konfigurasi  |  θ₁   |  θ₃     |  θ₅
+─────────────|───────|─────────|──────
+Config 1     | atan2 | elbow+  | +
+Config 2     | atan2 | elbow+  | -
+Config 3     | atan2 | elbow-  | +
+Config 4     | atan2 | elbow-  | -
+Config 5     | flip  | elbow+  | +
+Config 6     | flip  | elbow+  | -
+Config 7     | flip  | elbow-  | +
+Config 8     | flip  | elbow-  | -
+
+<span class="highlight">Strategi pemilihan:</span>
+1. Filter konfigurasi yang melanggar joint limits
+2. Hitung Δq = |q_desired - q_current| untuk setiap solusi valid
+3. Pilih solusi dengan Δq minimum (minimum joint motion)
+4. Optionally: pilih yang jauh dari singularitas (max manipulability)</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ────────────────────────────────── -->
+    <h3 id="ik-numeric">5.6 Metode Numerik — Overview</h3>
+    <p>Metode numerik mengiterasi dari konfigurasi awal menuju solusi. Lebih general dari analitik — berlaku untuk robot dengan struktur apa pun termasuk redundan.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Metode</th><th>Kecepatan</th><th>Akurasi</th><th>Singularitas</th><th>Use Case</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Newton-Raphson</td><td><span class="badge badge-green">Cepat</span></td><td>Tinggi</td><td>Gagal</td><td>Far from singularity</td></tr>
+          <tr><td>Jacobian Pseudoinverse</td><td><span class="badge badge-cyan">Sedang</span></td><td>Tinggi</td><td>Degraded</td><td>Redundant robots</td></tr>
+          <tr><td>Damped Least Squares</td><td><span class="badge badge-cyan">Sedang</span></td><td>Baik</td><td>Robust</td><td>General purpose</td></tr>
+          <tr><td>CCD</td><td><span class="badge badge-green">Cepat</span></td><td>Sedang</td><td>OK</td><td>Real-time, games</td></tr>
+          <tr><td>FABRIK</td><td><span class="badge badge-green">Sangat Cepat</span></td><td>Baik</td><td>OK</td><td>Character animation</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ────────────────────────────────── -->
+    <h3 id="ik-nr">5.7 Newton-Raphson IK</h3>
+    <p>Metode iteratif menggunakan linearisasi Jacobian untuk memperbaiki estimasi joint angle:</p>
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Definisikan Error Function</div>
+          <div class="math-block">e(q) = x_desired - FK(q)
+
+Dimana x_desired = [px, py, pz, ωx, ωy, ωz]ᵀ (6D task space)
+Dan    FK(q)    = posisi + orientasi saat ini
+
+<span class="comment">Untuk orientasi, gunakan axis-angle error:</span>
+e_orient = R_desired ⊗ R_current⁻¹  → konversi ke axis-angle vector</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Update Rule</div>
+          <div class="math-block"><span class="highlight">Δq = J⁻¹ · e(q)   (untuk n=6 robot square)</span>
+
+Iterasi:
+q_{k+1} = q_k + α · Δq_k
+
+<span class="comment">α = step size (biasanya 0.1 - 1.0)
+Lebih kecil α → lebih stabil, lebih lambat konvergen</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Kondisi Berhenti</div>
+          <div class="math-block">Stop jika:
+  ‖e(q)‖ < ε_pos    (misal: 0.001 meter)
+  AND
+  ‖e_orient‖ < ε_rot (misal: 0.01 radian)
+
+  atau max_iterations tercapai (misal: 100 iter)
+  atau ‖Δq‖ < ε_joint (perubahan sangat kecil)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="algo-box">
+      <div class="algo-title">⚙ ALGORITMA — Newton-Raphson IK</div>
+<span class="kw">function</span> NewtonRaphsonIK(T_desired, q_init, max_iter, eps):
+  q ← q_init
+  <span class="kw">for</span> k = 1 <span class="kw">to</span> max_iter:
+    T_curr  ← ForwardKinematics(q)
+    e_pos   ← T_desired[0:3,3] - T_curr[0:3,3]
+    e_rot   ← AxisAngleError(T_desired[0:3,0:3], T_curr[0:3,0:3])
+    e       ← [e_pos; e_rot]
+    <span class="kw">if</span> norm(e) < eps:
+      <span class="kw">return</span> q, SUCCESS
+    J       ← ComputeJacobian(q)
+    Δq      ← inv(J) · e         <span class="comm">← WARNING: J singular = fail</span>
+    q       ← q + α·Δq
+    q       ← ClampToJointLimits(q)
+  <span class="kw">return</span> q, FAILED_MAX_ITER
+    </div>
+
+    <!-- ────────────────────────────────── -->
+    <h3 id="ik-jac">5.8 Jacobian Pseudoinverse</h3>
+    <p>Untuk robot non-square (DOF ≠ 6) atau robot redundan, gunakan <strong style="color:var(--cyan)">Moore-Penrose pseudoinverse</strong>:</p>
+    <div class="math-block"><span class="label">Pseudoinverse (J⁺)</span><span class="highlight">Kasus over-determined (m > n): lebih banyak equations dari unknowns</span>
+J⁺ = Jᵀ(JJᵀ)⁻¹   →  minimum norm solution
+
+<span class="highlight">Kasus under-determined (m < n): robot redundan, DOF > task dim</span>
+J⁺ = (JᵀJ)⁻¹Jᵀ   →  least squares solution
+
+<span class="highlight">Update rule:</span>
+Δq = J⁺ · e + (I - J⁺J) · z
+
+<span class="comment">(I - J⁺J) = null-space projector
+z = arbitrary vector → digunakan untuk secondary objectives:
+  - joint limit avoidance
+  - singularity avoidance
+  - manipulability maximization</span></div>
+
+    <!-- ────────────────────────────────── -->
+    <h3 id="ik-dls">5.9 Damped Least Squares (DLS) — Levenberg-Marquardt</h3>
+    <p>Metode paling robust untuk IK numerik. Menambahkan <em>damping factor λ</em> untuk regularisasi di dekat singularitas:</p>
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Persamaan DLS</div>
+          <div class="math-block"><span class="highlight">DLS Solution:</span>
+Δq = Jᵀ · (J·Jᵀ + λ²·I)⁻¹ · e
+
+<span class="comment">Equivalent to minimizing:
+  min ‖J·Δq - e‖² + λ²·‖Δq‖²
+
+λ kecil → seperti pseudoinverse (akurat, tidak stabil di singularitas)
+λ besar → pergerakan kecil, sangat stabil, konvergen lambat</span>
+
+<span class="highlight">Variable damping (adaptive λ):</span>
+λ² = λ_max² · (1 - (μ/μ_max)²)
+
+<span class="comment">μ = manipulability = √det(JJᵀ)
+Jauh dari singularitas: μ besar → λ kecil (akurat)
+Dekat singularitas:     μ kecil → λ besar (stabil)</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Tuning Parameter λ</div>
+          <div class="math-block">Pilih:  λ_max ∈ [0.01, 0.1]  (tergantung skala robot)
+        μ_max ≈ nilai manipulability arm fully extended
+
+Rule of thumb untuk robot industri:
+  λ² = 0   jika μ > 0.1·μ_max
+  λ² = λ_max² · exp(-μ/0.05)  otherwise</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="algo-box">
+      <div class="algo-title">⚙ ALGORITMA — Damped Least Squares IK</div>
+<span class="kw">function</span> DLS_IK(T_desired, q_init, λ_max, max_iter, eps):
+  q ← q_init
+  <span class="kw">for</span> k = 1 <span class="kw">to</span> max_iter:
+    T_curr ← ForwardKinematics(q)
+    e      ← TaskSpaceError(T_desired, T_curr)
+    <span class="kw">if</span> norm(e) < eps: <span class="kw">return</span> q, SUCCESS
+    J      ← ComputeJacobian(q)
+    μ      ← sqrt(det(J @ Jᵀ))            <span class="comm">← manipulability</span>
+    λ²     ← ComputeDamping(μ, λ_max)
+    Δq     ← Jᵀ @ inv(J @ Jᵀ + λ²·I) @ e
+    q      ← ClampJointLimits(q + α·Δq)
+  <span class="kw">return</span> q, NOT_CONVERGED
+    </div>
+
+    <!-- ────────────────────────────────── -->
+    <h3 id="ik-ccd">5.10 Cyclic Coordinate Descent (CCD)</h3>
+    <p>Metode iteratif yang mengoptimasi satu joint pada satu waktu, berulang dari end-effector ke base:</p>
+
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Ide Dasar CCD</div>
+          <p>Untuk setiap joint i (dari ujung ke base), rotasikan joint i sehingga end-effector sedekat mungkin ke target:</p>
+          <div class="math-block">Vektor dari joint i ke EE:     v₁ = EE_pos - joint_i_pos
+Vektor dari joint i ke target: v₂ = target_pos - joint_i_pos
+
+<span class="highlight">Sudut rotasi optimal:</span>
+Δθᵢ = atan2(cross(v₁, v₂), dot(v₁, v₂))
+
+Untuk 3D dengan sumbu rotasi:
+  axis = normalize(v₁ × v₂)
+  angle = acos(dot(v₁, v₂) / (‖v₁‖·‖v₂‖))
+  Δθᵢ diprojeksi ke sumbu joint</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Loop CCD</div>
+          <div class="algo-box" style="margin:0">
+            <div class="algo-title" style="font-size:10px">CCD LOOP</div>
+<span class="kw">for</span> iter = 1 <span class="kw">to</span> max_iter:
+  <span class="kw">for</span> i = n-1 <span class="kw">downto</span> 0:   <span class="comm">← dari joint terakhir ke base</span>
+    v1 ← EE_pos(q) - joint_pos(i, q)
+    v2 ← target_pos - joint_pos(i, q)
+    Δθ ← signed_angle(v1, v2, joint_axis(i))
+    Δθ ← clamp(Δθ, -Δθ_max, Δθ_max)   <span class="comm">← joint velocity limit</span>
+    q[i] ← clamp(q[i] + Δθ, q_min[i], q_max[i])
+  <span class="kw">if</span> dist(EE_pos(q), target) < eps: <span class="kw">break</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-text">
+        <strong>Limitasi CCD:</strong> Tidak menjamin konvergensi global. Bisa terjebak di local minimum. Untuk orientasi end-effector, perlu modifikasi khusus. CCD hanya optimal untuk position-only IK.
+      </div>
+    </div>
+
+    <!-- ────────────────────────────────── -->
+    <h3 id="ik-fabrik">5.11 FABRIK (Forward and Backward Reaching IK)</h3>
+    <p>Algoritma FABRIK sangat cepat, intuitif, dan menghasilkan hasil yang natural. Ideal untuk real-time animation dan soft robotics:</p>
+
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Forward Reaching Pass</div>
+          <div class="math-block"><span class="comment">Gerakkan end-effector ke target, tarik seluruh chain:</span>
+
+p[n] ← target_pos             <span class="comment">← pindahkan EE ke target</span>
+<span class="kw">for</span> i = n-1 <span class="kw">downto</span> 0:
+  d    ← ‖p[i+1] - p[i]‖
+  λ    ← link_length[i] / d
+  p[i] ← (1-λ)·p[i+1] + λ·p[i]   <span class="comment">← interpolasi ke arah lama</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Backward Reaching Pass</div>
+          <div class="math-block"><span class="comment">Kembalikan base ke posisi aslinya, propagate ke depan:</span>
+
+p[0] ← base_pos               <span class="comment">← kembalikan base ke posisi fixed</span>
+<span class="kw">for</span> i = 0 <span class="kw">to</span> n-1:
+  d    ← ‖p[i+1] - p[i]‖
+  λ    ← link_length[i] / d
+  p[i+1] ← (1-λ)·p[i] + λ·p[i+1] <span class="comment">← ikatan link length</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Iterasi Hingga Konvergen</div>
+          <div class="math-block"><span class="kw">while</span> dist(p[n], target) > eps AND iter < max_iter:
+  ForwardPass(p)
+  BackwardPass(p)
+  iter++
+
+<span class="comment">Konversi posisi ke joint angles:</span>
+θᵢ = atan2(p[i+1].y - p[i].y, p[i+1].x - p[i].x) - θ_parent
+<span class="highlight">FABRIK konvergen dalam 5-10 iterasi untuk sebagian besar kasus!</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ────────────────────────────────── -->
+    <h3>5.12 Perbandingan Lengkap Semua Metode IK</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Aspek</th><th>Analitik</th><th>Newton-Raphson</th><th>DLS</th><th>CCD</th><th>FABRIK</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Kecepatan</td><td>★★★★★</td><td>★★★★</td><td>★★★</td><td>★★★★</td><td>★★★★★</td></tr>
+          <tr><td>Akurasi</td><td>Eksak</td><td>Sangat tinggi</td><td>Tinggi</td><td>Sedang</td><td>Tinggi</td></tr>
+          <tr><td>Generalitas</td><td>Terbatas</td><td>Medium</td><td>Tinggi</td><td>Tinggi</td><td>Tinggi</td></tr>
+          <tr><td>Near singularity</td><td>✓ (OK)</td><td>✗ (gagal)</td><td>✓ (robust)</td><td>✓ (OK)</td><td>✓ (OK)</td></tr>
+          <tr><td>Joint limits</td><td>Manual</td><td>Post-clamp</td><td>Post-clamp</td><td>Built-in</td><td>Partial</td></tr>
+          <tr><td>Redundant robots</td><td>✗</td><td>Partial</td><td>✓ (null-space)</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Implementasi</td><td>Kompleks</td><td>Sedang</td><td>Sedang</td><td>Mudah</td><td>Sangat mudah</td></tr>
+          <tr><td>Rekomendasi</td><td>Robot industri 6-DOF</td><td>Non-singular paths</td><td>General purpose</td><td>Game/Realtime</td><td>Animation/Soft</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- 6. WORKSPACE -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section" id="workspace">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Workspace Analysis</h2>
+    </div>
+    <div class="section-divider"></div>
+
+    <p>Workspace adalah himpunan semua pose yang dapat dicapai end-effector. Penting untuk memverifikasi feasibility sebelum menjalankan IK.</p>
+
+    <h3>6.1 Jenis Workspace</h3>
+    <div class="card-grid">
+      <div class="card">
+        <span class="card-icon">🌐</span>
+        <div class="card-title">Reachable Workspace</div>
+        <div class="card-body">Himpunan semua posisi (x,y,z) yang bisa dicapai end-effector dalam orientasi apa pun.</div>
+      </div>
+      <div class="card">
+        <span class="card-icon">🎯</span>
+        <div class="card-title">Dexterous Workspace</div>
+        <div class="card-body">Subset dari reachable workspace dimana end-effector dapat dicapai dalam orientasi apa pun.</div>
+      </div>
+    </div>
+
+    <h3>6.2 Cek Feasibility Sebelum IK</h3>
+    <div class="math-block"><span class="label">Pengecekan Workspace 2-DOF</span>r = √(px² + py²)   ← jarak target dari base
+
+Kondisi reachable:
+|L₁ - L₂| ≤ r ≤ L₁ + L₂
+
+r < |L₁ - L₂|  → target terlalu dekat (inside inner workspace)
+r > L₁ + L₂    → target terlalu jauh  (outside outer workspace)
+
+<span class="label">Pengecekan umum:</span>
+D = (px² + py² - L₁² - L₂²) / (2·L₁·L₂)
+<span class="highlight">Feasible ⟺  -1 ≤ D ≤ 1</span></div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- 7. PYTHON IMPLEMENTATION -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section" id="python">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Implementasi Python</h2>
+    </div>
+    <div class="section-divider"></div>
+
+    <h3>7.1 Kelas Robot Kinematics Lengkap</h3>
+    <div class="code-block"><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> numpy.linalg <span class="kw">import</span> norm, inv, det, pinv
+
+<span class="kw">class</span> <span class="fn">RobotKinematics</span>:
+    <span class="cm">"""Robot Kinematics — Blue Dragon Security Research
+    Mendukung: FK, IK (Analitik 2DOF, DLS Numerik)
+    """</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, dh_params, joint_limits):
+        <span class="cm"># dh_params: list of (theta_offset, d, a, alpha)</span>
+        self.dh = dh_params
+        self.n  = len(dh_params)
+        self.q_min = np.array([lim[0] <span class="kw">for</span> lim <span class="kw">in</span> joint_limits])
+        self.q_max = np.array([lim[1] <span class="kw">for</span> lim <span class="kw">in</span> joint_limits])
+
+    <span class="kw">def</span> <span class="fn">dh_matrix</span>(self, theta, d, a, alpha):
+        <span class="cm">"""Single D-H transformation matrix."""</span>
+        ct, st = np.cos(theta), np.sin(theta)
+        ca, sa = np.cos(alpha), np.sin(alpha)
+        <span class="kw">return</span> np.array([
+            [ct, -st*ca,  st*sa, a*ct],
+            [st,  ct*ca, -ct*sa, a*st],
+            [ 0,     sa,     ca,    d],
+            [ 0,      0,      0,    1]
+        ])
+
+    <span class="kw">def</span> <span class="fn">forward_kinematics</span>(self, q):
+        <span class="cm">"""FK: joint angles → end-effector pose T (4x4)."""</span>
+        T = np.eye(4)
+        <span class="kw">for</span> i, (th_off, d, a, alpha) <span class="kw">in</span> enumerate(self.dh):
+            T = T @ self.dh_matrix(q[i] + th_off, d, a, alpha)
+        <span class="kw">return</span> T
+
+    <span class="kw">def</span> <span class="fn">jacobian</span>(self, q, delta=<span class="num">1e-6</span>):
+        <span class="cm">"""Numerical Jacobian via finite differences."""</span>
+        T0 = self.forward_kinematics(q)
+        p0 = T0[:3, 3]
+        J  = np.zeros((6, self.n))
+        <span class="kw">for</span> i <span class="kw">in</span> range(self.n):
+            q2 = q.copy(); q2[i] += delta
+            T2 = self.forward_kinematics(q2)
+            <span class="cm"># Linear velocity</span>
+            J[:3, i] = (T2[:3,3] - p0) / delta
+            <span class="cm"># Angular velocity (from skew-symmetric)</span>
+            dR = (T2[:3,:3] - T0[:3,:3]) / delta @ T0[:3,:3].T
+            J[3, i] = dR[2,1]
+            J[4, i] = dR[0,2]
+            J[5, i] = dR[1,0]
+        <span class="kw">return</span> J
+
+    <span class="kw">def</span> <span class="fn">ik_dls</span>(self, T_des, q_init, lam=<span class="num">0.05</span>,
+                  max_iter=<span class="num">200</span>, eps_pos=<span class="num">1e-4</span>, eps_rot=<span class="num">1e-3</span>):
+        <span class="cm">"""Damped Least Squares Inverse Kinematics."""</span>
+        q = q_init.copy()
+        <span class="kw">for</span> _ <span class="kw">in</span> range(max_iter):
+            T = self.forward_kinematics(q)
+            <span class="cm"># Position error</span>
+            e_pos = T_des[:3,3] - T[:3,3]
+            <span class="cm"># Orientation error (axis-angle)</span>
+            R_err = T_des[:3,:3] @ T[:3,:3].T
+            angle = np.arccos(np.clip((np.trace(R_err)-1)/2, -1, 1))
+            <span class="kw">if</span> abs(angle) < <span class="num">1e-9</span>:
+                e_rot = np.zeros(3)
+            <span class="kw">else</span>:
+                e_rot = angle/(2*np.sin(angle)) * np.array(
+                    [R_err[2,1]-R_err[1,2],
+                     R_err[0,2]-R_err[2,0],
+                     R_err[1,0]-R_err[0,1]])
+            e = np.concatenate([e_pos, e_rot])
+            <span class="kw">if</span> norm(e_pos) < eps_pos <span class="kw">and</span> norm(e_rot) < eps_rot:
+                <span class="kw">return</span> q, True
+            J     = self.jacobian(q)
+            lam2  = lam**2
+            dq    = J.T @ np.linalg.solve(J @ J.T + lam2*np.eye(6), e)
+            q     = np.clip(q + dq, self.q_min, self.q_max)
+        <span class="kw">return</span> q, False  <span class="cm"># max iter reached</span>
+
+<span class="cm">########## Contoh Penggunaan ##########</span>
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    <span class="cm"># Robot 2-DOF sederhana</span>
+    L1, L2 = <span class="num">0.5</span>, <span class="num">0.4</span>
+    dh = [(<span class="num">0</span>, <span class="num">0</span>, L1, <span class="num">0</span>),  <span class="cm"># joint 1</span>
+          (<span class="num">0</span>, <span class="num">0</span>, L2, <span class="num">0</span>)]  <span class="cm"># joint 2</span>
+    limits = [(-np.pi, np.pi)] * 2
+    robot = RobotKinematics(dh, limits)
+
+    <span class="cm"># FK test</span>
+    q_test = [np.pi/4, np.pi/3]
+    T = robot.forward_kinematics(q_test)
+    print(<span class="str">f"FK pos: {T[:3,3]}"</span>)
+
+    <span class="cm"># IK test</span>
+    T_target = T.copy()
+    q_init = np.zeros(2)
+    q_sol, ok = robot.ik_dls(T_target, q_init)
+    print(<span class="str">f"IK solution: {np.degrees(q_sol)} deg, converged={ok}"</span>)</div>
+
+    <h3>7.2 IK Analitik 2-DOF (Fast Path)</h3>
+    <div class="code-block"><span class="kw">def</span> <span class="fn">ik_analytic_2dof</span>(px, py, L1, L2):
+    <span class="cm">"""Closed-form IK untuk robot 2-DOF planar.
+    Returns: list of (theta1, theta2) solutions, atau [] jika unreachable
+    """</span>
+    D = (px**2 + py**2 - L1**2 - L2**2) / (2*L1*L2)
+    <span class="kw">if</span> abs(D) > 1.0:
+        <span class="kw">return</span> []  <span class="cm"># Tidak ada solusi</span>
+
+    solutions = []
+    <span class="kw">for</span> sign <span class="kw">in</span> [+1, -1]:
+        theta2 = np.arctan2(sign * np.sqrt(1 - D**2), D)
+        k1     = L1 + L2 * np.cos(theta2)
+        k2     = L2 * np.sin(theta2)
+        theta1 = np.arctan2(py, px) - np.arctan2(k2, k1)
+        solutions.append((theta1, theta2))
+
+    <span class="kw">return</span> solutions  <span class="cm"># [(elbow_up), (elbow_down)]</span>
+
+<span class="cm"># Test</span>
+sols = ik_analytic_2dof(<span class="num">0.6</span>, <span class="num">0.3</span>, <span class="num">0.5</span>, <span class="num">0.4</span>)
+<span class="kw">for</span> i, (t1, t2) <span class="kw">in</span> enumerate(sols):
+    print(<span class="str">f"Sol {i+1}: θ₁={np.degrees(t1):.2f}°, θ₂={np.degrees(t2):.2f}°"</span>)</div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- REFERENSI -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section class="section" id="ref">
+    <div class="section-header">
+      <span class="section-num">REF</span>
+      <h2>Referensi & Bacaan Lanjutan</h2>
+    </div>
+    <div class="section-divider"></div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Sumber</th><th>Judul</th><th>Topik</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Spong et al.</td><td>Robot Modeling and Control (2nd Ed.)</td><td>FK, IK, Jacobian, Dynamics</td></tr>
+          <tr><td>Craig, J.J.</td><td>Introduction to Robotics (3rd Ed.)</td><td>D-H Parameters, FK, IK</td></tr>
+          <tr><td>Lynch & Park</td><td>Modern Robotics</td><td>Screw theory, IK numerik</td></tr>
+          <tr><td>Siciliano et al.</td><td>Robotics: Modelling, Planning and Control</td><td>Komprehensif</td></tr>
+          <tr><td>Kenwright, B.</td><td>FABRIK (Robotics & Automation Letters)</td><td>FABRIK algorithm</td></tr>
+          <tr><td>Wampler, C.W.</td><td>Manipulator IK via DLS</td><td>DLS / Levenberg-Marquardt</td></tr>
+          <tr><td>Buss, S.R.</td><td>Introduction to IK with Jacobian Transpose</td><td>Jacobian methods</td></tr>
+          <tr><td>robotics.stackexchange.com</td><td>Community Q&amp;A</td><td>Praktis/implementasi</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+</main>
+</div>
+
+<!-- FOOTER / FINGERPRINT -->
+<div id="footer">
+  <div class="bds-logo-footer">
+    <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+      <polygon points="16,2 30,10 30,22 16,30 2,22 2,10" stroke="#00c8ff" stroke-width="1.5" fill="rgba(0,200,255,0.05)"/>
+      <circle cx="16" cy="16" r="5" stroke="#00ffae" stroke-width="1" fill="none"/>
+      <circle cx="16" cy="16" r="2" fill="#00c8ff"/>
+    </svg>
+    Blue Dragon Security
+  </div>
+  <div class="fp-block">
+    <div class="fp-line"><span class="fp-key">DOCUMENT :</span> Matematika Kinematika Robotika v1.0</div>
+    <div class="fp-line"><span class="fp-key">AUTHOR   :</span> Blue Dragon Security Research</div>
+    <div class="fp-line"><span class="fp-key">URL      :</span> bluedragonsec.com</div>
+    <div class="fp-line"><span class="fp-key">DATE     :</span> April 2026 — Tangerang, Indonesia</div>
+    <div class="fp-line"><span class="fp-key">LICENSE  :</span> Educational Use — Internal Research Only</div>
+    <div class="fp-hash" id="doc-hash">BDS-FP :: SHA256 :: loading...</div>
+  </div>
+</div>
+
+<a href="#" id="scroll-top" title="Kembali ke atas">↑</a>
+
+<script>
+// ── Progress bar
+const pbar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (window.scrollY / (h.scrollHeight - h.clientHeight)) * 100;
+  pbar.style.width = pct + '%';
+  document.getElementById('scroll-top').classList.toggle('visible', window.scrollY > 300);
+});
+
+// ── Sidebar active highlight
+const navLinks = document.querySelectorAll('.nav-link, .nav-sub');
+const sections = document.querySelectorAll('.section[id]');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-10% 0px -80% 0px' });
+sections.forEach(s => obs.observe(s));
+
+// ── Mobile sidebar
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('overlay');
+  sb.classList.toggle('open');
+  ov.style.display = sb.classList.contains('open') ? 'block' : 'none';
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').style.display = 'none';
+}
+
+// ── Generate fingerprint hash (pseudo)
+async function genFingerprint() {
+  const data = 'BDS-KINEMATICS-DOC-v1.0-2026-BLUEDRAGONSEC';
+  const enc = new TextEncoder().encode(data);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  document.getElementById('doc-hash').textContent = 'BDS-FP :: SHA256 :: ' + hex;
+}
+genFingerprint();
+
+// ── Smooth scroll polyfill for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', function(e) {
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (window.innerWidth <= 900) closeSidebar();
+    }
+  });
+});
+</script>
+</body>
+</html>

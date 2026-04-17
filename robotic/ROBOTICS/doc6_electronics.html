@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Elektronika Robotika — Robotika</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>:root{--ac:224,96,96}:root{--bg:#0b0d0f;--bg2:#111417;--bg3:#181c21;--border:#2a3240;--border2:#3a4558;--text:#c8d4e0;--text2:#8a9ab0;--text3:#5a6a80;--mono:'IBM Plex Mono',monospace;--body:'IBM Plex Sans',sans-serif;--disp:'Bebas Neue',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.7;display:flex;min-height:100vh}
+#sidebar{width:280px;min-width:280px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;scrollbar-width:thin;transition:transform .3s ease}
+.sh{padding:22px 18px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:10}
+.sl{font-family:var(--disp);font-size:20px;letter-spacing:2px;line-height:1;margin-bottom:3px}
+.ss{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-family:var(--mono)}
+.nsec{padding:5px 18px 3px;font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--text3);margin-top:8px}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 18px;color:var(--text2);text-decoration:none;font-size:13px;transition:all .15s;border-left:2px solid transparent;line-height:1.3}
+.ni.active,.ni:hover{color:rgb(var(--ac));background:rgba(var(--ac),.07);border-left-color:rgb(var(--ac))}
+.nd{width:5px;height:5px;border-radius:50%;background:var(--border2);flex-shrink:0}
+.ni.active .nd,.ni:hover .nd{background:rgb(var(--ac))}
+#main{margin-left:280px;flex:1;min-width:0}
+#topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 36px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:90}
+.tbt{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:1px}
+#mbtn{display:none;background:none;border:1px solid var(--border2);color:var(--text);padding:5px 10px;border-radius:4px;cursor:pointer;font-size:15px}
+.content{max-width:920px;margin:0 auto;padding:44px 36px 80px}
+.hero{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:44px;margin-bottom:52px;position:relative;overflow:hidden}
+.hero::before{position:absolute;right:-10px;top:-10px;font-family:var(--disp);font-size:140px;color:rgba(var(--ac),.03);line-height:1;pointer-events:none;letter-spacing:4px}
+.hl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:3px;color:rgb(var(--ac));margin-bottom:14px}
+h1{font-family:var(--disp);font-size:48px;letter-spacing:3px;color:#fff;line-height:1.05;margin-bottom:14px}
+.hdesc{color:var(--text2);font-size:14.5px;max-width:620px;line-height:1.7}
+.htags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tag{padding:3px 10px;border:1px solid var(--border2);border-radius:3px;font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
+.ta{border-color:rgb(var(--ac));color:rgb(var(--ac))}.tb{border-color:#60c0e8;color:#60c0e8}.to{border-color:#e8a030;color:#e8a030}.tp2{border-color:#c060e0;color:#c060e0}.tr{border-color:#e06060;color:#e06060}
+.sec{margin-bottom:68px;scroll-margin-top:76px}
+.sech{display:flex;align-items:flex-start;gap:14px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.sn{font-family:var(--disp);font-size:44px;line-height:1;color:rgba(var(--ac),.15);flex-shrink:0;min-width:56px}
+.sc{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;color:rgb(var(--ac));margin-bottom:5px}
+h2{font-family:var(--disp);font-size:32px;letter-spacing:2px;color:#fff;line-height:1.1}
+h3{font-size:17px;font-weight:600;color:rgb(var(--ac));margin-top:32px;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+h3::before{content:'';width:3px;height:16px;background:rgb(var(--ac));border-radius:2px;flex-shrink:0}
+h4{font-size:14.5px;font-weight:600;color:#60c0e8;margin-top:22px;margin-bottom:9px}
+p{margin-bottom:13px;color:var(--text);font-size:14px}
+pre{background:var(--bg2);border:1px solid var(--border);border-left:3px solid rgb(var(--ac));border-radius:6px;padding:18px 22px;overflow-x:auto;margin:18px 0;font-family:var(--mono);font-size:12px;line-height:1.65;scrollbar-width:thin}
+pre::-webkit-scrollbar{height:4px}pre::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+code{font-family:var(--mono);font-size:12px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:rgb(var(--ac))}
+pre code{background:none;border:none;padding:0;color:var(--text)}
+.kw{color:#c060e0;font-weight:500}.fn{color:#60c0e8}.st{color:#80e060}.cm{color:#5a6a80;font-style:italic}.nm{color:#e8a030}.tp3{color:#f0c060}
+.math{background:var(--bg3);border:1px solid var(--border);border-left:3px solid #60c0e8;border-radius:6px;padding:18px 22px;margin:18px 0;font-family:var(--mono);font-size:13px;color:#c8ffd0;line-height:2;overflow-x:auto}
+.ib{border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin:18px 0;font-size:13.5px}
+.ib.note{border-left:3px solid #60c0e8;background:rgba(96,192,232,.05)}.ib.warn{border-left:3px solid #e8a030;background:rgba(232,160,48,.05)}.ib.tip{border-left:3px solid rgb(var(--ac));background:rgba(var(--ac),.05)}.ib.danger{border-left:3px solid #e06060;background:rgba(224,96,96,.06)}
+.ibl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;margin-bottom:7px;font-weight:600}.note .ibl{color:#60c0e8}.warn .ibl{color:#e8a030}.danger .ibl{color:#e06060}.tip .ibl{color:rgb(var(--ac))}
+.tw{overflow-x:auto;margin:18px 0}table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--bg3);color:rgb(var(--ac));font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:500;padding:11px 14px;text-align:left;border:1px solid var(--border)}
+td{padding:9px 14px;border:1px solid var(--border);color:var(--text);vertical-align:top}tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:18px 0}.card{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:16px}
+.ci{font-size:22px;margin-bottom:8px}.ct{font-weight:600;font-size:14px;color:var(--text);margin-bottom:5px}.cd{font-size:12px;color:var(--text2);line-height:1.5}
+.steps{counter-reset:sc;margin:18px 0}.step{display:flex;gap:18px;margin-bottom:18px;counter-increment:sc}.step::before{content:counter(sc,decimal-leading-zero);font-family:var(--disp);font-size:26px;color:rgba(var(--ac),.22);flex-shrink:0;min-width:38px;line-height:1;margin-top:2px}
+.stit{font-weight:600;color:var(--text);margin-bottom:5px;font-size:14px}.sdesc{font-size:13px;color:var(--text2);line-height:1.6}
+.divider{height:1px;background:linear-gradient(90deg,rgb(var(--ac)) 0%,var(--border) 60%,transparent 100%);margin:36px 0;opacity:.35}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99}
+@media(max-width:900px){#mbtn{display:block}#sidebar{transform:translateX(-100%)}#sidebar.open{transform:translateX(0)}#overlay.open{display:block}#main{margin-left:0}.content{padding:24px 18px 60px}h2{font-size:26px}.cg{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.cg{grid-template-columns:1fr}}.hero::before{content:'ELEK'}</style>
+</head><body>
+<nav id="sidebar"><div class="sh"><div class="sl" style="color:rgb(var(--ac))">ELEKT</div><div class="ss">Elektronika Robotika</div></div>
+<div style="padding:14px 0"><div class="nsec">Kontrol</div><a href="#s1" class="ni"><span class="nd"></span>MCU Comparison</a><a href="#s2" class="ni"><span class="nd"></span>Motor Driver & H-Bridge</a><a href="#s3" class="ni"><span class="nd"></span>FOC BLDC</a><div class="nsec">PCB</div><a href="#s4" class="ni"><span class="nd"></span>PCB Design Rules</a><a href="#s5" class="ni"><span class="nd"></span>Power Supply & BMS</a><div class="nsec">Sensor Interface</div><a href="#s6" class="ni"><span class="nd"></span>I2C & SPI</a><a href="#s7" class="ni"><span class="nd"></span>UART & CAN Bus</a><a href="#s8" class="ni"><span class="nd"></span>Sensor Digitalisation</a><div class="nsec">Proteksi</div><a href="#s9" class="ni"><span class="nd"></span>EMC & ESD Protection</a><a href="#s10" class="ni"><span class="nd"></span>Skema Referensi</a><a href="#s11" class="ni"><span class="nd"></span>Arduino Sensor Hub</a></div></nav>
+<div id="overlay"></div>
+<div id="main">
+<div id="topbar"><span class="tbt">DOC 6 — ELEKTRONIKA ROBOTIKA</span><button id="mbtn" onclick="toggleSidebar()">&#9776;</button></div>
+<div class="content">
+<div class="hero"><div class="hl">// DOC 06 / 07</div><h1>ELEKTRONIKA<br>ROBOTIKA</h1><p class="hdesc">Elektronika lengkap untuk robot: perbandingan MCU, motor driver H-Bridge, FOC BLDC, PCB design rules, power supply LiPo BMS, I2C/SPI/UART/CAN bus, ESD/EMC protection, skema referensi robot.</p><div class="htags"><span class="tag ta">Motor Driver</span><span class="tag tb">FOC BLDC</span><span class="tag to">PCB Design</span><span class="tag ta">LiPo BMS</span><span class="tag tb">CAN Bus</span></div></div>
+<section class="sec" id="s1"><div class="sech"><div class="sn">01</div><div><div class="sc">MCU</div><h2>PERBANDINGAN MIKROKONTROLLER</h2></div></div><p>Pemilihan MCU yang tepat sangat kritis. Robot kompleks sering menggunakan arsitektur berlapis: MCU kecil untuk real-time HAL, SBC (Single Board Computer) untuk komputasi tinggi.</p><div class="tw"><table><tr><th>MCU/SBC</th><th>Core</th><th>Flash/RAM</th><th>GPIO</th><th>Interface</th><th>Clock</th><th>Aplikasi Robot</th></tr><tr><td>ATmega2560</td><td>8-bit AVR</td><td>256KB/8KB</td><td>86</td><td>UART/SPI/I2C</td><td>16MHz</td><td>Sensor hub, aktuator low-level</td></tr><tr><td>STM32F4</td><td>32-bit Cortex-M4</td><td>1MB/192KB</td><td>140</td><td>UART/SPI/I2C/CAN</td><td>168MHz</td><td>FOC motor, real-time control</td></tr><tr><td>STM32H7</td><td>32-bit Cortex-M7</td><td>2MB/1MB</td><td>168</td><td>+ FD-CAN/SDMMC</td><td>480MHz</td><td>High-perf robot controller</td></tr><tr><td>ESP32-S3</td><td>32-bit Xtensa LX7</td><td>16MB/512KB</td><td>45</td><td>WiFi/BT/SPI/I2C</td><td>240MHz</td><td>Wireless, AI edge (NPU)</td></tr><tr><td>RP2040</td><td>32-bit Cortex-M0+</td><td>16MB ext/264KB</td><td>30</td><td>PIO/SPI/I2C/UART</td><td>133MHz</td><td>Custom protokol, servo PIO</td></tr><tr><td>Jetson Orin NX</td><td>12-core A78+GPU</td><td>16GB</td><td>40</td><td>PCIe/USB3/I2C/SPI</td><td>2.0GHz</td><td>AI inference + ROS2</td></tr><tr><td>Raspberry Pi 5</td><td>4-core A76</td><td>RAM 8GB</td><td>40</td><td>PCIe/USB3/I2C/SPI</td><td>2.4GHz</td><td>ROS2, mid-level compute</td></tr></table></div><div class="ib tip"><div class="ibl">Arsitektur Berlapis yang Direkomendasikan</div><b>Layer 1 — Real-time HAL:</b> STM32F4/H7 atau ATmega2560 → encoder, PWM, sensor polling, watchdog<br><b>Layer 2 — Robot Logic:</b> Raspberry Pi 5 atau Jetson → ROS2 nodes, navigation, vision<br><b>Layer 3 — AI/Compute:</b> Jetson Orin → LLM inference, deep learning, VLM<br>Komunikasi antar layer: UART serial bridge atau CAN bus</div></section><section class="sec" id="s2"><div class="sech"><div class="sn">02</div><div><div class="sc">Motor</div><h2>MOTOR DRIVER & H-BRIDGE</h2></div></div><h3>Topologi H-Bridge</h3><div class="math">H-Bridge: 4 switch (MOSFET) membentuk huruf H
+IN1=H, IN2=L → Forward
+IN1=L, IN2=H → Reverse  
+IN1=H, IN2=H → Brake (short circuit)
+IN1=L, IN2=L → Coast (free spin)
+
+PWM speed control:
+  Duty cycle 0-100% pada enable pin
+  f_PWM = 20-25kHz (supersonic, silent)
+  f_PWM > 1/(2π·L/R) untuk continuous current mode</div><div class="tw"><table><tr><th>Driver IC</th><th>Max V</th><th>Max A</th><th>Interface</th><th>Fitur</th><th>Aplikasi</th></tr><tr><td>L298N</td><td>46V</td><td>2A (4A peak)</td><td>IN1/IN2/ENA</td><td>Classic, banyak tutorial</td><td>Small robot &lt;2A</td></tr><tr><td>TB6612FNG</td><td>15V</td><td>1.2A (3.2A peak)</td><td>IN1/IN2/PWM</td><td>Compact, efisien vs L298</td><td>Micro robot</td></tr><tr><td>DRV8833</td><td>10.8V</td><td>1.5A (2A peak)</td><td>2-pin control</td><td>Sleep mode, fault detect</td><td>Small wheeled</td></tr><tr><td>DRV8874</td><td>37V</td><td>6A</td><td>SPI/PWM</td><td>Current sense built-in</td><td>Medium robot</td></tr><tr><td>BTS7960</td><td>27V</td><td>43A peak</td><td>IN/PWM</td><td>Industrial, heat sink</td><td>Heavy robot, 12V</td></tr><tr><td>VESC 6</td><td>60V</td><td>240A peak</td><td>UART/CAN/USB</td><td>FOC, odometry, CAN</td><td>BLDC robot drive</td></tr></table></div><h3>L298N — Arduino Wiring & Code</h3><pre><span class="cm">// L298N dual H-bridge dengan PWM speed control</span>
+<span class="kw">#define</span> IN1 <span class="nm">7</span>; <span class="kw">#define</span> IN2 <span class="nm">8</span>; <span class="kw">#define</span> ENA <span class="nm">9</span>;
+<span class="kw">#define</span> IN3 <span class="nm">10</span>; <span class="kw">#define</span> IN4 <span class="nm">11</span>; <span class="kw">#define</span> ENB <span class="nm">6</span>;
+
+<span class="kw">void</span> <span class="fn">driveMotors</span>(<span class="kw">int</span> L, <span class="kw">int</span> R) {
+  <span class="cm">// L, R: -255 to +255</span>
+  <span class="fn">digitalWrite</span>(IN1, L >= <span class="nm">0</span>); <span class="fn">digitalWrite</span>(IN2, L < <span class="nm">0</span>);
+  <span class="fn">digitalWrite</span>(IN3, R >= <span class="nm">0</span>); <span class="fn">digitalWrite</span>(IN4, R < <span class="nm">0</span>);
+  <span class="fn">analogWrite</span>(ENA, <span class="fn">constrain</span>(<span class="fn">abs</span>(L), <span class="nm">0</span>, <span class="nm">255</span>));
+  <span class="fn">analogWrite</span>(ENB, <span class="fn">constrain</span>(<span class="fn">abs</span>(R), <span class="nm">0</span>, <span class="nm">255</span>));}
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="kw">int</span> pins[] = {IN1,IN2,ENA,IN3,IN4,ENB};
+  <span class="kw">for</span>(<span class="kw">auto</span> p : pins) <span class="fn">pinMode</span>(p, OUTPUT);
+  TCCR1B = (TCCR1B & <span class="nm">0xF8</span>) | <span class="nm">0x01</span>; <span class="cm">// Pin 9,10 → 31.37kHz PWM</span>
+  TCCR2B = (TCCR2B & <span class="nm">0xF8</span>) | <span class="nm">0x01</span>; <span class="cm">// Pin 11,6  → 31.37kHz PWM</span>
+}</pre></section><section class="sec" id="s3"><div class="sech"><div class="sn">03</div><div><div class="sc">Motor</div><h2>FOC — FIELD ORIENTED CONTROL</h2></div></div><div class="math">FOC (Field Oriented Control) = kontrol torsi BLDC secara presisi
+
+Clarke Transform (abc → αβ):
+  Iα = Ia
+  Iβ = (Ia + 2·Ib) / √3
+
+Park Transform (αβ → dq, rotating frame):
+  Id = Iα·cos(θ) + Iβ·sin(θ)
+  Iq = -Iα·sin(θ) + Iβ·cos(θ)
+
+Control:
+  Id_ref = 0 (flux axis, set 0 untuk max efficiency)
+  Iq_ref = τ_desired / (1.5·p·λ)   p=pole pairs, λ=flux linkage
+
+Inverse Park + SVPWM → gate signals ke inverter</div><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">clarke</span>(ia, ib, ic):
+    alpha = ia
+    beta  = (ia + <span class="nm">2</span>*ib) / np.<span class="fn">sqrt</span>(<span class="nm">3</span>)
+    <span class="kw">return</span> alpha, beta
+
+<span class="kw">def</span> <span class="fn">park</span>(alpha, beta, theta):
+    d =  alpha*np.<span class="fn">cos</span>(theta) + beta*np.<span class="fn">sin</span>(theta)
+    q = -alpha*np.<span class="fn">sin</span>(theta) + beta*np.<span class="fn">cos</span>(theta)
+    <span class="kw">return</span> d, q
+
+<span class="kw">def</span> <span class="fn">inv_park</span>(d, q, theta):
+    alpha = d*np.<span class="fn">cos</span>(theta) - q*np.<span class="fn">sin</span>(theta)
+    beta  = d*np.<span class="fn">sin</span>(theta) + q*np.<span class="fn">cos</span>(theta)
+    <span class="kw">return</span> alpha, beta
+
+<span class="kw">class</span> <span class="tp3">FOCController</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, kp=<span class="nm">1.0</span>, ki=<span class="nm">100</span>, dt=<span class="nm">0.0001</span>):
+        self.kp=kp; self.ki=ki; self.dt=dt
+        self.id_i=<span class="nm">0</span>; self.iq_i=<span class="nm">0</span>
+
+    <span class="kw">def</span> <span class="fn">step</span>(self, ia, ib, ic, theta, iq_ref, id_ref=<span class="nm">0</span>):
+        alpha, beta = <span class="fn">clarke</span>(ia, ib, ic)
+        d, q = <span class="fn">park</span>(alpha, beta, theta)
+        ed = id_ref - d; eq = iq_ref - q
+        self.id_i += ed * self.dt; self.iq_i += eq * self.dt
+        vd = self.kp*ed + self.ki*self.id_i
+        vq = self.kp*eq + self.ki*self.iq_i
+        valpha, vbeta = <span class="fn">inv_park</span>(vd, vq, theta)
+        <span class="kw">return</span> vd, vq, valpha, vbeta  <span class="cm"># → SVPWM</span></pre></section><section class="sec" id="s4"><div class="sech"><div class="sn">04</div><div><div class="sc">PCB</div><h2>PCB DESIGN RULES</h2></div></div><h3>Aturan PCB untuk Robot</h3><div class="tw"><table><tr><th>Parameter</th><th>Signal</th><th>Power (≤3A)</th><th>Power (>3A)</th></tr><tr><td>Min trace width</td><td>0.2mm</td><td>0.8mm</td><td>2mm+</td></tr><tr><td>Min clearance</td><td>0.2mm</td><td>1.0mm</td><td>2.0mm</td></tr><tr><td>Via drill</td><td>0.3mm</td><td>0.5mm</td><td>0.8mm</td></tr><tr><td>Via annular ring</td><td>0.15mm</td><td>0.25mm</td><td>0.3mm</td></tr><tr><td>Min silkscreen</td><td>0.15mm width</td><td>—</td><td>—</td></tr><tr><td>Copper fill</td><td>GND plane wajib</td><td>Power plane</td><td>Thermal relief</td></tr></table></div><h3>Trace Width & Current Capacity</h3><div class="math">IPC-2221 Formula (external layer):
+  Width (mm) = (I / (k × ΔT^0.44))^(1/0.725) / 25.4
+
+  k = 0.048 (external), 0.024 (internal)
+  ΔT = temperature rise (°C), typical 10°C
+
+Quick reference (ΔT=10°C, external, 1oz copper):
+  0.3mm → 0.5A    0.5mm → 0.9A
+  1.0mm → 2.0A    2.0mm → 3.5A
+  3.0mm → 5.0A    5.0mm → 8.0A</div><pre><span class="kw">def</span> <span class="fn">trace_width_mm</span>(I_A, dT_C=<span class="nm">10</span>, layer=<span class="st">'ext'</span>):
+    <span class="st">"""IPC-2221 trace width (1oz copper)"""</span>
+    k = <span class="nm">0.048</span> <span class="kw">if</span> layer==<span class="st">'ext'</span> <span class="kw">else</span> <span class="nm">0.024</span>
+    area_mil2 = (I_A / (k * dT_C**<span class="nm">0.44</span>))**(<span class="nm">1</span>/<span class="nm">0.725</span>)
+    width_mm  = (area_mil2 / <span class="nm">1.378</span>) / <span class="nm">25.4</span>  <span class="cm"># 1oz=1.378mil/mil²</span>
+    <span class="kw">return</span> round(width_mm, <span class="nm">2</span>)
+
+<span class="fn">print</span>(<span class="st">f"5A → {trace_width_mm(5):.2f}mm"</span>)</pre><h3>Decoupling Capacitor Placement</h3><div class="ib warn"><div class="ibl">Aturan Decoupling</div>Setiap IC power pin harus memiliki decoupling cap: 100nF ceramic (0402/0603) sedekat mungkin ke pin VCC (<3mm). Untuk MCU: tambah 10µF elektrolit per power domain. Untuk motor driver: bulk cap 100µF–470µF dekat power input.</div></section><section class="sec" id="s5"><div class="sech"><div class="sn">05</div><div><div class="sc">Power</div><h2>POWER SUPPLY & BMS</h2></div></div><h3>LiPo Battery Management</h3><div class="tw"><table><tr><th>Parameter</th><th>LiPo 1S</th><th>LiPo 3S</th><th>LiPo 4S</th><th>LiPo 6S</th></tr><tr><td>Nominal V</td><td>3.7V</td><td>11.1V</td><td>14.8V</td><td>22.2V</td></tr><tr><td>Full charge</td><td>4.2V</td><td>12.6V</td><td>16.8V</td><td>25.2V</td></tr><tr><td>Cutoff V</td><td>3.0V</td><td>9.0V</td><td>12.0V</td><td>18.0V</td></tr><tr><td>C-rate 1C (2Ah)</td><td>2A</td><td>2A</td><td>2A</td><td>2A</td></tr><tr><td>Aplikasi Robot</td><td>Servo kecil</td><td>Small robot</td><td>Medium robot</td><td>Heavy drive</td></tr></table></div><h3>Power Tree Robot Tipikal</h3><pre><span class="cm"># Power distribution architecture:</span>
+<span class="cm"># LiPo 4S (16.8V max, 14.8V nom)</span>
+<span class="cm">#     |</span>
+<span class="cm">#     +---[BMS/fuse 30A]---+</span>
+<span class="cm">#     |                   |</span>
+<span class="cm"># [Motor Driver]    [Step-down DC-DC]</span>
+<span class="cm"># (raw Vbat)         LM2596/XL4016</span>
+<span class="cm">#                   |           |</span>
+<span class="cm">#                [12V 3A]     [5V 5A]</span>
+<span class="cm">#               (servo/fans)   |</span>
+<span class="cm">#                          [3.3V LDO]</span>
+<span class="cm">#                         (MCU, sensors)</span>
+<span class="cm"># Jetson Orin: butuh 9-20V 4A dedicated line (tidak share dgn motor!)</span></pre><h3>Regulasi Tegangan — Komponen</h3><div class="tw"><table><tr><th>Komponen</th><th>Vin</th><th>Vout</th><th>Imax</th><th>η</th><th>Kelebihan</th></tr><tr><td>LM7805</td><td>7–25V</td><td>5V fixed</td><td>1A</td><td>45%</td><td>Mudah, linear, noise rendah</td></tr><tr><td>AMS1117-3.3</td><td>4.5–12V</td><td>3.3V</td><td>0.8A</td><td>~60%</td><td>MCU supply, SMD mudah</td></tr><tr><td>LM2596</td><td>4–40V</td><td>1.2–37V adj</td><td>3A</td><td>~75%</td><td>Buck switching, efisien</td></tr><tr><td>XL4016</td><td>8–40V</td><td>1.2–36V adj</td><td>8A</td><td>~90%</td><td>Heavy buck, robot power</td></tr><tr><td>MP1584</td><td>4.5–28V</td><td>0.8–20V</td><td>3A</td><td>~92%</td><td>Compact high-eff buck</td></tr><tr><td>TPS54360</td><td>4–60V</td><td>0.8–58V</td><td>3.5A</td><td>~93%</td><td>Wide-input robot supply</td></tr></table></div><pre><span class="cm">// Arduino: Monitor voltage baterai via ADC (voltage divider)</span>
+<span class="cm">// 16.8V max → 100k:22k divider → max 3.0V pada ADC pin</span>
+<span class="kw">#define</span> VBAT_PIN A0
+<span class="kw">#define</span> R1 <span class="nm">100000.0</span>  <span class="cm">// 100k</span>
+<span class="kw">#define</span> R2  <span class="nm">22000.0</span>  <span class="cm">// 22k</span>
+<span class="kw">#define</span> VCUTOFF <span class="nm">12.0</span>   <span class="cm">// 3S cutoff 12V</span>
+
+<span class="kw">float</span> <span class="fn">readBattery</span>() {
+  <span class="kw">int</span> raw = <span class="fn">analogRead</span>(VBAT_PIN);
+  <span class="kw">float</span> vadc = raw * (<span class="nm">5.0</span> / <span class="nm">1023.0</span>);
+  <span class="kw">return</span> vadc * (R1 + R2) / R2;
+}
+
+<span class="kw">void</span> <span class="fn">checkBattery</span>() {
+  <span class="kw">float</span> v = <span class="fn">readBattery</span>();
+  <span class="kw">if</span> (v < VCUTOFF) {
+    Serial.<span class="fn">println</span>(<span class="st">"WARNING: Battery low! Shutting down."</span>);
+    <span class="cm">// Emergency stop motors</span>
+  }
+  Serial.<span class="fn">printf</span>(<span class="st">"Vbat: %.2fV (%.0f%%)\n"</span>, v, <span class="fn">map</span>(v*<span class="nm">100</span>,<span class="nm">1200</span>,<span class="nm">1680</span>,<span class="nm">0</span>,<span class="nm">100</span>));
+}</pre></section><section class="sec" id="s6"><div class="sech"><div class="sn">06</div><div><div class="sc">Interface</div><h2>I2C & SPI</h2></div></div><h3>I2C Protocol</h3><div class="math">I2C: 2 wire (SDA + SCL), multi-master, multi-slave
+Speed: Standard 100kHz, Fast 400kHz, Fast+ 1MHz, HS 3.4MHz
+Address: 7-bit (127 devices), 10-bit mode tersedia
+Pull-up: 4.7kΩ (100kHz), 2.2kΩ (400kHz) ke VCC</div><pre><span class="cm">// Arduino: Scan I2C bus — temukan semua device</span>
+<span class="kw">#include</span> &lt;Wire.h&gt;
+
+<span class="kw">void</span> <span class="fn">i2c_scan</span>() {
+  Wire.<span class="fn">begin</span>();
+  Serial.<span class="fn">println</span>(<span class="st">"I2C Scan:"</span>);
+  <span class="kw">for</span> (<span class="kw">uint8_t</span> addr = <span class="nm">0x01</span>; addr < <span class="nm">0x7F</span>; addr++) {
+    Wire.<span class="fn">beginTransmission</span>(addr);
+    <span class="kw">if</span> (Wire.<span class="fn">endTransmission</span>() == <span class="nm">0</span>)
+      Serial.<span class="fn">printf</span>(<span class="st">"Found: 0x%02X\n"</span>, addr);
+  }
+}
+
+<span class="cm">// MPU6050 IMU via I2C:</span>
+<span class="kw">#include</span> &lt;MPU6050_tockn.h&gt;
+MPU6050 <span class="fn">mpu</span>(Wire);
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Wire.<span class="fn">begin</span>(); Wire.<span class="fn">setClock</span>(<span class="nm">400000</span>);
+  mpu.<span class="fn">begin</span>(); mpu.<span class="fn">calcGyroOffsets</span>(<span class="nm">true</span>);
+}
+
+<span class="kw">float</span> <span class="fn">getYaw</span>() {
+  mpu.<span class="fn">update</span>();
+  <span class="kw">return</span> mpu.<span class="fn">getAngleZ</span>(); <span class="cm">// degrees</span>
+}</pre><h3>SPI Protocol</h3><pre><span class="cm">// Arduino: ICM42688 IMU via SPI (lebih cepat dari I2C)</span>
+<span class="kw">#include</span> &lt;SPI.h&gt;
+<span class="kw">#define</span> CS_PIN <span class="nm">10</span>
+
+<span class="kw">uint8_t</span> <span class="fn">spi_read</span>(<span class="kw">uint8_t</span> reg) {
+  <span class="fn">digitalWrite</span>(CS_PIN, LOW);
+  SPI.<span class="fn">transfer</span>(reg | <span class="nm">0x80</span>);  <span class="cm">// MSB=1 for read</span>
+  <span class="kw">uint8_t</span> val = SPI.<span class="fn">transfer</span>(<span class="nm">0x00</span>);
+  <span class="fn">digitalWrite</span>(CS_PIN, HIGH);
+  <span class="kw">return</span> val;
+}
+
+<span class="kw">void</span> <span class="fn">spi_write</span>(<span class="kw">uint8_t</span> reg, <span class="kw">uint8_t</span> val) {
+  <span class="fn">digitalWrite</span>(CS_PIN, LOW);
+  SPI.<span class="fn">transfer</span>(reg & <span class="nm">0x7F</span>);  <span class="cm">// MSB=0 for write</span>
+  SPI.<span class="fn">transfer</span>(val);
+  <span class="fn">digitalWrite</span>(CS_PIN, HIGH);
+}</pre></section><section class="sec" id="s7"><div class="sech"><div class="sn">07</div><div><div class="sc">Interface</div><h2>UART & CAN BUS</h2></div></div><h3>Multi-node CAN Bus untuk Robot</h3><div class="math">CAN Bus: differential pair (CANH, CANL), 2-wire
+Speed: 125kbps, 250kbps, 500kbps, 1Mbps
+Max nodes: 110 (standard), terminasi 120Ω di kedua ujung
+CAN FD: hingga 5Mbps data phase
+
+CAN ID priority: ID lebih rendah = prioritas lebih tinggi
+0x001 = highest priority  →  gunakan untuk emergency stop</div><pre><span class="cm">// Arduino Mega + MCP2515: CAN Bus node</span>
+<span class="kw">#include</span> &lt;mcp2515.h&gt;
+MCP2515 <span class="fn">can</span>(<span class="nm">10</span>);  <span class="cm">// CS pin 10</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  can.<span class="fn">reset</span>();
+  can.<span class="fn">setBitrate</span>(CAN_500KBPS, MCP_8MHZ);
+  can.<span class="fn">setNormalMode</span>();
+}
+
+<span class="cm">// Kirim data sensor via CAN:</span>
+<span class="kw">void</span> <span class="fn">sendSensorData</span>(<span class="kw">float</span> dist, <span class="kw">float</span> yaw) {
+  <span class="kw">struct</span> can_frame frame;
+  frame.can_id  = <span class="nm">0x101</span>;  <span class="cm">// Node ID: sensor</span>
+  frame.can_dlc = <span class="nm">8</span>;     <span class="cm">// 8 bytes data</span>
+  <span class="kw">uint16_t</span> d_mm = (<span class="kw">uint16_t</span>)(dist * <span class="nm">1000</span>);
+  <span class="kw">int16_t</span> y_10  = (<span class="kw">int16_t</span>)(yaw * <span class="nm">10</span>);
+  <span class="fn">memcpy</span>(&amp;frame.data[<span class="nm">0</span>], &amp;d_mm, <span class="nm">2</span>);
+  <span class="fn">memcpy</span>(&amp;frame.data[<span class="nm">2</span>], &amp;y_10, <span class="nm">2</span>);
+  can.<span class="fn">sendMessage</span>(&amp;frame);
+}
+
+<span class="cm">// Terima perintah motor:</span>
+<span class="kw">void</span> <span class="fn">receiveCAN</span>() {
+  <span class="kw">struct</span> can_frame f;
+  <span class="kw">if</span> (can.<span class="fn">readMessage</span>(&amp;f) == MCP2515::ERROR_OK) {
+    <span class="kw">if</span> (f.can_id == <span class="nm">0x200</span>) {  <span class="cm">// Motor command</span>
+      <span class="kw">int16_t</span> L, R;
+      <span class="fn">memcpy</span>(&amp;L, &amp;f.data[<span class="nm">0</span>], <span class="nm">2</span>);
+      <span class="fn">memcpy</span>(&amp;R, &amp;f.data[<span class="nm">2</span>], <span class="nm">2</span>);
+      <span class="fn">driveMotors</span>(L, R);
+    }
+  }
+}</pre></section><section class="sec" id="s8"><div class="sech"><div class="sn">08</div><div><div class="sc">Sensor</div><h2>SENSOR INTERFACING</h2></div></div><h3>ADC — Analog Sensor Digitalisasi</h3><pre><span class="cm">// Arduino: Averaging + low-pass filter untuk sensor analog</span>
+<span class="kw">class</span> <span class="tp3">AnalogSensor</span> {
+  <span class="kw">int</span> pin; <span class="kw">float</span> val=<span class="nm">0</span>; <span class="kw">float</span> alpha=<span class="nm">0.1</span>;
+<span class="kw">public</span>:
+  <span class="fn">AnalogSensor</span>(<span class="kw">int</span> p, <span class="kw">float</span> a=<span class="nm">0.15</span>) : pin(p), alpha(a) {}
+  <span class="kw">float</span> <span class="fn">read</span>() {
+    <span class="kw">float</span> raw = <span class="nm">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i=<span class="nm">0</span>; i&lt;<span class="nm">8</span>; i++) raw += <span class="fn">analogRead</span>(pin);
+    raw /= <span class="nm">8.0</span>;
+    val = alpha * raw + (<span class="nm">1</span>-alpha) * val;  <span class="cm">// EMA filter</span>
+    <span class="kw">return</span> val;
+  }
+  <span class="kw">float</span> <span class="fn">voltage</span>() { <span class="kw">return</span> <span class="fn">read</span>() * (<span class="nm">5.0</span>/<span class="nm">1023.0</span>); }
+};
+
+<span class="cm">// ADS1115 external 16-bit ADC via I2C (jauh lebih akurat):</span>
+<span class="kw">#include</span> &lt;ADS1X15.h&gt;
+ADS1115 <span class="fn">ads</span>(<span class="nm">0x48</span>);
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Wire.<span class="fn">begin</span>(); ads.<span class="fn">begin</span>();
+  ads.<span class="fn">setGain</span>(<span class="nm">1</span>);  <span class="cm">// ±4.096V range, 0.125mV/bit</span>
+}
+
+<span class="kw">float</span> <span class="fn">readForce</span>() {
+  <span class="kw">int16_t</span> raw = ads.<span class="fn">readADC</span>(<span class="nm">0</span>);
+  <span class="kw">float</span> v = raw * <span class="nm">0.0001250</span>;  <span class="cm">// 0.125mV/bit</span>
+  <span class="kw">return</span> (v - <span class="nm">0.5</span>) / (<span class="nm">4.5</span> - <span class="nm">0.5</span>) * <span class="nm">100</span>;  <span class="cm">// FSR 0-100N</span>
+}</pre></section><section class="sec" id="s9"><div class="sech"><div class="sn">09</div><div><div class="sc">Proteksi</div><h2>EMC & ESD PROTECTION</h2></div></div><h3>EMI Mitigation untuk Robot</h3><div class="tw"><table><tr><th>Problem</th><th>Sumber</th><th>Solusi</th></tr><tr><td>Motor noise</td><td>DC brush motor, chopper PWM</td><td>TVS diode + 100nF keramik dekat motor terminal, ferrite bead pada kabel</td></tr><tr><td>Ground bounce</td><td>High-current switching</td><td>Star grounding, ground plane terpisah antara analog & digital</td></tr><tr><td>Radiated EMI</td><td>Long wires, BLDC commutation</td><td>Twisted pair kabel power, shielded cable untuk sensor analog</td></tr><tr><td>Sensor noise</td><td>EMI coupling ke ADC line</td><td>RC low-pass filter di analog pin (1kΩ + 100nF), pisahkan dari power trace</td></tr><tr><td>USB disconnect</td><td>ESD pada USB port</td><td>ESD diode TVS (USBLC6-2SC6), common mode choke</td></tr><tr><td>Logic level mismatch</td><td>3.3V MCU vs 5V sensor</td><td>Voltage divider R1:R2 atau logic level shifter bidirectional</td></tr></table></div><h3>TVS Diode Clamping Circuit</h3><pre><span class="cm">// Proteksi reverse polarity + overvoltage input:</span>
+<span class="cm">// VIN+ ---[P-MOSFET gate ke GND]--- VBAT+</span>
+<span class="cm">// (P-FET mengalir jika Vgs negatif → proteksi reverse polarity)</span>
+<span class="cm">//</span>
+<span class="cm">// Komponen proteksi PCB robot:</span>
+<span class="cm">// - TVS SMAJ15A (15V): proteksi spike pada motor power rail</span>
+<span class="cm">// - BAT54 Schottky: proteksi back-EMF render diode</span>
+<span class="cm">// - Ferrite bead BLM21: 600Ω@100MHz pada VCC MCU</span>
+<span class="cm">// - 100nF + 10µF pada setiap regulasi tegangan output</span>
+
+<span class="cm">// Logic level shift 5V→3.3V (voltage divider):</span>
+<span class="cm">// GPIO_5V ---[1kΩ]---+---[2.2kΩ]--- GND</span>
+<span class="cm">//                   |</span>
+<span class="cm">//              GPIO_3V3  (= 5V × 2.2/(1+2.2) = 3.44V max ✓)</span>
+<span class="cm">// Atau: gunakan BSS138 N-FET bidirectional level shifter</span></pre><h3>Ground Strategy</h3><div class="ib danger"><div class="ibl">Ground Loop Warning</div>Jangan pernah menghubungkan GND analog dan GND digital/power di beberapa titik. Gunakan single-point star ground di satu titik yang dekat dengan power supply input. Kegagalan ini penyebab paling umum dari ADC noise dan sensor malfunction pada robot.</div></section><section class="sec" id="s10"><div class="sech"><div class="sn">010</div><div><div class="sc">Referensi</div><h2>SKEMA REFERENSI ROBOT</h2></div></div><h3>Skema Blok Robot Wheeled Lengkap</h3><pre><span class="cm">============================================</span>
+<span class="cm"> POWER DOMAIN        COMPUTE DOMAIN</span>
+<span class="cm">============================================</span>
+<span class="cm"> LiPo 3S 5000mAh</span>
+<span class="cm">   |</span>
+<span class="cm">   +--[BMS 20A fuse]</span>
+<span class="cm">   |         |</span>
+<span class="cm">   |    [Buck XL4016 → 5V 5A]</span>
+<span class="cm">   |         |           |</span>
+<span class="cm">   |    [RPi 5 SBC]  [AMS1117 → 3.3V]</span>
+<span class="cm">   |    (ROS2/Nav)      |</span>
+<span class="cm">   |         |        [MCU 3.3V sensors]</span>
+<span class="cm">   |    [USB Serial]</span>
+<span class="cm">   |         |</span>
+<span class="cm">   |    [Arduino Mega]  ← encoder ISR, PID, sensor poll</span>
+<span class="cm">   |         |</span>
+<span class="cm">   |    [L298N/BTS7960] ← PWM from Arduino</span>
+<span class="cm">   |         |</span>
+<span class="cm">   +----[DC Motors] ← back-EMF diode protection</span>
+<span class="cm">============================================</span>
+<span class="cm"> SENSOR DOMAIN</span>
+<span class="cm">============================================</span>
+<span class="cm"> Arduino ← [I2C] ← MPU6050 (IMU)</span>
+<span class="cm">         ← [UART] ← RPLiDAR A1</span>
+<span class="cm">         ← [GPIO] ← HC-SR04 × 5 (sonar)</span>
+<span class="cm">         ← [ADC]  ← Sharp IR × 2</span>
+<span class="cm">         ← [INT]  ← Encoder A/B × 2 (quadrature)</span>
+<span class="cm"> RPi 5   ← [USB]  ← RPLiDAR (raw scan → /scan)</span>
+<span class="cm">         ← [CSI]  ← Camera V3 (→ /camera/image)</span></pre></section><section class="sec" id="s11"><div class="sech"><div class="sn">011</div><div><div class="sc">Arduino C</div><h2>ARDUINO SENSOR HUB</h2></div></div><pre><span class="cm">// Arduino Mega: Complete sensor hub + ROS serial bridge</span>
+<span class="cm">// Publishes: distances, IMU, battery, encoder</span>
+<span class="kw">#include</span> &lt;Wire.h&gt;
+<span class="kw">#include</span> &lt;NewPing.h&gt;
+<span class="kw">#include</span> &lt;MPU6050_tockn.h&gt;
+
+<span class="kw">#define</span> N_SONAR <span class="nm">5</span>
+NewPing sonar[N_SONAR] = {
+  NewPing(<span class="nm">22</span>,<span class="nm">23</span>,<span class="nm">200</span>), NewPing(<span class="nm">24</span>,<span class="nm">25</span>,<span class="nm">200</span>), NewPing(<span class="nm">26</span>,<span class="nm">27</span>,<span class="nm">200</span>),
+  NewPing(<span class="nm">28</span>,<span class="nm">29</span>,<span class="nm">200</span>), NewPing(<span class="nm">30</span>,<span class="nm">31</span>,<span class="nm">200</span>)
+};
+MPU6050 <span class="fn">mpu</span>(Wire);
+
+<span class="kw">volatile long</span> encL=<span class="nm">0</span>, encR=<span class="nm">0</span>;
+<span class="kw">void</span> <span class="fn">isrL</span>() { encL++; }
+<span class="kw">void</span> <span class="fn">isrR</span>() { encR++; }
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(<span class="nm">115200</span>);
+  Wire.<span class="fn">begin</span>(); Wire.<span class="fn">setClock</span>(<span class="nm">400000</span>);
+  mpu.<span class="fn">begin</span>(); mpu.<span class="fn">calcGyroOffsets</span>(<span class="nm">true</span>);
+  <span class="fn">attachInterrupt</span>(<span class="fn">digitalPinToInterrupt</span>(<span class="nm">2</span>), isrL, RISING);
+  <span class="fn">attachInterrupt</span>(<span class="fn">digitalPinToInterrupt</span>(<span class="nm">3</span>), isrR, RISING);
+  TCCR1B = (TCCR1B & <span class="nm">0xF8</span>) | <span class="nm">0x01</span>;  <span class="cm">// 31kHz PWM</span>
+}
+
+<span class="kw">unsigned long</span> t_pub=<span class="nm">0</span>;
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  mpu.<span class="fn">update</span>();
+  <span class="kw">if</span> (<span class="fn">millis</span>() - t_pub >= <span class="nm">50</span>) {  <span class="cm">// 20Hz publish</span>
+    t_pub = <span class="fn">millis</span>();
+    <span class="cm">// Sonar</span>
+    Serial.<span class="fn">print</span>(<span class="st">"S:"</span>);
+    <span class="kw">for</span> (<span class="kw">int</span> i=<span class="nm">0</span>; i&lt;N_SONAR; i++) {
+      <span class="kw">unsigned int</span> us = sonar[i].<span class="fn">ping_median</span>(<span class="nm">3</span>);
+      <span class="kw">float</span> d = (us==<span class="nm">0</span>) ? <span class="nm">200</span> : us/US_ROUNDTRIP_CM;
+      Serial.<span class="fn">print</span>(d); Serial.<span class="fn">print</span>(<span class="st">","</span>);
+    }
+    <span class="cm">// IMU + encoder</span>
+    Serial.<span class="fn">printf</span>(<span class="st">"I:%.2f,%.2f,%.2f,E:%ld,%ld\n"</span>,
+      mpu.<span class="fn">getAngleX</span>(), mpu.<span class="fn">getAngleY</span>(), mpu.<span class="fn">getAngleZ</span>(),
+      encL, encR);
+  }
+  <span class="cm">// Receive motor command from RPi</span>
+  <span class="kw">if</span> (Serial.<span class="fn">available</span>() >= <span class="nm">8</span>) {
+    <span class="kw">float</span> v, w;
+    Serial.<span class="fn">readBytes</span>((<span class="kw">char</span>*)&v, <span class="nm">4</span>);
+    Serial.<span class="fn">readBytes</span>((<span class="kw">char</span>*)&w, <span class="nm">4</span>);
+    <span class="kw">int</span> L = (v - w * <span class="nm">0.115</span>) / <span class="nm">0.5</span> * <span class="nm">255</span>;
+    <span class="kw">int</span> R = (v + w * <span class="nm">0.115</span>) / <span class="nm">0.5</span> * <span class="nm">255</span>;
+    <span class="fn">driveMotors</span>(<span class="fn">constrain</span>(L,-<span class="nm">255</span>,<span class="nm">255</span>), <span class="fn">constrain</span>(R,-<span class="nm">255</span>,<span class="nm">255</span>));
+  }
+}</pre></section>
+<div style="text-align:center;padding:40px 0;color:var(--text3);font-family:var(--mono);font-size:11px;border-top:1px solid var(--border);margin-top:40px">ELEKTRONIKA ROBOTIKA — DOC 06 / 07<br><span style="color:rgb(var(--ac));margin-top:8px;display:block">Antonius - bluedragonsec.com</span></div>
+</div></div><script>function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open')}
+document.getElementById('overlay').addEventListener('click',toggleSidebar);
+const secs=document.querySelectorAll('.sec'),nls=document.querySelectorAll('.ni');
+secs.forEach(s=>new IntersectionObserver(e=>{if(e[0].isIntersecting){const id=s.id;nls.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+id))}},{threshold:0.15,rootMargin:'-60px 0px -60% 0px'}).observe(s));
+nls.forEach(l=>l.addEventListener('click',()=>{if(window.innerWidth<=900)toggleSidebar()}));</script></body></html>
